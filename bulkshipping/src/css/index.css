@@ -1,0 +1,50 @@
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.ForgotPasswordForm {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1 0 auto;
+    text-align: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    flex: 1 1 auto;
+}
+
+.form--wrapper {
+    margin: 32px 0;
+}
+
+.form--error {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+.backButton {
+    top: 1%;
+    right: 2%;
+    position: fixed;
+}
+
+.fillPerformanceDropDowns {
+    margin-left: 1%;
+    width: 32%;
+}
