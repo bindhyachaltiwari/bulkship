@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan('combined'));
 // ... other app.use middleware 
-app.use(express.static(path.join(__dirname, 'bulkshipping', 'build')))
+app.use(express.static(path.join(__dirname, 'build')))
 const checkJwt = jwt({
     secret: jwksRsa.expressJwtSecret({
         cache: true,
@@ -53,7 +53,7 @@ app.use('/voyageDetails', voyageDetails);
 app.use('/performanceDetails', performanceDetails);
 app.get('*', (req, res) => {
     //res.send([{ 'key': 'value' }]);
-    res.sendFile(path.join(__dirname, 'bulkshipping', 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 app.listen(port, () => {
     console.log('listening at 3003');
