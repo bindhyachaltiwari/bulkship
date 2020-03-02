@@ -48,7 +48,7 @@ export default class LoginHome extends Component {
             error: false,
             role: '',
         }));
-        let resp = (await axios.post('userDetails/login', {
+        let resp = (await axios.post('/userDetails/login', {
             headers: { 'Content-Type': 'application/json' },
             data: {
                 username,

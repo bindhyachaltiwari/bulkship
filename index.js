@@ -15,7 +15,7 @@ const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 const path = require("path");
 app.use(helmet());
-mongoose.connect('mongodb://localhost/bulkShiping').then((
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/bulkShiping').then((
     () => {
         console.log('mongo bd connected')
     }
@@ -29,7 +29,6 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan('combined'));
 // ... other app.use middleware 
-app.use(express.static(path.join(__dirname, 'build')))
 const checkJwt = jwt({
     secret: jwksRsa.expressJwtSecret({
         cache: true,
@@ -51,10 +50,14 @@ app.use('/userDetails', userDetails);
 app.use('/vesselDetails', vesselDetails);
 app.use('/voyageDetails', voyageDetails);
 app.use('/performanceDetails', performanceDetails);
-app.get('*', (req, res) => {
-    //res.send([{ 'key': 'value' }]);
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+if(process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, 'build')));
+    app.get('*', (req, res) => {
+        //res.send([{ 'key': 'value' }]);
+        res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    });
+}
+
 app.listen(port, () => {
     console.log('listening at 3003');
 })
