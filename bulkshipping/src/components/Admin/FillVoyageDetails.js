@@ -91,7 +91,7 @@ class FillVoyageDetails extends Component {
   }
 
   getAllClients = async () => {
-    await axios.post('http://localhost:3003/userDetails/getAllClients', {
+    await axios.post('/userDetails/getAllClients', {
       headers: { 'Content-Type': 'application/json' },
     }).then(res => {
       if (res.data.status) {
@@ -111,7 +111,7 @@ class FillVoyageDetails extends Component {
   }
 
   getAllVessels = async () => {
-    await axios.post('http://localhost:3003/vesselDetails/getAllVessels', {
+    await axios.post('/vesselDetails/getAllVessels', {
       headers: { 'Content-Type': 'application/json' },
     }).then(res => {
       if (res.data.status) {
@@ -142,7 +142,7 @@ class FillVoyageDetails extends Component {
       return;
     }
 
-    let data = (await axios.post('http://localhost:3003/performanceDetails/insertPerformanceData', {
+    let data = (await axios.post('/performanceDetails/insertPerformanceData', {
       headers: { 'Content-Type': 'application/json' },
       data: {
         cpDate: this.state.vesselDetails.cpDate,
@@ -152,7 +152,7 @@ class FillVoyageDetails extends Component {
       }
     }));
 
-    data = (await axios.post('http://localhost:3003/voyageDetails/insertVoyageData', {
+    data = (await axios.post('/voyageDetails/insertVoyageData', {
       headers: { 'Content-Type': 'application/json' },
       data: {
         ...this.state.vesselDetails

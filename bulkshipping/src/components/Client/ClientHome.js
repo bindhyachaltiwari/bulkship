@@ -29,7 +29,7 @@ class ClientHome extends Component {
     }
 
     getAllVoyage = async () => {
-        await axios.post('http://localhost:3003/voyageDetails/getAllVoyage', {
+        await axios.post('/voyageDetails/getAllVoyage', {
             headers: { 'Content-Type': 'application/json' },
             data: { 'companyName': this.props.companyName },
         }).then(res => {

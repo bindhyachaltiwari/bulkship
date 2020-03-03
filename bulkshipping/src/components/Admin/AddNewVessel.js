@@ -52,7 +52,7 @@ class AddNewVessel extends Component {
       return;
     }
 
-    let data = (await axios.post('http://localhost:3003/vesselDetails/insertVesselDetails', {
+    let data = (await axios.post('/vesselDetails/insertVesselDetails', {
       headers: { 'Content-Type': 'application/json' },
       data: {
         ...this.state

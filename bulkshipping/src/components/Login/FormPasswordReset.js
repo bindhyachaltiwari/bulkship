@@ -46,7 +46,7 @@ export default class FormPasswordReset extends Component {
     setSubmitting,
     resetForm,
   }) => {
-    let resp = (await axios.post('http://localhost:3003/userDetails/updatePassword', {
+    let resp = (await axios.post('/userDetails/updatePassword', {
       headers: { 'Content-Type': 'application/json' },
       data: {
         user: this.state.user,

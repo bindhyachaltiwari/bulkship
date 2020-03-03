@@ -16,7 +16,7 @@ class ViewAllClients extends Component {
     }
 
     getAllClients = async () => {
-        await axios.post('http://localhost:3003/userDetails/getAllClientDetails', {
+        await axios.post('/userDetails/getAllClientDetails', {
             headers: { 'Content-Type': 'application/json' },
         }).then(res => {
             if (res.data.status) {

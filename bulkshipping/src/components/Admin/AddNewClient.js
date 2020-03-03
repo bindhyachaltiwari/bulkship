@@ -75,7 +75,7 @@ class AddNewClient extends Component {
       this.state.clientType = role;
     }
 
-    let data = (await axios.post('http://localhost:3003/userDetails/insertUserDetails', {
+    let data = (await axios.post('/userDetails/insertUserDetails', {
       headers: { 'Content-Type': 'application/json' },
       data: {
         ...this.state

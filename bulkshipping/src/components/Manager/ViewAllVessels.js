@@ -16,7 +16,7 @@ class ViewAllVessels extends Component {
     }
 
     getAllVessels = async () => {
-        await axios.post('http://localhost:3003/vesselDetails/getAllVesselDetails', {
+        await axios.post('/vesselDetails/getAllVesselDetails', {
             headers: { 'Content-Type': 'application/json' },
         }).then(res => {
             if (res.data.status) {

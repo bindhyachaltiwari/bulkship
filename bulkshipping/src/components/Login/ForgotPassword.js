@@ -27,7 +27,7 @@ class ForgotPassword extends Component {
     setSubmitting,
     resetForm,
   }) => {
-    let resp = (await axios.post('http://localhost:3003/userDetails/checkUsername', {
+    let resp = (await axios.post('/userDetails/checkUsername', {
       headers: { 'Content-Type': 'application/json' },
       data: {
         'userName': username,

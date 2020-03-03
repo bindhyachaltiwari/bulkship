@@ -43,7 +43,7 @@ class FillPerformanceDetails extends Component {
   }
 
   getAllVessels = async () => {
-    await axios.post('http://localhost:3003/performanceDetails/getAllVessels', {
+    await axios.post('/performanceDetails/getAllVessels', {
       headers: { 'Content-Type': 'application/json' },
       data: {
         'isDetailsFilled': false,
@@ -155,7 +155,7 @@ class FillPerformanceDetails extends Component {
       return;
     }
 
-    let data = (await axios.post('http://localhost:3003/performanceDetails/insertPerformanceData', {
+    let data = (await axios.post('/performanceDetails/insertPerformanceData', {
       headers: { 'Content-Type': 'application/json' },
       data: {
         ...this.state.performanceDetails,
