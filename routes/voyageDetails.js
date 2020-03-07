@@ -23,7 +23,7 @@ router.post('/getAllVoyage', (req, res) => {
             res.json({ status: false, error: err });
             return;
         }
-        if (vl) {
+        if (vl.length) {
             res.json({ status: true, vesselList: vl });
         } else {
             res.json({ status: false });
@@ -37,7 +37,7 @@ router.post('/getVoyageDetails', (req, res) => {
             res.json({ status: false, error: 'No details found' });
             return;
         }
-        if (v) {
+        if (v.length) {
             v = v[0];
             res.json({
                 status: true,

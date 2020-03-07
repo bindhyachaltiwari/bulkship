@@ -78,16 +78,12 @@ class FillPerformanceDetails extends Component {
   };
 
   handleVesselListChange = async e => {
-    const { selectedVessel, vesselList } = this.state;
-    if (e.value === selectedVessel) {
-      return;
-    }
-
+    const { selectedVessel, vesselList, selectedClient } = this.state;
     if (e.value !== selectedVessel) {
       this.setState({ selectedCpDate: 'SelectCpDate' });
     }
 
-    const allCpDates = vesselList.filter(f => f.vesselName === e.value).map(m => m.cpDate);
+    const allCpDates = vesselList.filter(f => f.vesselName === e.value && f.chartererName === selectedClient).map(m => m.cpDate);
     if (!allCpDates.length || (allCpDates.length === 1 && allCpDates[0] === '')) {
       this.setState({
         allCpDatesForSelectedClient: [],
@@ -110,10 +106,6 @@ class FillPerformanceDetails extends Component {
 
   handleClientListChange = e => {
     const { selectedClient, vesselList } = this.state;
-    if (e.value === selectedClient) {
-      return;
-    }
-
     if (e.value !== selectedClient) {
       this.setState({ selectedCpDate: 'SelectCpDate', selectedVessel: 'SelectVessel' });
     }
@@ -145,21 +137,15 @@ class FillPerformanceDetails extends Component {
 
   async handlePerformanceDetailSubmit(event) {
     event.preventDefault();
-    const { chartererName, vesselName, cpDate } = this.state.performanceDetails;
+    const { selectedClient, selectedVessel, selectedCpDate, vesselList } = this.state;
+    const vessel = vesselList.find(f => f.chartererName === selectedClient && f.vesselName === selectedVessel && f.cpDate === selectedCpDate)
+    const vId = vessel ? vessel['_id'] : '';
 
-    if (!chartererName || !vesselName || !cpDate.toString()) {
-      this.setState({
-        success: false,
-        errorMsg: 'Please fill the required details'
-      });
-      return;
-    }
-
-    let data = (await axios.post('/performanceDetails/insertPerformanceData', {
+    let data = (await axios.post('/performanceDetails/fillPerformanceDetails', {
       headers: { 'Content-Type': 'application/json' },
       data: {
         ...this.state.performanceDetails,
-        isDetailsFilled: true,
+        vId
       }
     }));
 
@@ -172,7 +158,7 @@ class FillPerformanceDetails extends Component {
     } else {
       document.getElementById('performanceDetailsForm').reset();
       this.setState({
-        ...this.localState.vesselDetails,
+        performanceDetails: {},
         success: false,
         errorMsg: 'Success!! Performance Details saved for = ' + this.state.selectedClient
       });
@@ -275,7 +261,7 @@ class FillPerformanceDetails extends Component {
               </label>
                 </td>
                 <td>
-                  <input type="text" name="DWTBunkerPriceMDOOrg" required onChange={this.handlePerformanceDetailsChange} autoComplete="off" />
+                  <input type="text" name="BunkerPriceMDOOrg" required onChange={this.handlePerformanceDetailsChange} autoComplete="off" />
                 </td>
                 <td>
                   <input type="text" name="BunkerPriceMDOAct" required onChange={this.handlePerformanceDetailsChange} autoComplete="off" />

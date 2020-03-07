@@ -9,7 +9,9 @@ import {
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={(props) => (
-        localStorage.getItem('userRole') === 'Admin'
+        localStorage.getItem('userRole') === 'Admin' ||
+        localStorage.getItem('userRole') === 'Manager' ||
+        localStorage.getItem('userRole') === 'Client'
         ? <Component {...props} />
         : <Redirect to={{
             pathname: '/login',

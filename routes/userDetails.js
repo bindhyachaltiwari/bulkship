@@ -83,7 +83,7 @@ router.post('/getAllClients', (req, res) => {
             res.json({ status: false, error: err });
             return;
         }
-        if (cl) {
+        if (cl.length) {
             res.json({ status: true, clientList: cl.map(m => m.companyName) });
         } else {
             res.json({ status: false });
@@ -97,7 +97,7 @@ router.post('/getAllClientDetails', (req, res) => {
             res.json({ status: false, error: err });
             return;
         }
-        if (cl) {
+        if (cl.length) {
             res.json({
                 status: true,
                 clientList: cl.map(m => {
@@ -106,7 +106,8 @@ router.post('/getAllClientDetails', (req, res) => {
                         displayName: m.displayName,
                         companyName: m.companyName,
                         role: m.role,
-                        clientType: m.clientType
+                        clientType: m.clientType,
+                        id:m['_id']
                     };
                 })
             });

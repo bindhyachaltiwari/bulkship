@@ -5,10 +5,6 @@ class AdminHome extends Component {
 
     history;
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <div className="about_us_2 about_us_2_animated">

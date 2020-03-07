@@ -31,9 +31,6 @@ export default class LoginHome extends Component {
     //         role: '',
     //         errorMsg: '',
     //         error: false,
-    //         userName: '',
-    //         companyName: '',
-    //         displayName: ''
     //     });
     // }
 
@@ -71,14 +68,12 @@ export default class LoginHome extends Component {
                 isLoggedIn: true,
                 error: false,
                 errorMsg: '',
-                userName: resp.userName,
-                companyName: resp.companyName,
-                displayName: resp.displayName,
-                role: resp.role,
             }))
             localStorage.setItem('authToken', resp.token);
             localStorage.setItem('userRole', resp.role);
             localStorage.setItem('displayName', resp.displayName);
+            localStorage.setItem('userName', resp.userName);
+            localStorage.setItem('companyName', resp.companyName);
         }
 
         resetForm();
@@ -126,7 +121,7 @@ export default class LoginHome extends Component {
                         showData = <Spinner />
                     } else if (userRole && !error) {
                         showData = <div>
-                            <Page state={this.state} />
+                            <Page />
                             {/* <LogoutButton onClick={this.handleLogoutClick} ></LogoutButton> */}
                         </div>
                     } else {

@@ -21,7 +21,7 @@ router.post('/getAllVessels', (req, res) => {
             res.json({ status: false, error: err });
             return;
         }
-        if (cl) {
+        if (cl.length) {
             res.json({
                 status: true, vesselList: cl.map(m => {
                     return { vesselName: m.vesselName, DWT: m.DWT };
@@ -39,7 +39,7 @@ router.post('/getAllVesselDetails', (req, res) => {
             res.json({ status: false, error: err });
             return;
         }
-        if (cl) {
+        if (cl.length) {
             res.json({
                 status: true, vesselList: cl
             });

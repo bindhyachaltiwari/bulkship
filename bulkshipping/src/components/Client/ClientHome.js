@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Datatable } from "@o2xp/react-datatable";
 import Popup from "reactjs-popup";
 import DisplaySelectedVesselDetails from './DisplaySelectedVesselDetails';
+import { useHistory } from 'react-router-dom';
 
 class ClientHome extends Component {
     constructor(props) {
@@ -31,18 +32,18 @@ class ClientHome extends Component {
     getAllVoyage = async () => {
         await axios.post('/voyageDetails/getAllVoyage', {
             headers: { 'Content-Type': 'application/json' },
-            data: { 'companyName': this.props.companyName },
+            data: { 'companyName': localStorage.getItem('companyName')},
         }).then(res => {
             if (res.data.status) {
                 this.setState({
                     vesselList: res.data.vesselList,
-                    companyName: this.props.companyName,
+                    companyName: localStorage.getItem('companyName'),
                     error: false,
                 });
             } else {
                 this.setState({
                     error: true,
-                    companyName: this.props.companyName,
+                    companyName: localStorage.getItem('companyName'),
                 });
                 return;
             }
@@ -53,14 +54,18 @@ class ClientHome extends Component {
         const { vesselList } = this.state;
         const c = vesselList.find(m => m['_id'] === e.target.id);
         console.log(c.vesselName);
+        // let history = useHistory();
+        // history.push('/DisplaySelectedVesselPerformance');
+        alert(c.vesselName)
     }
 
 
-    handleVesselClick = e => {
-        const { vesselList } = this.state;
-        const c = vesselList.find(m => m['_id'] === e.target.id);
-        console.log(c.vesselName);
-    }
+    // handleVesselClick = e => {
+    //     const { vesselList } = this.state;
+    //     const c = vesselList.find(m => m['_id'] === e.target.id);
+    //     console.log(c.vesselName);
+    //     alert(c.vesselName)
+    // }
 
     buildCustomTableBodyCell = ({ cellVal, column, rowId }) => {
         let val;

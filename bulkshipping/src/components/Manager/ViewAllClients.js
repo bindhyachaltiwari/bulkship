@@ -35,6 +35,25 @@ class ViewAllClients extends Component {
         this.props.history.goBack();
     }
 
+    handleEditClick = e => {
+        const { clientList } = this.state;
+        const c = clientList.find(m => m['id'] === e.target.id);
+        console.log(c);
+    }
+
+    buildCustomTableBodyCell = ({ cellVal, column, rowId }) => {
+        let val;
+        switch (column.id) {
+            case "edit":
+                val = <button style={{ color: "blue", textAlign: "center", marginLeft:'20%' }} id={rowId} type="button" onClick={this.handleEditClick}>Edit</button>;
+                break;
+            default:
+                val = <div style={{ color: "blue" }}>{cellVal}</div>;
+                break;
+        }
+        return val;
+    };
+
     render() {
         let { clientList } = this.state;
         let options;
@@ -58,10 +77,14 @@ class ViewAllClients extends Component {
                     canDownload: true,
                     canPrint: true,
                     canOrderColumns: true,
-                    canClick: true,
                 },
                 data: {
                     columns: [
+                        {
+                            id: "edit",
+                            label: "Edit",
+                            colSize: "50px",
+                        },
                         {
                             id: "userName",
                             label: "User Name",
@@ -89,7 +112,7 @@ class ViewAllClients extends Component {
                         },
                     ],
                     rows: [
-                        ...clientList.map(({ userName, displayName, companyName, role, clientType}) => ({ userName, displayName, companyName, role, clientType}))
+                        ...clientList.map(({ userName, displayName, companyName, role, clientType, id}) => ({ userName, displayName, companyName, role, clientType, id, edit:true}))
                     ],
                 }
             }
@@ -99,7 +122,7 @@ class ViewAllClients extends Component {
                 <button className='backButton' onClick={this.handleBackButton}>Back</button>
                 <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
                 < div id='table' style={{ marginTop: '2%', marginLeft: '2%', display: 'flex' }}>
-                    <Datatable options={options} stripped />
+                    <Datatable options={options} stripped CustomTableBodyCell={this.buildCustomTableBodyCell}/>
                 </div >
             </span>
         );

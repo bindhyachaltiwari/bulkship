@@ -5,15 +5,14 @@ import AdminHome from '../Admin/AdminHome';
 import ManagerHome from '../Manager/ManagerHome';
 
 function Page(props) {
-    const { displayName, isLoggedIn, role, companyName, userName } = props.state;
-    if (isLoggedIn) {
-        switch (role.toLowerCase()) {
+    if (localStorage.getItem('authToken')) {
+        switch (localStorage.getItem('userRole').toLowerCase()) {
             case 'admin':
-                return <AdminHome companyName={companyName} displayName={displayName} userName={userName} />;
+                return <AdminHome/>;
             case 'manager':
-                return <ManagerHome companyName={companyName} displayName={displayName} userName={userName} />;
+                return <ManagerHome/>;
             case 'client':
-                return <ClientHome companyName={companyName} displayName={displayName} userName={userName} />;
+                return <ClientHome/>;
             default:
                 return <LoginHome />;
         }

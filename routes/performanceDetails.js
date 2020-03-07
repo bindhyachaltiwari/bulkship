@@ -26,7 +26,7 @@ router.post('/getPerformanceDetails', (req, res) => {
             res.json({ status: false, error: 'No details found' });
             return;
         }
-        if (v) {
+        if (v.length) {
             v = v[0];
             res.json({
                 status: true,
@@ -53,11 +53,65 @@ router.post('/getAllVessels', (req, res) => {
             res.json({ status: false, error: err });
             return;
         }
-        if (vl) {
+        if (vl.length) {
             res.json({ status: true, vesselList: vl });
         } else {
             res.json({ status: false });
         }
+    });
+});
+
+
+router.post('/fillPerformanceDetails', (req, res) => {
+    PerformanceDetails.findOne({ _id: req.body.data.vId }, (err, user) => {
+        if (!user) {
+            res.json({ status: false, err: "Username not found" });
+            return;
+        }
+        let data = req.body.data;
+        PerformanceDetails.update(
+            { _id: req.body.data.vId },
+            {
+                $set: {
+                    "isDetailsFilled": true,
+                    NumberOfDaysOrg: data.NumberOfDaysOrg,
+                    NumberOfDaysAct: data.NumberOfDaysAct,
+                    BunkerConsumptionIFOOrg: data.BunkerConsumptionIFOOrg,
+                    BunkerConsumptionIFOAct: data.BunkerConsumptionIFOAct,
+                    BunkerConsumptionMDOOrg: data.BunkerConsumptionMDOOrg,
+                    BunkerConsumptionMDOAct: data.BunkerConsumptionMDOAct,
+                    BunkerPriceIFOOrg: data.BunkerPriceIFOOrg,
+                    BunkerPriceIFOAct: data.BunkerPriceIFOAct,
+                    BunkerPriceMDOOrg: data.BunkerPriceMDOOrg,
+                    BunkerPriceMDOAct: data.BunkerPriceMDOAct,
+                    LoadPortDAOrg: data.LoadPortDAOrg,
+                    LoadPortDAAct: data.LoadPortDAAct,
+                    DischargePortDAOrg: data.DischargePortDAOrg,
+                    DischargePortDAAct: data.DischargePortDAAct,
+                    ILOHCandCVEOrg: data.ILOHCandCVEOrg,
+                    ILOHCandCVEAct: data.ILOHCandCVEAct,
+                    BunkerSurveyCostBendsOrg: data.BunkerSurveyCostBendsOrg,
+                    BunkerSurveyCostBendsAct: data.BunkerSurveyCostBendsAct,
+                    WXRoutingExpenseOrg: data.WXRoutingExpenseOrg,
+                    WXRoutingExpenseAct: data.WXRoutingExpenseAct,
+                    PNIInsuranceOrg: data.PNIInsuranceOrg,
+                    PNIInsuranceAct: data.PNIInsuranceAct,
+                    DespatchPaidOrg: data.DespatchPaidOrg,
+                    DespatchPaidAct: data.DespatchPaidAct,
+                    OtherExpenseOrg: data.OtherExpenseOrg,
+                    OtherExpenseAct: data.OtherExpenseAct,
+                    HRA_WARRiskOrg: data.HRA_WARRiskOrg,
+                    HRA_WARRiskAct: data.HRA_WARRiskAct,
+                    DemmurrageReceivedOrg: data.DemmurrageReceivedOrg,
+                    DemmurrageReceivedAct: data.DemmurrageReceivedAct,
+                    CargoQuantityOrg: data.CargoQuantityOrg,
+                    CargoQuantityAct: data.CargoQuantityAct,
+                }
+            }
+        ).then(e => {
+            res.json({ status: true });
+            return;
+        });
     });
 });
 
