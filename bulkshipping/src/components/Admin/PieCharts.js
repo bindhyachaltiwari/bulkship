@@ -1,59 +1,87 @@
-import React,{Component} from 'react';
-import PieChart from 'react-minimal-pie-chart';
+import React, { Component } from 'react';
+import Chart from 'react-apexcharts';
 class PieCharts extends Component {
-constructor(props) {
+  constructor(props) {
     super(props);
-}
-render() {
-    return(
-        <PieChart
-  animate={false}
-  animationDuration={500}
-  animationEasing="ease-out"
-  cx={50}
-  cy={50}
-  data={[
-    {
-      color: '#E38627',
-      title: 'One',
-      value: 10
-    },
-    {
-      color: '#C13C37',
-      title: 'Two',
-      value: 15
-    },
-    {
-      color: '#6A2135',
-      title: 'Three',
-      value: 20
-    }
-  ]}
-  label={true}
-  labelPosition={50}
-  labelStyle={{
-    fill: '#121212',
-    fontFamily: 'sans-serif',
-    fontSize: '5px'
-  }}
-  lengthAngle={360}
-  lineWidth={100}
-  onClick={undefined}
-  onMouseOut={undefined}
-  onMouseOver={undefined}
-  paddingAngle={0}
-  radius={50}
-  rounded={false}
-  startAngle={0}
-  style={{
-    height: '700px'
-  }}
-  viewBoxSize={[
-    100,
-    100
-  ]}
-/>
-    )
-}
+    
+    this.state = {
+      options: {
+        chart: {
+          width: 380,
+          type: 'pie',
+        },
+        labels: Object.keys(props.vesselDetails),
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+},
+      series: Object.values(props.vesselDetails),
+    };
+  }
+
+  render() {
+    return (
+      <div className="app">
+        <div className="row" />
+
+        <div className="row">
+          <div className="col percentage-chart">
+            <Chart
+              options={this.state.options}
+              series={this.state.series}
+              type="pie"
+              width={500}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 export default PieCharts;
+
+/*import React, { Component } from "react";
+import Chart from "react-apexcharts";
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      options: {},
+      series: [44, 55, 41, 17, 15],
+      labels: ["A", "B", "C", "D", "E"]
+    };
+  }
+
+  render() {
+    return (
+      <div className="app">
+        <div className="row" />
+
+        <div className="row">
+          <div className="col percentage-chart">
+            <Chart
+              options={this.state.options}
+              series={this.state.series}
+              type="pie"
+              width={500}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default App;
+
+ */

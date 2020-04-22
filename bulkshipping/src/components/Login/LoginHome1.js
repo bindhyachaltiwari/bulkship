@@ -38,7 +38,7 @@ export default class LoginHome extends Component {
         e.preventDefault();
         const { userName, password } = this.state;
         if (userName && password) {
-            let resp = (await axios.post('/userDetails/login', {
+            let resp = (await axios.post('http://localhost:3003/userDetails/login', {
                 headers: { 'Content-Type': 'application/json' },
                 data: {
                     'userName': userName,

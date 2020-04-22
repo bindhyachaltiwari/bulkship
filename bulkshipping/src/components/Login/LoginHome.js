@@ -74,6 +74,7 @@ export default class LoginHome extends Component {
             localStorage.setItem('displayName', resp.displayName);
             localStorage.setItem('userName', resp.userName);
             localStorage.setItem('companyName', resp.companyName);
+            localStorage.setItem('isAdmin',resp.isAdmin);
         }
 
         resetForm();

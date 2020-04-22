@@ -29,7 +29,8 @@ router.post('/login', (req, res) => {
                 displayName: user.displayName,
                 companyName: user.companyName,
                 userName: user.userName,
-                token: tokenGenerator
+                token: tokenGenerator,
+                isAdmin: user.isAdmin
             });
         } else {
             res.json({ status: false, err: "Wrong Credentials" });
@@ -115,6 +116,33 @@ router.post('/getAllClientDetails', (req, res) => {
             res.json({ status: false });
         }
     });
+});
+router.post('/getAllManager', (req, res) => {
+    userDetails.find({ role: 'Manager' }, (err, cl) => {
+        if (!cl) {
+            res.json({ status: false, error: err });
+            return;
+        }
+        if (cl.length) {
+            res.json({ status: true, managerList: cl.map(m => m.userName) });
+        } else {
+            res.json({ status: false });
+        }
+    });
+});
+
+router.post('/addRightsValue',(req, res) => {
+    
+    for( var i=0; i<req.body.data.adminList.length;i++) {
+        userDetails.update(
+            { userName: req.body.data.adminList[i]},
+            { $set: { 'isAdmin': true } },
+            {multi:true}
+        ).then(e => {
+            res.json({ status: true });
+        });
+    }
+    
 });
 
 // router.delete('/:pid',(req,res) => {

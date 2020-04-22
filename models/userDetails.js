@@ -29,7 +29,11 @@ var userDetails = new Schema({
     clientType: {
         type: String,
         required: true
-    }
+    },
+	isAdmin: {
+		type: Boolean,
+		required: true
+	}
 }, {
     collection: 'userDetails'
 });

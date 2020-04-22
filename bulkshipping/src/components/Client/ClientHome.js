@@ -4,6 +4,11 @@ import { Datatable } from "@o2xp/react-datatable";
 import Popup from "reactjs-popup";
 import DisplaySelectedVesselDetails from './DisplaySelectedVesselDetails';
 import { useHistory } from 'react-router-dom';
+import {
+    withRouter
+  } from 'react-router-dom'
+  
+import PieCharts from '../../components/Admin/PieCharts';
 
 class ClientHome extends Component {
     constructor(props) {
@@ -54,9 +59,13 @@ class ClientHome extends Component {
         const { vesselList } = this.state;
         const c = vesselList.find(m => m['_id'] === e.target.id);
         console.log(c.vesselName);
-        // let history = useHistory();
+        //let history = useHistory();
         // history.push('/DisplaySelectedVesselPerformance');
-        alert(c.vesselName)
+        this.props.history.push({
+            pathname: '/CheckPerformance',
+        state: { detail: c }
+        })
+        //alert(c.vesselName)
     }
 
 
@@ -134,18 +143,25 @@ class ClientHome extends Component {
             }
 
             const ourCount = {};
+            let previousYearDate = new Date();
+            const pastYear = previousYearDate.getFullYear() - 1;
+            previousYearDate.setFullYear(pastYear);
             vesselList.forEach(v => {
                 if (!ourCount[v.cargo]) {
                     ourCount[v.cargo] = 0;
                 }
-                ourCount[v.cargo] += parseInt(v.cargoIntake);
+                if(new Date(v.cpDate).getTime() <= new Date().getTime() && new Date(v.cpDate).getTime() > previousYearDate.getTime()) {
+                    ourCount[v.cargo] += parseInt(v.cargoIntake);
+                }
             });
 
 
             showData = < div id='table' style={{ marginTop: '2%', marginLeft: '2%', display: 'flex' }}>
                 <Datatable options={options} stripped CustomTableBodyCell={this.buildCustomTableBodyCell} />
-                <div style={{ marginTop: '15%', marginLeft: '18%' }}>
-                    <DisplaySelectedVesselDetails vesselDetails={ourCount} />
+                <div style={{ marginTop: '15%', marginLeft: '0%' }}>
+                    {/* <DisplaySelectedVesselDetails vesselDetails={ourCount} /> */}
+                    <PieCharts vesselDetails={ourCount}/>
+
                 </div>
             </div >
         } else {
@@ -186,4 +202,4 @@ class ClientHome extends Component {
     }
 }
 
-export default ClientHome;
+export default withRouter(ClientHome);

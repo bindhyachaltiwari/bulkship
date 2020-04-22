@@ -245,7 +245,8 @@ class FillVoyageDetails extends Component {
                 </label>
                 </td>
                 <td>
-                  <DatePicker selected={this.state.vesselDetails.cpDate} onChange={this.handleDateFieldChange} value={this.state.vesselDetails.cpDate} required autoComplete="off" />
+                  <DatePicker selected={this.state.vesselDetails.cpDate} onChange={this.handleDateFieldChange} value={this.state.vesselDetails.cpDate} required autoComplete="off" maxDate={new Date()}
+      placeholderText='Select a date before 1 day in the future'/>
                 </td>
               </tr>
               <tr>
