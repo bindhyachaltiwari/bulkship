@@ -10,11 +10,12 @@ class AdminHome extends Component {
             <div className="about_us_2 about_us_2_animated">
                 <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
                 <div style={{ display: 'inline-block', marginTop: '15%' }}>
-                    <Link style={{ width: '300px', height: '40px', marginRight: '80px' }} to="/addNewClient">Add New Client </Link>
+                    <Link style={{ width: '300px', height: '40px', marginRight: '80px' }} to="/addNewUser">Add New User </Link>
+                    <Link style={{ width: '300px', height: '40px', marginRight: '80px' }} to="/viewAllUsers">View All Users </Link>
                     <Link style={{ width: '300px', height: '40px', marginRight: '80px' }} to="/addNewVessel">Add New Vessel</Link>
+                    <Link style={{ width: '300px', height: '40px', marginRight: '80px' }} to="/viewAllVessels">View All Vessels</Link>
                     <Link style={{ width: '300px', height: '40px', marginRight: '80px' }} to="/fillVoyageDetails">Fill Voyage Details </Link>
-                    <Link style={{ width: '300px', height: '40px',marginRight: '80px' }} to="/fillPerformanceDetails">Fill Performance Details</Link>
-                    <Link style={{ width: '300px', height: '40px' }} to="/addRightsToManager">Add Rights to Manager</Link>
+                    <Link style={{ width: '300px', height: '40px', marginRight: '80px' }} to="/fillPerformanceDetails">Fill Performance Details</Link>
                 </div>
             </div>
         )

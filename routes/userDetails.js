@@ -30,7 +30,7 @@ router.post('/login', (req, res) => {
                 companyName: user.companyName,
                 userName: user.userName,
                 token: tokenGenerator,
-                isAdmin: user.isAdmin
+                managerRoles: user.managerRoles
             });
         } else {
             res.json({ status: false, err: "Wrong Credentials" });
@@ -108,6 +108,7 @@ router.post('/getAllClientDetails', (req, res) => {
                         companyName: m.companyName,
                         role: m.role,
                         clientType: m.clientType,
+                        managerRoles:m.managerRoles,
                         id:m['_id']
                     };
                 })

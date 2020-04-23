@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import '../../css/Admin.css';
 import FormHelperText from '@material-ui/core/FormHelperText'
 import Button from '@material-ui/core/Button';
+import api from '../api';
 
 class AddNewVessel extends Component {
 
@@ -52,13 +52,7 @@ class AddNewVessel extends Component {
       return;
     }
 
-    let data = (await axios.post('/vesselDetails/insertVesselDetails', {
-      headers: { 'Content-Type': 'application/json' },
-      data: {
-        ...this.state
-      }
-    }));
-
+    const data = await api.insertVesselDetails({ ...this.state});
     if (data.data.status.errors || data.data.status.errmsg) {
       this.setState({
         success: false,

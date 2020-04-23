@@ -30,9 +30,9 @@ var userDetails = new Schema({
         type: String,
         required: true
     },
-	isAdmin: {
-		type: Boolean,
-		required: true
+	managerRoles: {
+		type: Array,
+		required: false
 	}
 }, {
     collection: 'userDetails'

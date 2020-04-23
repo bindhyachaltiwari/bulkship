@@ -8,9 +8,9 @@ import FormHelperText from '@material-ui/core/FormHelperText'
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
 import Spinner from '../Others/Spinner'
-import axios from 'axios';
 import FormPasswordReset from './FormPasswordReset';
 import Typography from '@material-ui/core/Typography'
+import api from '../api'
 class ForgotPassword extends Component {
   state = {
     passChangeSuccess: false,
@@ -27,12 +27,7 @@ class ForgotPassword extends Component {
     setSubmitting,
     resetForm,
   }) => {
-    let resp = (await axios.post('/userDetails/checkUsername', {
-      headers: { 'Content-Type': 'application/json' },
-      data: {
-        'userName': username,
-      }
-    }));
+    let resp = await api.checkUsername({ username });
     setSubmitting(false);
     resp = resp.data;
     if (!resp.status) {

@@ -8,8 +8,8 @@ import FormHelperText from '@material-ui/core/FormHelperText'
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
 import Spinner from '../Others/Spinner'
-import Alert from '../Others/Alert'
-import axios from 'axios';
+import Alert from '../Others/Alert';
+import api from '../api'
 
 export default class FormPasswordReset extends Component {
 
@@ -46,14 +46,8 @@ export default class FormPasswordReset extends Component {
     setSubmitting,
     resetForm,
   }) => {
-    let resp = (await axios.post('/userDetails/updatePassword', {
-      headers: { 'Content-Type': 'application/json' },
-      data: {
-        user: this.state.user,
-        confirmPass,
-      }
-    }));
 
+    let resp = await api.updatePassword({ user: this.state.user, confirmPass });
     resp = resp.data;
     setSubmitting(false);
     if (!resp.status) {

@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { Datatable } from "@o2xp/react-datatable";
 import Popup from "reactjs-popup";
 import DisplaySelectedVesselDetails from './DisplaySelectedVesselDetails';
-import { useHistory } from 'react-router-dom';
-import {
-    withRouter
-  } from 'react-router-dom'
-  
+import { withRouter } from 'react-router-dom'
 import PieCharts from '../../components/Admin/PieCharts';
+import api from '../api';
 
 class ClientHome extends Component {
     constructor(props) {
@@ -35,10 +31,7 @@ class ClientHome extends Component {
     }
 
     getAllVoyage = async () => {
-        await axios.post('/voyageDetails/getAllVoyage', {
-            headers: { 'Content-Type': 'application/json' },
-            data: { 'companyName': localStorage.getItem('companyName')},
-        }).then(res => {
+        api.getAllVoyage({ 'companyName': localStorage.getItem('companyName') }).then(res => {
             if (res.data.status) {
                 this.setState({
                     vesselList: res.data.vesselList,
@@ -63,7 +56,7 @@ class ClientHome extends Component {
         // history.push('/DisplaySelectedVesselPerformance');
         this.props.history.push({
             pathname: '/CheckPerformance',
-        state: { detail: c }
+            state: { detail: c }
         })
         //alert(c.vesselName)
     }
@@ -150,7 +143,7 @@ class ClientHome extends Component {
                 if (!ourCount[v.cargo]) {
                     ourCount[v.cargo] = 0;
                 }
-                if(new Date(v.cpDate).getTime() <= new Date().getTime() && new Date(v.cpDate).getTime() > previousYearDate.getTime()) {
+                if (new Date(v.cpDate).getTime() <= new Date().getTime() && new Date(v.cpDate).getTime() > previousYearDate.getTime()) {
                     ourCount[v.cargo] += parseInt(v.cargoIntake);
                 }
             });
@@ -160,7 +153,7 @@ class ClientHome extends Component {
                 <Datatable options={options} stripped CustomTableBodyCell={this.buildCustomTableBodyCell} />
                 <div style={{ marginTop: '15%', marginLeft: '0%' }}>
                     {/* <DisplaySelectedVesselDetails vesselDetails={ourCount} /> */}
-                    <PieCharts vesselDetails={ourCount}/>
+                    <PieCharts vesselDetails={ourCount} />
 
                 </div>
             </div >
@@ -169,10 +162,10 @@ class ClientHome extends Component {
         }
         return (
             <div className='about_us_2 about_us_2_animated'>
-            <span>
-                <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
-                {showData}
-            </span>
+                <span>
+                    <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
+                    {showData}
+                </span>
             </div>
         );
     }

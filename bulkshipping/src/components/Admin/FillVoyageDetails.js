@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
-import axios from 'axios';
 import '../../css/Admin.css';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from 'react-select';
 import FormHelperText from '@material-ui/core/FormHelperText'
+import api from '../api';
 
 class FillVoyageDetails extends Component {
 
@@ -91,44 +91,38 @@ class FillVoyageDetails extends Component {
   }
 
   getAllClients = async () => {
-    await axios.post('/userDetails/getAllClients', {
-      headers: { 'Content-Type': 'application/json' },
-    }).then(res => {
-      if (res.data.status) {
-        const cl = res.data.clientList.sort().map(v => ({
-          label: v,
-          value: v
-        }));
-        this.setState({
-          clientList: cl,
-          error: false,
-        });
-      } else {
-        this.setState({ error: true });
-        return;
-      }
-    });
+    const res = await api.getAllClients();
+    if (res.data.status) {
+      const cl = res.data.clientList.sort().map(v => ({
+        label: v,
+        value: v
+      }));
+      this.setState({
+        clientList: cl,
+        error: false,
+      });
+    } else {
+      this.setState({ error: true });
+      return;
+    }
   }
 
   getAllVessels = async () => {
-    await axios.post('/vesselDetails/getAllVessels', {
-      headers: { 'Content-Type': 'application/json' },
-    }).then(res => {
-      if (res.data.status) {
-        const vl = res.data.vesselList.map(m => m.vesselName + '_' + m.DWT).sort().map(v => ({
-          label: v,
-          value: v
-        }));
-        this.setState({
-          vesselList: vl,
-          error: false,
-        });
+    const res = await api.getAllVessels();
+    if (res.data.status) {
+      const vl = res.data.vesselList.map(m => m.vesselName + '_' + m.DWT).sort().map(v => ({
+        label: v,
+        value: v
+      }));
+      this.setState({
+        vesselList: vl,
+        error: false,
+      });
 
-      } else {
-        this.setState({ error: true });
-        return;
-      }
-    });
+    } else {
+      this.setState({ error: true });
+      return;
+    }
   }
 
   async handleVesselDetailSubmit(event) {
@@ -142,22 +136,14 @@ class FillVoyageDetails extends Component {
       return;
     }
 
-    let data = (await axios.post('/performanceDetails/insertPerformanceData', {
-      headers: { 'Content-Type': 'application/json' },
-      data: {
-        cpDate: this.state.vesselDetails.cpDate,
-        vesselName: this.state.vesselDetails.vesselName,
-        chartererName: this.state.vesselDetails.chartererName,
-        isDetailsFilled: false,
-      }
-    }));
+    let data = await api.insertPerformanceData({
+      cpDate: this.state.vesselDetails.cpDate,
+      vesselName: this.state.vesselDetails.vesselName,
+      chartererName: this.state.vesselDetails.chartererName,
+      isDetailsFilled: false,
+    });
 
-    data = (await axios.post('/voyageDetails/insertVoyageData', {
-      headers: { 'Content-Type': 'application/json' },
-      data: {
-        ...this.state.vesselDetails
-      }
-    }));
+    data = await api.insertVoyageData({ ...this.state.vesselDetails });
 
     if (data.data.status.errors || data.data.status.errmsg) {
       this.setState({

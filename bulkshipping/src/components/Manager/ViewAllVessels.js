@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { Datatable } from "@o2xp/react-datatable";
+import api from '../api';
 
 class ViewAllVessels extends Component {
 
@@ -11,25 +11,22 @@ class ViewAllVessels extends Component {
     constructor(props) {
         super(props);
         this.state = { ...this.localState };
-        this.getAllVessels();
+        this.getAllVesselDetails();
         this.handleBackButton = this.handleBackButton.bind(this);
     }
 
-    getAllVessels = async () => {
-        await axios.post('/vesselDetails/getAllVesselDetails', {
-            headers: { 'Content-Type': 'application/json' },
-        }).then(res => {
-            if (res.data.status) {
-                this.setState({
-                    vesselList: res.data.vesselList,
-                    error: false,
-                });
+    getAllVesselDetails = async () => {
+        const res = await api.getAllVesselsDetails();
+        if (res.data.status) {
+            this.setState({
+                vesselList: res.data.vesselList,
+                error: false,
+            });
 
-            } else {
-                this.setState({ error: true });
-                return;
-            }
-        });
+        } else {
+            this.setState({ error: true });
+            return;
+        }
     }
 
     handleBackButton() {

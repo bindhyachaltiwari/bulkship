@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
-import axios from 'axios';
 import ShowDropDownAdmin from './ShowDropDownAdmin';
 import FormHelperText from '@material-ui/core/FormHelperText'
+import api from '../api';
 class FillPerformanceDetails extends Component {
 
   constructor(props) {
     super(props);
-    this.getAllVessels();
+    this.getAllVesselsPerformance();
     this.handleVesselListChange = this.handleVesselListChange.bind(this);
     this.handleClientListChange = this.handleClientListChange.bind(this);
     this.handleCpDateChange = this.handleCpDateChange.bind(this);
@@ -42,25 +42,19 @@ class FillPerformanceDetails extends Component {
     });
   }
 
-  getAllVessels = async () => {
-    await axios.post('/performanceDetails/getAllVessels', {
-      headers: { 'Content-Type': 'application/json' },
-      data: {
-        'isDetailsFilled': false,
-      }
-    }).then(res => {
-      if (res.data.status) {
-        const allClients = [...new Set(res.data.vesselList.map(m => m.chartererName))];
-        this.setState({
-          vesselList: res.data.vesselList,
-          allClients: allClients,
-          error: false,
-        });
-      } else {
-        this.setState({ error: true });
-        return;
-      }
-    });
+  getAllVesselsPerformance = async () => {
+    const res = await api.getAllVesselsPerformance({ 'isDetailsFilled': false });
+    if (res.data.status) {
+      const allClients = [...new Set(res.data.vesselList.map(m => m.chartererName))];
+      this.setState({
+        vesselList: res.data.vesselList,
+        allClients: allClients,
+        error: false,
+      });
+    } else {
+      this.setState({ error: true });
+      return;
+    }
   };
 
   handleCpDateChange = e => {
@@ -141,14 +135,7 @@ class FillPerformanceDetails extends Component {
     const vessel = vesselList.find(f => f.chartererName === selectedClient && f.vesselName === selectedVessel && f.cpDate === selectedCpDate)
     const vId = vessel ? vessel['_id'] : '';
 
-    let data = (await axios.post('/performanceDetails/fillPerformanceDetails', {
-      headers: { 'Content-Type': 'application/json' },
-      data: {
-        ...this.state.performanceDetails,
-        vId
-      }
-    }));
-
+    let data = await api.fillPerformanceDetails({ ...this.state.performanceDetails, vId });
     if (data.data.status.errors || data.data.status.errmsg) {
       this.setState({
         success: false,

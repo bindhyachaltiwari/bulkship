@@ -8,10 +8,10 @@ import FormHelperText from '@material-ui/core/FormHelperText'
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
 import Spinner from '../Others/Spinner'
-import axios from 'axios';
 import Typography from '@material-ui/core/Typography'
 import { Link } from 'react-router-dom';
 import Page from '../Others/Page'
+import api from '../api'
 
 export default class LoginHome extends Component {
 
@@ -45,14 +45,8 @@ export default class LoginHome extends Component {
             error: false,
             role: '',
         }));
-        let resp = (await axios.post('/userDetails/login', {
-            headers: { 'Content-Type': 'application/json' },
-            data: {
-                username,
-                password,
-            }
-        }));
 
+        let resp = await api.login({ username, password, });
         resp = resp.data;
         setSubmitting(false);
         if (!resp.status) {
@@ -74,7 +68,7 @@ export default class LoginHome extends Component {
             localStorage.setItem('displayName', resp.displayName);
             localStorage.setItem('userName', resp.userName);
             localStorage.setItem('companyName', resp.companyName);
-            localStorage.setItem('isAdmin',resp.isAdmin);
+            localStorage.setItem('managerRoles', resp.managerRoles);
         }
 
         resetForm();
