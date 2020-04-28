@@ -25,7 +25,10 @@ class AddNewUser extends Component {
       AddVessel: false,
       FillVoyage: false,
       FillPerformance: false,
-      ViewUsers: false
+      ViewUsers: false,
+      ViewVessels:false,
+      EditVessels: false,
+
     },
   };
 
@@ -97,7 +100,7 @@ class AddNewUser extends Component {
     if (role === 'Manager') {
       const { AddUser, AddVessel, FillVoyage, FillPerformance, ViewUsers } = managerRoles;
       const error = [AddUser, AddVessel, FillVoyage, FillPerformance, ViewUsers].filter((v) => v).length < 1;
-      roles = [AddUser, AddVessel, FillVoyage, FillPerformance, ViewUsers];
+      // roles = [AddUser, AddVessel, FillVoyage, FillPerformance, ViewUsers];
       if (error) {
         this.setState({
           success: false,
@@ -110,12 +113,12 @@ class AddNewUser extends Component {
     if (!clientType) {
       this.state.clientType = role;
     }
-    const data1 = { ...this.state };
-    if (roles.length) {
-      data1.managerRoles = roles
-    }
+    // const data1 = { ...this.state };
+    // if (roles.length) {
+    //   data1.managerRoles = roles
+    // }
 
-    let data = await api.insertUserDetails({ ...data1 });
+    let data = await api.insertUserDetails({ ...this.state });
     if (data.data.status.errors || data.data.status.errmsg) {
       if (data.data.status.errmsg.indexOf('duplicate key error') >= 0) {
         data.data.status.errmsg = 'Username already exits.'
@@ -138,7 +141,7 @@ class AddNewUser extends Component {
 
   render() {
     const role = this.state.role;
-    const { AddUser, AddVessel, FillVoyage, FillPerformance, ViewUsers } = this.state.managerRoles;
+    const { AddUser, AddVessel, FillVoyage, FillPerformance, ViewUsers, ViewVessels, EditVessels } = this.state.managerRoles;
     const error = [AddUser, AddVessel, FillVoyage, FillPerformance, ViewUsers].filter((v) => v).length < 1;
     let tableData;
     if (role === 'Client') {
@@ -188,6 +191,15 @@ class AddNewUser extends Component {
                 control={<Checkbox checked={ViewUsers} onChange={this.handleMultiSelect} name="ViewUsers" />}
                 label="View All Users"
               />
+                <FormControlLabel
+                control={<Checkbox checked={ViewVessels} onChange={this.handleMultiSelect} name="ViewVessels" />}
+                label="View All Vessels"
+              />
+                <FormControlLabel
+                control={<Checkbox checked={EditVessels} onChange={this.handleMultiSelect} name="EditVessels" />}
+                label="Edit Vessel Details"
+              />
+              
             </FormGroup>
             <FormHelperText>Please select minimum one role</FormHelperText>
           </FormControl>

@@ -4,21 +4,24 @@ import { withRouter, Link } from 'react-router-dom';
 class ManagerHome extends Component {
     constructor(props) {
         super(props);
-        let localRoles = localStorage.getItem('managerRoles');
-        localRoles = localRoles.length && localRoles.split(',');
-        this.state = {
-            arrayItemsRoles: [{ role: localRoles[0], to: '/addNewUser', text: 'Add New User' },
-            { role: localRoles[1], to: '/addNewVessel', text: 'Add New Vessel' },
-            { role: localRoles[2], to: '/fillVoyageDetails', text: 'Fill Voyage Details' },
-            { role: localRoles[3], to: '/fillPerformanceDetails', text: 'Fill Performance Details' },
-            { role: localRoles[4], to: '/viewAllUsers', text: 'View All Users' }]
+        let localRoles = JSON.parse(localStorage.getItem('managerRoles'));
+        if (Object.keys(localRoles).length) {
+            this.state = {
+                arrayItemsRoles: [{ role: localRoles.AddUser, to: '/addNewUser', text: 'Add New User' },
+                { role: localRoles.AddVessel, to: '/addNewVessel', text: 'Add New Vessel' },
+                { role: localRoles.FillVoyage, to: '/fillVoyageDetails', text: 'Fill Voyage Details' },
+                { role: localRoles.FillPerformance, to: '/fillPerformanceDetails', text: 'Fill Performance Details' },
+                { role: localRoles.ViewUsers, to: '/viewAllUsers', text: 'View All Users' },
+                { role: localRoles.ViewVessels, to: '/viewAllVessels', text: 'View All Vessels' },
+                { role: localRoles.EditVessels, to: '/editVesselDetails', text: 'Edit Vessel Details' }]
+            }
         }
     }
     render() {
-        const data = this.state.arrayItemsRoles.map(function(item, i) {
-            return item.role === 'true' ? 
+        const data = this.state.arrayItemsRoles.map(function (item, i) {
+            return item.role ?
                 (<Link style={{ width: '300px', height: '40px', marginRight: '80px' }} key={i} to={item.to}> {item.text} </Link>) :
-               ''
+                ''
         }.bind(this));
         return (
             <div className="about_us_2 about_us_2_animated">

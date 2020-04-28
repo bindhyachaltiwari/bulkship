@@ -13,20 +13,20 @@ var vesselDetails = new Schema({
         trim: true
     },
     DWT: {
-        type: String,
+        type: Number,
         required: true,
         trim: true
     },
     built: {
-        type: String,
+        type: Number,
         trim: true
     },
     LOA: {
-        type: String,
+        type: Number,
         trim: true
     },
     beam: {
-        type: String,
+        type: Number,
         trim: true
     },
     cranes: {

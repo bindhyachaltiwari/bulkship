@@ -49,4 +49,31 @@ router.post('/getAllVesselDetails', (req, res) => {
     });
 });
 
-module.exports = router;
+router.delete('/:pid', (req, res) => {
+    vesselDetails.deleteOne({ '_id': req.params.pid }).then(() => {
+        res.json({
+            status: true
+        })
+    }).catch(e => {
+        res.json({
+            status: false
+        });
+    })
+});
+
+
+
+router.post('/updateVessel', (req, res) => {
+    console.log(req.body.data);
+    vesselDetails.findOneAndUpdate({ '_id': req.body.data._id }, req.body.data).then(() => {
+        res.json({
+            status: true
+        })
+    }).catch(e => {
+        res.json({
+            status: false
+        });
+    })
+});
+
+    module.exports = router;

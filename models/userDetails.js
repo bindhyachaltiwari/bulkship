@@ -31,7 +31,7 @@ var userDetails = new Schema({
         required: true
     },
 	managerRoles: {
-		type: Array,
+		type: Object,
 		required: false
 	}
 }, {

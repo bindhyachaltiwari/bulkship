@@ -14,6 +14,7 @@ class AdminHome extends Component {
                     <Link style={{ width: '300px', height: '40px', marginRight: '80px' }} to="/viewAllUsers">View All Users </Link>
                     <Link style={{ width: '300px', height: '40px', marginRight: '80px' }} to="/addNewVessel">Add New Vessel</Link>
                     <Link style={{ width: '300px', height: '40px', marginRight: '80px' }} to="/viewAllVessels">View All Vessels</Link>
+                    <Link style={{ width: '300px', height: '40px', marginRight: '80px' }} to="/editVesselDetails">Edit Vessel Details</Link>
                     <Link style={{ width: '300px', height: '40px', marginRight: '80px' }} to="/fillVoyageDetails">Fill Voyage Details </Link>
                     <Link style={{ width: '300px', height: '40px', marginRight: '80px' }} to="/fillPerformanceDetails">Fill Performance Details</Link>
                 </div>

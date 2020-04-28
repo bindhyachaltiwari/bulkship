@@ -51,7 +51,7 @@ class API {
             data,
         });
     }
-    
+
     getAllClientDetails = () => {
         return axios.post(this.apiUrl + '/userDetails/getAllClientDetails', {
             headers: { 'Content-Type': 'application/json' },
@@ -102,9 +102,17 @@ class API {
             data,
         });
     }
-    
 
-   
+    deleteVessel = data => {
+        return axios.delete(this.apiUrl + '/vesselDetails/' + data);
+    }
+
+    updateVessel = data=>{
+        return axios.post(this.apiUrl + '/vesselDetails/updateVessel', {
+            headers: { 'Content-Type': 'application/json' },
+            data,
+        });
+    }
 };
 
 const api = new API();

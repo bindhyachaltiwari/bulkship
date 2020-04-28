@@ -17,8 +17,8 @@ import Header from './components/Others/Header';
 import Footer from './components/Others/Footer';
 import FirstComponentStateFul from './components/FirstComponentStateFul'
 import ForgotPassword from './components/Login/ForgotPassword';
-import ViewAllVessels from './components/Manager/ViewAllVessels';
-import ViewAllUsers from './components/Manager/ViewAllUsers';
+import ViewAllVessels from './components/Admin/ViewAllVessels';
+import ViewAllUsers from './components/Admin/ViewAllUsers';
 import PrivateRoute from './components/Admin/PrivateRoute';
 import PieCharts from './components/Admin/PieCharts';
 import CheckPerformance from './components/Client/CheckPerformance';
@@ -36,6 +36,7 @@ function App() {
           <PrivateRoute path="/fillPerformanceDetails" component={FillPerformanceDetails}></PrivateRoute>
           <PrivateRoute path="/addNewVessel" component={AddNewVessel}></PrivateRoute>
           <PrivateRoute path="/addNewUser" component={AddNewUser}></PrivateRoute>
+          <PrivateRoute path="/editVesselDetails" component={ViewAllVessels}></PrivateRoute>
           <PrivateRoute path="/viewAllVessels" component={ViewAllVessels}></PrivateRoute>
           <PrivateRoute path="/viewAllUsers" component={ViewAllUsers}></PrivateRoute>
           <PrivateRoute path='/checkPerformance' component={CheckPerformance}></PrivateRoute>

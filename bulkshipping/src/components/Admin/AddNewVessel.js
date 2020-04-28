@@ -112,47 +112,47 @@ class AddNewVessel extends Component {
               <tr>
                 <td>
                   <label>
-                    DWT *
+                    DWT (MT) *
                 </label>
                 </td>
                 <td>
-                  <input type="text" name="DWT" required onChange={this.handleVesselDetailsChange} autoComplete="off" />
+                  <input type="number" name="DWT" required onChange={this.handleVesselDetailsChange} autoComplete="off" />
                 </td>
               </tr>
               <tr>
                 <td>
                   <label>
-                    Built
+                    Built Year
                 </label>
                 </td>
                 <td>
-                  <input type="text" name="built" onChange={this.handleVesselDetailsChange} autoComplete="off" />
+                  <input type="number" name="built" onChange={this.handleVesselDetailsChange} autoComplete="off" />
                 </td>
               </tr>
               <tr>
                 <td>
                   <label>
-                    LOA
+                    LOA (m)
                 </label>
                 </td>
                 <td>
-                  <input type="text" name="LOA" onChange={this.handleVesselDetailsChange} autoComplete="off" />
+                  <input type="number" name="LOA" onChange={this.handleVesselDetailsChange} autoComplete="off" />
                 </td>
               </tr>
               <tr>
                 <td>
                   <label>
-                    Beam
+                    Beam (m)
                 </label>
                 </td>
                 <td>
-                  <input type="text" name="beam" onChange={this.handleVesselDetailsChange} autoComplete="off" />
+                  <input type="number" name="beam" onChange={this.handleVesselDetailsChange} autoComplete="off" />
                 </td>
               </tr>
               <tr>
                 <td>
                   <label>
-                    Cranes
+                    Cranes (MT)
                 </label>
                 </td>
                 <td>
@@ -162,7 +162,7 @@ class AddNewVessel extends Component {
               <tr>
                 <td>
                   <label>
-                    Grabs
+                    Grabs (CBM)
                 </label>
                 </td>
                 <td>
