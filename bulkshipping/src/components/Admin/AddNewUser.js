@@ -96,11 +96,9 @@ class AddNewUser extends Component {
       return;
     }
 
-    let roles = [];
     if (role === 'Manager') {
       const { AddUser, AddVessel, FillVoyage, FillPerformance, ViewUsers } = managerRoles;
       const error = [AddUser, AddVessel, FillVoyage, FillPerformance, ViewUsers].filter((v) => v).length < 1;
-      // roles = [AddUser, AddVessel, FillVoyage, FillPerformance, ViewUsers];
       if (error) {
         this.setState({
           success: false,
@@ -113,10 +111,6 @@ class AddNewUser extends Component {
     if (!clientType) {
       this.state.clientType = role;
     }
-    // const data1 = { ...this.state };
-    // if (roles.length) {
-    //   data1.managerRoles = roles
-    // }
 
     let data = await api.insertUserDetails({ ...this.state });
     if (data.data.status.errors || data.data.status.errmsg) {

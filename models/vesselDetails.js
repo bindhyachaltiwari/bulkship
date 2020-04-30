@@ -36,6 +36,9 @@ var vesselDetails = new Schema({
     grabs: {
         type: String,
         trim: true
+    },
+    otherFields:{
+        type:JSON,
     }
 }, {
     collection: 'vesselDetails'

@@ -61,8 +61,6 @@ router.delete('/:pid', (req, res) => {
     })
 });
 
-
-
 router.post('/updateVessel', (req, res) => {
     console.log(req.body.data);
     vesselDetails.findOneAndUpdate({ '_id': req.body.data._id }, req.body.data).then(() => {

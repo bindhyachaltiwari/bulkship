@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Datatable } from '@o2xp/react-datatable';
 import api from '../api';
+import DisplaySelectedVesselDetails from '../Client/DisplaySelectedVesselDetails';
+import Popup from 'reactjs-popup';
+import { Button } from '@material-ui/core';
 
 class ViewAllVessels extends Component {
 
@@ -37,6 +40,19 @@ class ViewAllVessels extends Component {
         this.props.history.goBack();
     }
 
+    buildCustomTableBodyCell = ({ cellVal, column, rowId }) => {
+        let val;
+        switch (column.id) {
+            case 'otherFields':
+                val = this.getPopupContent(cellVal, rowId);
+                break;
+            default:
+                val = <div style={{ color: 'blue' }}>{cellVal}</div>;
+                break;
+        }
+        return val;
+    };
+
     render() {
         let { vesselList, isEditPage } = this.state;
         let options;
@@ -47,7 +63,7 @@ class ViewAllVessels extends Component {
                 font: 'Arial',
                 dimensions: {
                     datatable: {
-                        width: '60%',
+                        width: '80%',
                         height: '648px',
                     },
                     row: {
@@ -61,6 +77,10 @@ class ViewAllVessels extends Component {
                     canPrint: true,
                     canOrderColumns: true,
                     canRefreshRows: true,
+                    rowsPerPage: {
+                        available: [5, 10, 25, 50, 100],
+                        selected: 10
+                    },
                 },
                 data: {
                     columns: [
@@ -87,7 +107,7 @@ class ViewAllVessels extends Component {
                             label: 'Built Year',
                             colSize: '50px',
                             editable: true,
-                            dataType: 'number',
+                            dataType: 'text',
                             inputType: 'input'
                         },
                         {
@@ -95,7 +115,7 @@ class ViewAllVessels extends Component {
                             label: 'LOA (m)',
                             colSize: '50px',
                             editable: true,
-                            dataType: 'number',
+                            dataType: 'text',
                             inputType: 'input',
                         },
                         {
@@ -103,7 +123,7 @@ class ViewAllVessels extends Component {
                             label: 'Beam (m)',
                             colSize: '50px',
                             editable: true,
-                            dataType: 'number',
+                            dataType: 'text',
                             inputType: 'input'
                         },
                         {
@@ -124,15 +144,27 @@ class ViewAllVessels extends Component {
                         },
                     ],
                     rows: [
-                        ...vesselList.map(({ vesselName, IMO, DWT, built, LOA, beam, cranes, grabs, _id }) => ({ vesselName, IMO, DWT, built, LOA, beam, cranes, grabs, _id, edit: true, delete: true }))
+                        ...vesselList.map(({ vesselName, IMO, DWT, built, LOA, beam, cranes, grabs, _id }) => ({ vesselName, IMO, DWT, built, LOA, beam, cranes, grabs, _id, otherFields: true }))
                     ],
                 }
             }
             if (isEditPage) {
                 options.features.canEdit = true;
                 options.features.canDelete = true;
-                options.dimensions.datatable.width = '80%'
             }
+
+            if (vesselList.some(f => f.otherFields)) {
+                options.data.columns.push({
+                    id: 'otherFields',
+                    label: 'Other Details',
+                    colSize: '50px',
+                    editable: true,
+                    dataType: 'text',
+                    inputType: 'input'
+                });
+                options.dimensions.datatable.width = '90%';
+            }
+
         }
 
         this.refreshRows = () => {
@@ -167,8 +199,8 @@ class ViewAllVessels extends Component {
             <span>
                 <button className='backButton' onClick={this.handleBackButton}>Back</button>
                 <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
-                < div id='table' style={{ marginTop: '2%', marginLeft: '2%', display: 'flex' }}>
-                    <Datatable options={options} stripped actions={this.actionsRow} refreshRows={this.refreshRows} />
+                < div id='table' className={'tooltipBoundary'} style={{ margin: '2% 0 6% 2%', display: 'flex' }}>
+                    <Datatable options={options} stripped actions={this.actionsRow} refreshRows={this.refreshRows} CustomTableBodyCell={this.buildCustomTableBodyCell} />
                 </div >
             </span>
         );
@@ -177,6 +209,37 @@ class ViewAllVessels extends Component {
     capitalize = s => {
         if (typeof s !== 'string') return ''
         return s.charAt(0).toUpperCase() + s.slice(1)
+    }
+
+    getPopupContent = (cellVal, rowId) => {
+        const { vesselList } = this.state;
+        if (!vesselList.some(f => f.otherFields)) {
+            return;
+        }
+
+        let vsl = vesselList.find(m => m['_id'] === rowId);
+        let content = <p></p>;
+        if (vsl && vsl.otherFields && Object.keys(vsl.otherFields).length) {
+            return content =
+                <Popup
+                    trigger={
+                    <Button
+                    variant='contained'
+                    size='small'
+                    color='primary'
+                    >
+                    Details </Button> }
+                    position={['bottom right', 'bottom center', 'left top', 'top center']}
+                    on='hover'
+                    keepTooltipInside='.tooltipBoundary'
+                   >
+                    <div className='content'>
+                        <DisplaySelectedVesselDetails vesselDetails={vsl.otherFields} />
+                    </div>
+                </Popup>
+        }
+
+        return content;
     }
 }
 

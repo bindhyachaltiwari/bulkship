@@ -121,7 +121,7 @@ export default class LoginHome extends Component {
                         </div>
                     } else {
                         showData = <div className="ForgotPasswordForm">
-                            <Typography variant="title" style={{ margin: '16px 0' }}> Login </Typography>
+                            <Typography variant="h4" style={{ margin: '10px 0' }}> Login </Typography>
                             <Paper className="form form--wrapper" elevation={10}>
                                 <form className="form" onSubmit={handleSubmit}>
                                     <FormControl fullWidth margin="dense">
@@ -167,13 +167,13 @@ export default class LoginHome extends Component {
                                         {this.state.error ? this.state.errorMsg : ''}
                                     </FormHelperText>
                                     <Button
-                                        type="submit"
-                                        variant="raised"
+                                        type='submit'
+                                        variant="contained"
+                                        size="small"
                                         color="primary"
                                         disabled={Boolean(!isValid || isSubmitting)}
                                         style={{ margin: '16px' }}>
-                                        {'Login'}
-                                    </Button>
+                                        Login </Button>
                                     <Link style={{ color: 'black' }} to="/forgotPassword">Forgot Password !!</Link>
                                 </form>
                             </Paper>

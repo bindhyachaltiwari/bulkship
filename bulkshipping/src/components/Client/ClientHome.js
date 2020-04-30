@@ -51,14 +51,10 @@ class ClientHome extends Component {
     handlePerformanceClick = e => {
         const { vesselList } = this.state;
         const c = vesselList.find(m => m['_id'] === e.target.id);
-        console.log(c.vesselName);
-        //let history = useHistory();
-        // history.push('/DisplaySelectedVesselPerformance');
         this.props.history.push({
             pathname: '/CheckPerformance',
             state: { detail: c }
-        })
-        //alert(c.vesselName)
+        });
     }
 
 

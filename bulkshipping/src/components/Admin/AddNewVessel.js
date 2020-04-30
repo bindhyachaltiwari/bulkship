@@ -3,39 +3,50 @@ import '../../css/Admin.css';
 import FormHelperText from '@material-ui/core/FormHelperText'
 import Button from '@material-ui/core/Button';
 import api from '../api';
+import AddDynamicField from './AddDynamicField';
 
 class AddNewVessel extends Component {
 
-  vesselDetails = {
-    vesselName: '',
-    IMO: '',
-    DWT: '',
-    built: '',
-    LOA: '',
-    beam: '',
-    cranes: '',
-    grabs: '',
+  localState = {
+    vesselDetails: {
+      vesselName: '',
+      IMO: '',
+      DWT: '',
+      built: '',
+      LOA: '',
+      beam: '',
+      cranes: '',
+      grabs: '',
+      otherFields: {},
+    },
     success: true,
-    errorMsg: ''
-  };
+    errorMsg: '',
+    newFields: []
+  }
 
   constructor(props) {
     super(props);
-    this.state = { ...this.vesselDetails };
+    this.state = { ...this.localState };
     this.handleVesselDetailsChange = this.handleVesselDetailsChange.bind(this);
     this.handleAddNewVesselSubmit = this.handleAddNewVesselSubmit.bind(this);
     this.handleBackButton = this.handleBackButton.bind(this);
+    this.submitNewFieldDetails = this.submitNewFieldDetails.bind(this);
+    this.handleNewFieldDetailsChange = this.handleNewFieldDetailsChange.bind(this);
   }
 
   handleVesselDetailsChange = e => {
     e.preventDefault();
     const { name, value } = e.target;
+    const localDetails = this.state.vesselDetails;
+    Object.assign(localDetails, { [name]: value.trim() });
     this.setState({
-      [name]: value,
       success: true,
-      errorMsg: ''
+      errorMsg: '',
+      vesselDetails: {
+        ...localDetails
+      }
     });
-  };
+  }
 
   handleBackButton() {
     this.props.history.goBack();
@@ -43,16 +54,7 @@ class AddNewVessel extends Component {
 
   async handleAddNewVesselSubmit(event) {
     event.preventDefault();
-    const { vesselName, IMO, DWT } = this.state;
-    if (!vesselName || !DWT || !IMO) {
-      this.setState({
-        success: false,
-        errorMsg: 'Please fill the required details'
-      });
-      return;
-    }
-
-    const data = await api.insertVesselDetails({ ...this.state});
+    const data = await api.insertVesselDetails({ ...this.state.vesselDetails });
     if (data.data.status.errors || data.data.status.errmsg) {
       this.setState({
         success: false,
@@ -61,25 +63,55 @@ class AddNewVessel extends Component {
       return;
     } else {
       this.setState({
-        ...this.vesselDetails,
+        ...this.localState,
         success: false,
-        errorMsg: 'Success!! New vessel created = ' + vesselName,
+        errorMsg: 'Success!! New vessel created = ' + this.state.vesselDetails.vesselName,
       });
       document.getElementById('vesselDetailsForm').reset();
+      if (document.getElementById('newFieldForm')) {
+        document.getElementById('newFieldForm').reset();
+      }
       return;
     }
   }
 
+  submitNewFieldDetails = e => {
+    e.preventDefault();
+    console.log(e)
+    const inputs = e.target.querySelectorAll('input');
+    if (inputs && inputs.length) {
+      const vesselDetails = this.state.vesselDetails;
+      Object.assign(vesselDetails.otherFields, { [inputs[0].value.trim()]: inputs[1].value.trim() });
+      this.setState({ vesselDetails });
+      document.getElementById('newFieldForm').reset();
+      this.displayOtherFields();
+    }
+  };
+
+  handleNewFieldDetailsChange = e => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    const otherFields = this.state.vesselDetails.otherFields;
+    Object.assign(otherFields, { [name]: value.trim() });
+    this.setState({
+      vesselDetails: {
+        ...this.state.vesselDetails,
+        otherFields
+      }
+    });
+  }
+
   render() {
+    const { errorMsg, success, newFields } = this.state;
     return (
       <div className="about_us_2 about_us_2_animated">
-        <Button variant="contained" color="primary" onClick={this.handleBackButton} style={{ top: "4%", left: "10%", position: "fixed" }}>
-          Back
-        </Button>
+        <Button variant="contained" size="small" color="primary" onClick={this.handleBackButton} style={{ top: "4%", left: "10%", position: "fixed" }}> Back </Button>
         <h2>Add New Vessel</h2>
-        <FormHelperText style={{ textAlign: 'center', fontSize: 'large' }} error={Boolean(!this.state.success)}>
-          {this.state.success ? '' : this.state.errorMsg}
+        <AddDynamicField submitNewFieldDetails={this.submitNewFieldDetails} />
+        <FormHelperText style={{ textAlign: 'center', fontSize: 'large' }} error={Boolean(!success)}>
+          {success ? '' : errorMsg}
         </FormHelperText>
+       
         <form id='vesselDetailsForm' onSubmit={this.handleAddNewVesselSubmit} style={{ margin: "1%" }}>
           <table>
             <thead>
@@ -169,19 +201,42 @@ class AddNewVessel extends Component {
                   <input type="text" name="grabs" onChange={this.handleVesselDetailsChange} autoComplete="off" />
                 </td>
               </tr>
+              {newFields}
             </tbody>
           </table>
           <Button
-            type="submit"
-            variant="raised"
+            type='submit'
+            variant="contained"
+            size="small"
             color="primary"
             style={{ margin: '16px' }}>
-            {'Submit'}
-          </Button>
+            Submit </Button>
         </form>
       </div>
     );
   }
+
+  displayOtherFields() {
+    const otherFields = this.state.vesselDetails.otherFields;
+    let data = [];
+    if (otherFields && Object.keys(otherFields).length) {
+      const keys = Object.keys(otherFields);
+      for (let i = 0; i < keys.length; i++) {
+        data.push(<tr key={i}>
+          <td key={keys[i]}>
+            <label>
+              {keys[i]}
+            </label>
+          </td>
+          <td key={otherFields[keys[i]]}>
+            <input type="text" maxLength={50} required name={keys[i]} onChange={this.handleNewFieldDetailsChange} defaultValue={otherFields[keys[i]]} />
+          </td>
+        </tr>)
+      }
+    }
+    this.setState({ newFields: data });
+  }
+
 }
 
 export default AddNewVessel;
