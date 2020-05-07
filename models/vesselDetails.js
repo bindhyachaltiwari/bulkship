@@ -13,20 +13,20 @@ var vesselDetails = new Schema({
         trim: true
     },
     DWT: {
-        type: Number,
+        type: String,
         required: true,
         trim: true
     },
     built: {
-        type: Number,
+        type: String,
         trim: true
     },
     LOA: {
-        type: Number,
+        type: String,
         trim: true
     },
     beam: {
-        type: Number,
+        type: String,
         trim: true
     },
     cranes: {
@@ -37,9 +37,37 @@ var vesselDetails = new Schema({
         type: String,
         trim: true
     },
-    otherFields:{
-        type:JSON,
-    }
+    otherFields: {
+        type: JSON,
+    },
+    flag: {
+        type: String,
+        trim: true
+    },
+    draft: {
+        type: String,
+        trim: true
+    },
+    GRT: {
+        type: String,
+        trim: true
+    },
+    NRT: {
+        type: String,
+        trim: true
+    },
+    TPC: {
+        type: String,
+        trim: true
+    },
+    grainCapacity: {
+        type: String,
+        trim: true
+    },
+    baleCapacity: {
+        type: String,
+        trim: true
+    },
 }, {
     collection: 'vesselDetails'
 });

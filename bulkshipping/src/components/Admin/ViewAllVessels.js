@@ -47,7 +47,7 @@ class ViewAllVessels extends Component {
                 val = this.getPopupContent(cellVal, rowId);
                 break;
             default:
-                val = <div style={{ color: 'blue' }}>{cellVal}</div>;
+                val = <div title={cellVal} style={{ color: 'blue' }}>{cellVal}</div>;
                 break;
         }
         return val;
@@ -87,41 +87,85 @@ class ViewAllVessels extends Component {
                         {
                             id: 'vesselName',
                             label: 'Vessel Name',
-                            colSize: '50px',
+                            colSize: '80px',
                             editable: false,
-                        },
-                        {
+                        }, {
                             id: 'IMO',
                             label: 'IMO',
-                            colSize: '50px',
+                            colSize: '80px',
                             editable: false,
-                        },
-                        {
-                            id: 'DWT',
-                            label: ' DWT (MT)',
-                            colSize: '50px',
-                            editable: false,
-                        },
-                        {
-                            id: 'built',
-                            label: 'Built Year',
-                            colSize: '50px',
+                        }, {
+                            id: 'flag',
+                            label: 'Flag',
+                            colSize: '80px',
                             editable: true,
                             dataType: 'text',
                             inputType: 'input'
-                        },
-                        {
+                        }, {
+                            id: 'built',
+                            label: 'Built Year',
+                            colSize: '80px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
+                        }, {
+                            id: 'DWT',
+                            label: ' DWT (MT)',
+                            colSize: '80px',
+                            editable: false,
+                        }, {
+                            id: 'draft',
+                            label: 'Draft',
+                            colSize: '80px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
+                        }, {
                             id: 'LOA',
-                            label: 'LOA (m)',
-                            colSize: '50px',
+                            label: 'LOA (M)',
+                            colSize: '80px',
                             editable: true,
                             dataType: 'text',
                             inputType: 'input',
-                        },
-                        {
+                        }, {
                             id: 'beam',
-                            label: 'Beam (m)',
-                            colSize: '50px',
+                            label: 'Beam (M)',
+                            colSize: '80px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
+                        }, {
+                            id: 'GRT',
+                            label: 'GRT (MT)',
+                            colSize: '80px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
+                        }, {
+                            id: 'NRT',
+                            label: 'NRT (MT)',
+                            colSize: '80px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
+                        }, {
+                            id: 'TPC',
+                            label: 'TPC (MT/CBM)',
+                            colSize: '80px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
+                        }, {
+                            id: 'grainCapacity',
+                            label: 'GRAIN CAPACITY (MT)',
+                            colSize: '80px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
+                        }, {
+                            id: 'baleCapacity',
+                            label: 'BALE CAPACITY (MT)',
+                            colSize: '80px',
                             editable: true,
                             dataType: 'text',
                             inputType: 'input'
@@ -129,7 +173,7 @@ class ViewAllVessels extends Component {
                         {
                             id: 'cranes',
                             label: 'Cranes (MT)',
-                            colSize: '50px',
+                            colSize: '80px',
                             editable: true,
                             dataType: 'text',
                             inputType: 'input'
@@ -137,14 +181,14 @@ class ViewAllVessels extends Component {
                         {
                             id: 'grabs',
                             label: 'Grabs (CBM)',
-                            colSize: '50px',
+                            colSize: '80px',
                             editable: true,
                             dataType: 'text',
                             inputType: 'input'
                         },
                     ],
                     rows: [
-                        ...vesselList.map(({ vesselName, IMO, DWT, built, LOA, beam, cranes, grabs, _id }) => ({ vesselName, IMO, DWT, built, LOA, beam, cranes, grabs, _id, otherFields: true }))
+                        ...vesselList.map(({ vesselName, IMO, flag, built, DWT, draft, LOA, beam, GRT, NRT, TPC, grainCapacity, baleCapacity, cranes, grabs, _id }) => ({ vesselName, IMO, flag, built, DWT, draft, LOA, beam, GRT, NRT, TPC, grainCapacity, baleCapacity, cranes, grabs, _id, otherFields: true }))
                     ],
                 }
             }
@@ -157,10 +201,7 @@ class ViewAllVessels extends Component {
                 options.data.columns.push({
                     id: 'otherFields',
                     label: 'Other Details',
-                    colSize: '50px',
-                    editable: true,
-                    dataType: 'text',
-                    inputType: 'input'
+                    colSize: '80px',
                 });
                 options.dimensions.datatable.width = '90%';
             }
@@ -200,7 +241,7 @@ class ViewAllVessels extends Component {
                 <button className='backButton' onClick={this.handleBackButton}>Back</button>
                 <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
                 < div id='table' className={'tooltipBoundary'} style={{ margin: '2% 0 6% 2%', display: 'flex' }}>
-                    <Datatable options={options} stripped actions={this.actionsRow} refreshRows={this.refreshRows} CustomTableBodyCell={this.buildCustomTableBodyCell} />
+                    <Datatable options={options} tooltip='abc' stripped actions={this.actionsRow} refreshRows={this.refreshRows} CustomTableBodyCell={this.buildCustomTableBodyCell} />
                 </div >
             </span>
         );
@@ -223,16 +264,16 @@ class ViewAllVessels extends Component {
             return content =
                 <Popup
                     trigger={
-                    <Button
-                    variant='contained'
-                    size='small'
-                    color='primary'
-                    >
-                    Details </Button> }
+                        <Button
+                            variant='contained'
+                            size='small'
+                            color='primary'
+                        >
+                            Details </Button>}
                     position={['bottom right', 'bottom center', 'left top', 'top center']}
                     on='hover'
                     keepTooltipInside='.tooltipBoundary'
-                   >
+                >
                     <div className='content'>
                         <DisplaySelectedVesselDetails vesselDetails={vsl.otherFields} />
                     </div>

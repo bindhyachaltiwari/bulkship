@@ -9,7 +9,7 @@ const DisplaySelectedVesselDetails = props => {
 
     for (var key in props.vesselDetails) {
         pairs.push(
-            <tr>
+            <tr key={key}>
                 <td>
                     <label>
                         {getDisplayKey(key)}

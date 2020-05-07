@@ -104,15 +104,15 @@ class AddNewVessel extends Component {
   render() {
     const { errorMsg, success, newFields } = this.state;
     return (
-      <div className="about_us_2 about_us_2_animated">
-        <Button variant="contained" size="small" color="primary" onClick={this.handleBackButton} style={{ top: "4%", left: "10%", position: "fixed" }}> Back </Button>
+      <div className='about_us_2 about_us_2_animated'>
+        <Button variant='contained' size='small' color='primary' onClick={this.handleBackButton} style={{ top: '4%', left: '10%', position: 'fixed' }}> Back </Button>
         <h2>Add New Vessel</h2>
         <AddDynamicField submitNewFieldDetails={this.submitNewFieldDetails} />
         <FormHelperText style={{ textAlign: 'center', fontSize: 'large' }} error={Boolean(!success)}>
           {success ? '' : errorMsg}
         </FormHelperText>
        
-        <form id='vesselDetailsForm' onSubmit={this.handleAddNewVesselSubmit} style={{ margin: "1%" }}>
+        <form id='vesselDetailsForm' onSubmit={this.handleAddNewVesselSubmit} style={{ margin: '1%' }}>
           <table>
             <thead>
               <tr>
@@ -128,7 +128,7 @@ class AddNewVessel extends Component {
                 </label>
                 </td>
                 <td>
-                  <input type="text" name="vesselName" required onChange={this.handleVesselDetailsChange} autoComplete="off" />
+                  <input type="text" name='vesselName' required onChange={this.handleVesselDetailsChange} autoComplete='off' />
                 </td>
               </tr>
               <tr>
@@ -138,17 +138,17 @@ class AddNewVessel extends Component {
                 </label>
                 </td>
                 <td>
-                  <input type="text" name="IMO" required onChange={this.handleVesselDetailsChange} autoComplete="off" />
+                  <input type='text' name='IMO' required onChange={this.handleVesselDetailsChange} autoComplete='off' />
                 </td>
               </tr>
               <tr>
                 <td>
                   <label>
-                    DWT (MT) *
+                    Flag
                 </label>
                 </td>
                 <td>
-                  <input type="number" name="DWT" required onChange={this.handleVesselDetailsChange} autoComplete="off" />
+                  <input type='text' name='flag' onChange={this.handleVesselDetailsChange} autoComplete='off' />
                 </td>
               </tr>
               <tr>
@@ -158,27 +158,97 @@ class AddNewVessel extends Component {
                 </label>
                 </td>
                 <td>
-                  <input type="number" name="built" onChange={this.handleVesselDetailsChange} autoComplete="off" />
+                  <input type='text' name='built' onChange={this.handleVesselDetailsChange} autoComplete='off' />
                 </td>
               </tr>
               <tr>
                 <td>
                   <label>
-                    LOA (m)
+                    DWT (MT) *
                 </label>
                 </td>
                 <td>
-                  <input type="number" name="LOA" onChange={this.handleVesselDetailsChange} autoComplete="off" />
+                  <input type='text' name='DWT' required onChange={this.handleVesselDetailsChange} autoComplete='off' />
                 </td>
               </tr>
               <tr>
                 <td>
                   <label>
-                    Beam (m)
+                    Draft (M)
                 </label>
                 </td>
                 <td>
-                  <input type="number" name="beam" onChange={this.handleVesselDetailsChange} autoComplete="off" />
+                  <input type='text' name='draft' onChange={this.handleVesselDetailsChange} autoComplete='off' />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    LOA (M)
+                </label>
+                </td>
+                <td>
+                  <input type='text' name='LOA' onChange={this.handleVesselDetailsChange} autoComplete='off' />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    Beam (M)
+                </label>
+                </td>
+                <td>
+                  <input type='text' name='beam' onChange={this.handleVesselDetailsChange} autoComplete='off' />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    GRT (MT)
+                </label>
+                </td>
+                <td>
+                  <input type='text' name='GRT' onChange={this.handleVesselDetailsChange} autoComplete='off' />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                   NRT (MT)
+                </label>
+                </td>
+                <td>
+                  <input type='text' name='NRT' onChange={this.handleVesselDetailsChange} autoComplete='off' />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                  TPC (MT/CBM)
+                </label>
+                </td>
+                <td>
+                  <input type='text' name='TPC' onChange={this.handleVesselDetailsChange} autoComplete='off' />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                  GRAIN CAPACITY (MT)
+                </label>
+                </td>
+                <td>
+                  <input type='text' name='grainCapacity' onChange={this.handleVesselDetailsChange} autoComplete='off' />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                  BALE CAPACITY (MT)
+                </label>
+                </td>
+                <td>
+                  <input type='text' name='baleCapacity' onChange={this.handleVesselDetailsChange} autoComplete='off' />
                 </td>
               </tr>
               <tr>
@@ -188,7 +258,7 @@ class AddNewVessel extends Component {
                 </label>
                 </td>
                 <td>
-                  <input type="text" name="cranes" onChange={this.handleVesselDetailsChange} autoComplete="off" />
+                  <input type='text' name='cranes' onChange={this.handleVesselDetailsChange} autoComplete='off' />
                 </td>
               </tr>
               <tr>
@@ -198,7 +268,7 @@ class AddNewVessel extends Component {
                 </label>
                 </td>
                 <td>
-                  <input type="text" name="grabs" onChange={this.handleVesselDetailsChange} autoComplete="off" />
+                  <input type='text' name='grabs' onChange={this.handleVesselDetailsChange} autoComplete='off' />
                 </td>
               </tr>
               {newFields}
@@ -206,9 +276,9 @@ class AddNewVessel extends Component {
           </table>
           <Button
             type='submit'
-            variant="contained"
-            size="small"
-            color="primary"
+            variant='contained'
+            size='small'
+            color='primary'
             style={{ margin: '16px' }}>
             Submit </Button>
         </form>
@@ -229,7 +299,7 @@ class AddNewVessel extends Component {
             </label>
           </td>
           <td key={otherFields[keys[i]]}>
-            <input type="text" maxLength={50} required name={keys[i]} onChange={this.handleNewFieldDetailsChange} defaultValue={otherFields[keys[i]]} />
+            <input type='text' maxLength={50} required name={keys[i]} onChange={this.handleNewFieldDetailsChange} defaultValue={otherFields[keys[i]]} />
           </td>
         </tr>)
       }
