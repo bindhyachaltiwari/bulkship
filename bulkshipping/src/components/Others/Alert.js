@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import Button from '@material-ui/core/Button'
 
 function Transition(props) {
-  return <Slide direction="up" {...props} />
+  return <Slide direction='up' {...props} />
 }
 
 export default function Alert({
@@ -26,8 +26,8 @@ export default function Alert({
       transition={Transition}
       keepMounted
       onClose={handleClose}
-      aria-labelledby="alert-dialog-slide-title"
-      aria-describedby="alert-dialog-slide-description"
+      aria-labelledby='alert-dialog-slide-title'
+      aria-describedby='alert-dialog-slide-description'
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
@@ -35,11 +35,11 @@ export default function Alert({
       </DialogContent>
       <DialogActions>
         {hasTwoButtons ? (
-          <Button onClick={handleClose} variant="raised" color="primary">
+          <Button onClick={handleClose} variant='raised' color='primary'>
             {'CANCEL'}
           </Button>
         ) : null}
-        <Button onClick={handleSubmit} color="primary">
+        <Button onClick={handleSubmit} color='primary'>
           {submitButtonText}
         </Button>
       </DialogActions>

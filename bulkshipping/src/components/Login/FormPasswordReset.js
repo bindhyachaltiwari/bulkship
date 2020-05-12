@@ -34,9 +34,9 @@ export default class FormPasswordReset extends Component {
         isOpen={this.state.passChangeSuccess}
         onClose={this._handleClose}
         handleSubmit={onClick}
-        title="Password Reset"
-        text="Your password was changed successfully"
-        submitButtonText="Done"
+        title='Password Reset'
+        text='Your password was changed successfully'
+        submitButtonText='Done'
       />
     )
   }
@@ -102,17 +102,17 @@ export default class FormPasswordReset extends Component {
           return isSubmitting ? (
             <Spinner />
           ) : (
-              <Paper className="form form--wrapper" elevation={10}>
-                <form className="form" onSubmit={handleSubmit}>
-                  <FormControl fullWidth margin="dense" error={Boolean(touched.newPass && errors.newPass)}>
-                    <InputLabel htmlFor="password-new" error={Boolean(touched.newPass && errors.newPass)}>
+              <Paper className='form form--wrapper' elevation={10}>
+                <form className='form' onSubmit={handleSubmit}>
+                  <FormControl fullWidth margin='dense' error={Boolean(touched.newPass && errors.newPass)}>
+                    <InputLabel htmlFor='password-new' error={Boolean(touched.newPass && errors.newPass)}>
                       {'New Password'}
                     </InputLabel>
                     <Input
-                      id="password-new"
-                      name="newPass"
-                      type="password"
-                      autoComplete="off"
+                      id='password-new'
+                      name='newPass'
+                      type='password'
+                      autoComplete='off'
                       value={values.newPass}
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -121,16 +121,16 @@ export default class FormPasswordReset extends Component {
                       {touched.newPass && errors.newPass ? errors.newPass : ''}
                     </FormHelperText>
                   </FormControl>
-                  <FormControl fullWidth margin="dense" error={Boolean(touched.confirmPass && errors.confirmPass)}>
-                    <InputLabel htmlFor="password-confirm" error={Boolean(touched.confirmPass && errors.confirmPass)}>
+                  <FormControl fullWidth margin='dense' error={Boolean(touched.confirmPass && errors.confirmPass)}>
+                    <InputLabel htmlFor='password-confirm' error={Boolean(touched.confirmPass && errors.confirmPass)}>
                       {'Confirm Password'}
                     </InputLabel>
                     <Input
-                      id="password-confirm"
-                      name="confirmPass"
-                      type="password"
+                      id='password-confirm'
+                      name='confirmPass'
+                      type='password'
                       value={values.confirmPass}
-                      autoComplete="off"
+                      autoComplete='off'
                       onChange={handleChange}
                       onBlur={handleBlur}
                       error={Boolean(touched.confirmPass && errors.confirmPass)} />
@@ -139,9 +139,9 @@ export default class FormPasswordReset extends Component {
                     </FormHelperText>
                   </FormControl>
                   <Button
-                    type="submit"
-                    variant="raised"
-                    color="primary"
+                    type='submit'
+                    variant='raised'
+                    color='primary'
                     disabled={Boolean(!isValid || isSubmitting)}
                     style={{ margin: '16px' }} >
                     {'Reset Password'}

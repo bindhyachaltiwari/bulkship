@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Datatable } from "@o2xp/react-datatable";
-import Popup from "reactjs-popup";
+import { Datatable } from '@o2xp/react-datatable';
+import Popup from 'reactjs-popup';
 import DisplaySelectedVesselDetails from './DisplaySelectedVesselDetails';
 import { withRouter } from 'react-router-dom'
-import PieCharts from '../../components/Admin/PieCharts';
+import PieCharts from '../../components/Others/PieCharts';
 import api from '../api';
 
 class ClientHome extends Component {
@@ -20,7 +20,7 @@ class ClientHome extends Component {
                 dischargePoint: '',
                 cargo: '',
                 cargoIntake: '',
-                onwerName: ''
+                ownerName: ''
             },
             tableData: [],
             performanceDetails: {},
@@ -31,7 +31,7 @@ class ClientHome extends Component {
     }
 
     getAllVoyage = async () => {
-        api.getAllVoyage({ 'companyName': localStorage.getItem('companyName') }).then(res => {
+       await api.getAllVoyage({ 'companyName': localStorage.getItem('companyName') }).then(res => {
             if (res.data.status) {
                 this.setState({
                     vesselList: res.data.vesselList,
@@ -68,14 +68,14 @@ class ClientHome extends Component {
     buildCustomTableBodyCell = ({ cellVal, column, rowId }) => {
         let val;
         switch (column.id) {
-            case "checkPerformance":
-                val = <button style={{ color: "blue", textAlign: "center" }} id={rowId} type="button" onClick={this.handlePerformanceClick}>Check Performance</button>;
+            case 'checkPerformance':
+                val = <button style={{ color: 'blue', textAlign: 'center' }} id={rowId} type='button' onClick={this.handlePerformanceClick}>Check Performance</button>;
                 break;
-            case "vesselName":
+            case 'vesselName':
                 val = this.getPopupContent(cellVal, rowId);
                 break;
             default:
-                val = <div style={{ color: "blue" }}>{cellVal}</div>;
+                val = <div style={{ color: 'blue' }}>{cellVal}</div>;
                 break;
         }
         return val;
@@ -89,14 +89,14 @@ class ClientHome extends Component {
             options = {
                 title: 'Fixture List',
                 keyColumn: 'id',
-                font: "Arial",
+                font: 'Arial',
                 dimensions: {
                     datatable: {
                         width: '60%',
                         height: '648px',
                     },
                     row: {
-                        height: "10px"
+                        height: '10px'
                     }
                 },
                 stripped: true,
@@ -109,20 +109,20 @@ class ClientHome extends Component {
                 data: {
                     columns: [
                         {
-                            id: "vesselName",
-                            label: "Vessel Name",
-                            colSize: "50px",
+                            id: 'vesselName',
+                            label: 'Vessel Name',
+                            colSize: '50px',
                             dataType: ''
                         },
                         {
-                            id: "cpDate",
-                            label: "CP Date",
-                            colSize: "50px",
+                            id: 'cpDate',
+                            label: 'CP Date',
+                            colSize: '50px',
                         },
                         {
-                            id: "checkPerformance",
-                            label: "Performance",
-                            colSize: "50px",
+                            id: 'checkPerformance',
+                            label: 'Performance',
+                            colSize: '50px',
                         },
                     ],
                     rows: [
@@ -175,13 +175,13 @@ class ClientHome extends Component {
     getPopupContent = (cellVal, rowId) => {
         const { vesselList } = this.state;
         let vesselDetails = vesselList.find(m => m['_id'] === rowId);
-        vesselDetails = (({ vesselName, vesselSize, cpDate, loadPort, cargo, cargoIntake, onwerName }) => (
-            { vesselName, vesselSize, cpDate, loadPort, cargo, cargoIntake, onwerName }))(vesselDetails);
+        vesselDetails = (({ vesselName, vesselSize, cpDate, loadPort, cargo, cargoIntake, ownerName }) => (
+            { vesselName, vesselSize, cpDate, loadPort, cargo, cargoIntake, ownerName }))(vesselDetails);
 
         const content = <div>
-            <Popup trigger={<a id={rowId} style={{ color: "blue", textAlign: "center", textDecoration: 'underline', cursor: 'pointer' }}> {cellVal} </a>}
+            <Popup trigger={<a id={rowId} style={{ color: 'blue', textAlign: 'center', textDecoration: 'underline', cursor: 'pointer' }}> {cellVal} </a>}
                 modal closeOnDocumentClick >
-                <div className="content">
+                <div className='content'>
                     <DisplaySelectedVesselDetails vesselDetails={vesselDetails} />
                 </div>
             </Popup>

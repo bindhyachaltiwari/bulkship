@@ -18,7 +18,7 @@ router.post('/insertUserDetails', (req, res) => {
 router.post('/login', (req, res) => {
     userDetails.findOne({ userName: req.body.data.username }, (err, user) => {
         if (!user) {
-            res.json({ status: false, err: "Username not found" });
+            res.json({ status: false, err: 'Username not found' });
             return;
         }
 
@@ -33,7 +33,7 @@ router.post('/login', (req, res) => {
                 managerRoles: user.managerRoles
             });
         } else {
-            res.json({ status: false, err: "Wrong Credentials" });
+            res.json({ status: false, err: 'Wrong Credentials' });
         }
     });
 });
@@ -41,7 +41,7 @@ router.post('/login', (req, res) => {
 router.post('/checkUsername', (req, res) => {
     userDetails.findOne({ userName: req.body.data.userName }, (err, user) => {
         if (!user) {
-            res.json({ status: false, err: "Username not present" });
+            res.json({ status: false, err: 'Username not present' });
             return;
         }
 
@@ -55,13 +55,13 @@ router.post('/checkUsername', (req, res) => {
 router.post('/updatePassword', (req, res) => {
     userDetails.findOne({ userName: req.body.data.user }, (err, user) => {
         if (!user) {
-            res.json({ status: false, err: "Username not found" });
+            res.json({ status: false, err: 'Username not found' });
             return;
         }
 
         userDetails.update(
             { userName: req.body.data.user },
-            { $set: { "password": req.body.data.confirmPass } }
+            { $set: { 'password': req.body.data.confirmPass } }
         ).then(e => {
             res.json({ status: true });
             return;
@@ -69,7 +69,7 @@ router.post('/updatePassword', (req, res) => {
     });
 });
 
-router.get('/:userName', (req, res) => {
+router.get('getUsername/:userName', (req, res) => {
     const pid = req.params.userName;
     const query = userDetails.find({
         'userName': pid
@@ -78,7 +78,7 @@ router.get('/:userName', (req, res) => {
     })
 });
 
-router.post('/getAllClients', (req, res) => {
+router.get('/getAllClientList', (req, res) => {
     userDetails.find({ role: 'Client' }, (err, cl) => {
         if (!cl) {
             res.json({ status: false, error: err });
@@ -92,7 +92,7 @@ router.post('/getAllClients', (req, res) => {
     });
 });
 
-router.post('/getAllClientDetails', (req, res) => {
+router.get('/getAllUserDetails', (req, res) => {
     userDetails.find((err, cl) => {
         if (!cl) {
             res.json({ status: false, error: err });
@@ -108,8 +108,8 @@ router.post('/getAllClientDetails', (req, res) => {
                         companyName: m.companyName,
                         role: m.role,
                         clientType: m.clientType,
-                        managerRoles:m.managerRoles,
-                        id:m['_id']
+                        managerRoles: m.managerRoles,
+                        id: m['_id']
                     };
                 })
             });
@@ -118,7 +118,9 @@ router.post('/getAllClientDetails', (req, res) => {
         }
     });
 });
-router.post('/getAllManager', (req, res) => {
+
+
+router.get('/getAllManager', (req, res) => {
     userDetails.find({ role: 'Manager' }, (err, cl) => {
         if (!cl) {
             res.json({ status: false, error: err });
@@ -132,18 +134,18 @@ router.post('/getAllManager', (req, res) => {
     });
 });
 
-router.post('/addRightsValue',(req, res) => {
-    
-    for( var i=0; i<req.body.data.adminList.length;i++) {
+router.post('/addRightsValue', (req, res) => {
+
+    for (var i = 0; i < req.body.data.adminList.length; i++) {
         userDetails.update(
-            { userName: req.body.data.adminList[i]},
+            { userName: req.body.data.adminList[i] },
             { $set: { 'isAdmin': true } },
-            {multi:true}
+            { multi: true }
         ).then(e => {
             res.json({ status: true });
         });
     }
-    
+
 });
 
 // router.delete('/:pid',(req,res) => {

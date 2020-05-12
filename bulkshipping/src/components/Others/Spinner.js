@@ -11,7 +11,7 @@ export default function Spinner() {
         height: '100vh',
       }}
     >
-      <CircularProgress color="primary" />
+      <CircularProgress color='primary' />
     </div>
   )
 }

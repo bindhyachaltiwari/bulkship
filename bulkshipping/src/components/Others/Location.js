@@ -15,8 +15,8 @@ class Location extends Component {
       render() {
         return (
             <div>
-                <section className="about_us_2 about_us_2_animated">
-                    <div className="about_text">
+                <section className='about_us_2 about_us_2_animated'>
+                    <div className='about_text'>
                     <div style={{ height: '100vh', width: '100%' }}>
                             <GoogleMapReact
                             bootstrapURLKeys={{ key: 'AIzaSyAtqgKhqfCi91s3GL1SM5HEt9pfqQvnZDw' }}
@@ -26,7 +26,7 @@ class Location extends Component {
                             <AnyReactComponent
                                 lat={59.955413}
                                 lng={30.337844}
-                                text="My Marker"
+                                text='My Marker'
                             />
                             </GoogleMapReact>
                         </div>

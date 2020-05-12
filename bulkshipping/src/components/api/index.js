@@ -52,16 +52,8 @@ class API {
         });
     }
 
-    getAllClientDetails = () => {
-        return axios.post(this.apiUrl + '/userDetails/getAllClientDetails', {
-            headers: { 'Content-Type': 'application/json' },
-        });
-    }
-
     getAllManager = () => {
-        return axios.post(this.apiUrl + '/userDetails/getAllManager', {
-            headers: { 'Content-Type': 'application/json' },
-        });
+        return axios.get(this.apiUrl + '/userDetails/getAllManager');
     }
 
     getAllVesselsPerformance = data => {
@@ -78,22 +70,24 @@ class API {
         });
     }
 
-    getAllClients = () => {
-        return axios.post(this.apiUrl + '/userDetails/getAllClients', {
-            headers: { 'Content-Type': 'application/json' },
-        });
+    getAllUserDetails = () => {
+        return axios.get(this.apiUrl + '/userDetails/getAllUserDetails');
     }
 
-    getAllVessels = () => {
-        return axios.post(this.apiUrl + '/vesselDetails/getAllVessels', {
-            headers: { 'Content-Type': 'application/json' },
-        });
+    getAllClientList = () => {
+        return axios.get(this.apiUrl + '/userDetails/getAllClientList');
+    }
+
+    getAllVesselsList = () => {
+        return axios.get(this.apiUrl + '/vesselDetails/getAllVesselsList');
     }
 
     getAllVesselsDetails = () => {
-        return axios.post(this.apiUrl + '/vesselDetails/getAllVesselDetails', {
-            headers: { 'Content-Type': 'application/json' },
-        });
+        return axios.get(this.apiUrl + '/vesselDetails/getAllVesselDetails');
+    }
+
+    getAllVoyageDetails=()=>{
+        return axios.get(this.apiUrl + '/voyageDetails/getAllVoyageDetails');
     }
 
     fillPerformanceDetails = data => {

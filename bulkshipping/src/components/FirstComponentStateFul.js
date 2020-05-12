@@ -60,7 +60,7 @@ class FirstComponentStateFul extends Component {
             <div>
                 <p>you clicked it {this.state.count} times</p>
                 <button onClick={this.incrementCounter}></button>
-                <input type="text" onChange={this.addItemTo} />
+                <input type='text' onChange={this.addItemTo} />
                 <button onClick={this.addItems}></button>
                 <ul>
                     {

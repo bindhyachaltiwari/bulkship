@@ -3,7 +3,7 @@ const voyageDetails = require('../models/voyageDetails');
 const router = express.Router();
 
 router.post('/insertVoyageData', (req, res) => {
-    const vesselDetailData = new voyageDetails(req.body.data);
+    const vesselDetailData = new voyageDetails(req.body.data.voyageDetails);
     vesselDetailData.vId = new Date().getTime();
     vesselDetailData.cpDate = vesselDetailData.cpDate.split('T')[0];
     vesselDetailData.save().then(() => {
@@ -58,8 +58,21 @@ router.post('/getVoyageDetails', (req, res) => {
     });
 });
 
-
-
+router.get('/getAllVoyageDetails', (req, res) => {
+    voyageDetails.find((err, cl) => {
+        if (!cl) {
+            res.json({ status: false, error: err });
+            return;
+        }
+        if (cl.length) {
+            res.json({
+                status: true, voyageList: cl
+            });
+        } else {
+            res.json({ status: false });
+        }
+    });
+});
 
 
 

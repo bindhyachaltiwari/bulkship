@@ -15,7 +15,7 @@ router.post('/insertVesselDetails', (req, res) => {
     });
 });
 
-router.post('/getAllVessels', (req, res) => {
+router.get('/getAllVesselsList', (req, res) => {
     vesselDetails.find((err, cl) => {
         if (!cl) {
             res.json({ status: false, error: err });
@@ -33,7 +33,7 @@ router.post('/getAllVessels', (req, res) => {
     });
 });
 
-router.post('/getAllVesselDetails', (req, res) => {
+router.get('/getAllVesselDetails', (req, res) => {
     vesselDetails.find((err, cl) => {
         if (!cl) {
             res.json({ status: false, error: err });

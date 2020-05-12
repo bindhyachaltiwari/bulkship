@@ -7,16 +7,26 @@ class ManagerHome extends Component {
         let localRoles = JSON.parse(localStorage.getItem('managerRoles'));
         if (Object.keys(localRoles).length) {
             this.state = {
-                arrayItemsRoles: [{ role: localRoles.AddUser, to: '/addNewUser', text: 'Add New User' },
-                { role: localRoles.AddVessel, to: '/addNewVessel', text: 'Add New Vessel' },
-                { role: localRoles.FillVoyage, to: '/fillVoyageDetails', text: 'Fill Voyage Details' },
-                { role: localRoles.FillPerformance, to: '/fillPerformanceDetails', text: 'Fill Performance Details' },
-                { role: localRoles.ViewUsers, to: '/viewAllUsers', text: 'View All Users' },
-                { role: localRoles.ViewVessels, to: '/viewAllVessels', text: 'View All Vessels' },
-                { role: localRoles.EditVessels, to: '/editVesselDetails', text: 'Edit Vessel Details' }]
+                arrayItemsRoles: [
+                    { role: localRoles.AddUser, to: '/addNewUser', text: 'Add New User' },
+                    { role: localRoles.ViewUsers, to: '/viewAllUsers', text: 'View All Users' },
+                    { role: localRoles.EditUser, to: '/editUserDetails', text: 'Edit User Details' },
+
+                    { role: localRoles.AddVessel, to: '/addNewVessel', text: 'Add New Vessel' },
+                    { role: localRoles.ViewVessels, to: '/viewAllVessels', text: 'View All Vessels' },
+                    { role: localRoles.EditVessels, to: '/editVesselDetails', text: 'Edit Vessel Details' },
+
+                    { role: localRoles.FillVoyage, to: '/fillVoyageDetails', text: 'Fill Voyage Details' },
+                    { role: localRoles.ViewVoyage, to: '/viewVoyageDetails', text: 'View Voyage Details' },
+                    { role: localRoles.EditVoyage, to: '/editVoyageDetails', text: 'Edit Voyage Details' },
+
+                    { role: localRoles.FillPerformance, to: '/fillPerformanceDetails', text: 'Fill Performance Details' },
+                    { role: localRoles.ViewPerformance, to: '/viewPerformanceDetails', text: 'View Performance Details' },
+                    { role: localRoles.EditPerformance, to: '/editPerformanceDetails', text: 'Edit Performance Details' }]
             }
         }
     }
+
     render() {
         const data = this.state.arrayItemsRoles.map(function (item, i) {
             return item.role ?
@@ -24,7 +34,7 @@ class ManagerHome extends Component {
                 ''
         }.bind(this));
         return (
-            <div className="about_us_2 about_us_2_animated">
+            <div className='about_us_2 about_us_2_animated'>
                 <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
                 <div style={{ display: 'inline-block', marginTop: '15%' }}>
                     {data}

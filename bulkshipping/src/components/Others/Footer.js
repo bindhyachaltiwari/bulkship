@@ -13,22 +13,22 @@ class Footer extends Component {
 
   render() {
     return (
-      <footer className="navbar navbar-dark bg-primary fixed-top">
-        <div className="bottom_footer">
-          <Link className="navbar-brand" to="/">
+      <footer className='navbar navbar-dark bg-primary fixed-top'>
+        <div className='bottom_footer'>
+          <Link className='navbar-brand' to='/'>
             Home
             </Link>
-          <Link className="navbar-brand" to="/about">
+          <Link className='navbar-brand' to='/about'>
             About
             </Link>
-          <Link className="navbar-brand" to="/location">
+          <Link className='navbar-brand' to='/location'>
             Locations
             </Link>
           {localStorage.getItem('authToken') ? (
-            <Link className="navbar-brand" to="/login" onClick={this.logoutAndToggleState}>
+            <Link className='navbar-brand' to='/login' onClick={this.logoutAndToggleState}>
               Logout
              </Link>) : (
-              <Link className="navbar-brand" to="/login">
+              <Link className='navbar-brand' to='/login'>
                 Login
                 </Link>
             )}

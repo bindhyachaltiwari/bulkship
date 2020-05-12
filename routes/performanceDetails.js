@@ -38,7 +38,7 @@ router.post('/getPerformanceDetails', (req, res) => {
                     dischargePoint: v.dischargePoint,
                     cargo: v.cargo,
                     cargoIntake: v.cargoIntake,
-                    onwerName: v.onwerName
+                    ownerName: v.ownerName
                 }
             });
         } else {
@@ -65,7 +65,7 @@ router.post('/getAllVessels', (req, res) => {
 router.post('/fillPerformanceDetails', (req, res) => {
     PerformanceDetails.findOne({ _id: req.body.data.vId }, (err, user) => {
         if (!user) {
-            res.json({ status: false, err: "Username not found" });
+            res.json({ status: false, err: 'Username not found' });
             return;
         }
         let data = req.body.data;
@@ -73,7 +73,7 @@ router.post('/fillPerformanceDetails', (req, res) => {
             { _id: req.body.data.vId },
             {
                 $set: {
-                    "isDetailsFilled": true,
+                    'isDetailsFilled': true,
                     NumberOfDaysOrg: data.NumberOfDaysOrg,
                     NumberOfDaysAct: data.NumberOfDaysAct,
                     BunkerConsumptionIFOOrg: data.BunkerConsumptionIFOOrg,

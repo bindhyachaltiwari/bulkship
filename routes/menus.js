@@ -16,7 +16,7 @@ const products = [{
 router.post('/login', (req, res) => {
     userDetails.findOne({ userName: req.body.userName }, (err, user) => {
         if (!user) {
-            res.json({ data: "userName not present" });
+            res.json({ data: 'userName not present' });
             return;
         }
 

@@ -41,11 +41,11 @@ var voyageDetails = new Schema({
         type: String,
         unique: false,
     },
-    onwerName: {
+    ownerName: {
         type: String,
         unique: false,
     },
-    Shipper: {
+    shipper: {
         type: String,
         unique: false,
     },
@@ -53,7 +53,7 @@ var voyageDetails = new Schema({
         type: String,
         unique: false,
     },
-    dischargePoint: {
+    dischargePortAgent: {
         type: String,
         unique: false,
     },
@@ -84,6 +84,13 @@ var voyageDetails = new Schema({
     weatherRoutingCompany: {
         type: String,
         unique: false,
+    },
+    fieldVisibility: {
+		type: Object,
+		required: false
+    },
+    otherFields: {
+        type: JSON,
     },
 }, {
     collection: 'voyageDetails'

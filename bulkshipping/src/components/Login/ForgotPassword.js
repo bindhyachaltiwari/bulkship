@@ -83,26 +83,26 @@ class ForgotPassword extends Component {
           if (isSubmitting) {
             showData = <Spinner />
           } else if (this.state.passChangeSuccess) {
-            showData = <div className="ForgotPasswordForm">
-              <Typography variant="title" style={{ margin: '16px 0' }}> Password Reset </Typography>
+            showData = <div className='ForgotPasswordForm'>
+              <Typography variant='title' style={{ margin: '16px 0' }}> Password Reset </Typography>
               <FormPasswordReset username={this.state.username} />
             </div>
           } else {
-            showData = <div className="ForgotPasswordForm">
-              <Typography variant="title" style={{ margin: '16px 0' }}> Password Reset </Typography>
-              <Paper className="form form--wrapper" elevation={10}>
-                <form className="form" onSubmit={handleSubmit}>
-                  <FormControl fullWidth margin="dense">
+            showData = <div className='ForgotPasswordForm'>
+              <Typography variant='title' style={{ margin: '16px 0' }}> Password Reset </Typography>
+              <Paper className='form form--wrapper' elevation={10}>
+                <form className='form' onSubmit={handleSubmit}>
+                  <FormControl fullWidth margin='dense'>
                     <InputLabel
-                      htmlFor="username"
+                      htmlFor='username'
                       error={Boolean(touched.username && errors.username)}>
                       {'Enter your username'}
                     </InputLabel>
                     <Input
-                      id="username"
-                      name="username"
-                      type="email"
-                      autoComplete="off"
+                      id='username'
+                      name='username'
+                      type='email'
+                      autoComplete='off'
                       value={values.username}
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -116,9 +116,9 @@ class ForgotPassword extends Component {
                     </FormHelperText>
                   </FormControl>
                   <Button
-                    type="submit"
-                    variant="raised"
-                    color="primary"
+                    type='submit'
+                    variant='raised'
+                    color='primary'
                     disabled={Boolean(!isValid || isSubmitting)}
                     style={{ margin: '16px' }}>
                     {'Check Username'}

@@ -120,20 +120,20 @@ export default class LoginHome extends Component {
                             {/* <LogoutButton onClick={this.handleLogoutClick} ></LogoutButton> */}
                         </div>
                     } else {
-                        showData = <div className="ForgotPasswordForm">
-                            <Typography variant="h4" style={{ margin: '10px 0' }}> Login </Typography>
-                            <Paper className="form form--wrapper" elevation={10}>
-                                <form className="form" onSubmit={handleSubmit}>
-                                    <FormControl fullWidth margin="dense">
-                                        <InputLabel htmlFor="username" error={Boolean(touched.username && errors.username)}>
+                        showData = <div className='ForgotPasswordForm'>
+                            <Typography variant='h4' style={{ margin: '10px 0' }}> Login </Typography>
+                            <Paper className='form form--wrapper' elevation={10}>
+                                <form className='form' onSubmit={handleSubmit}>
+                                    <FormControl fullWidth margin='dense'>
+                                        <InputLabel htmlFor='username' error={Boolean(touched.username && errors.username)}>
                                             {'Enter your username'}
                                         </InputLabel>
                                         <Input
-                                            id="username"
-                                            name="username"
-                                            type="email"
+                                            id='username'
+                                            name='username'
+                                            type='email'
                                             required
-                                            autoComplete="off"
+                                            autoComplete='off'
                                             value={values.username}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
@@ -144,16 +144,16 @@ export default class LoginHome extends Component {
                                     </FormControl>
                                     <FormControl
                                         fullWidth
-                                        margin="dense"
+                                        margin='dense'
                                         error={Boolean(touched.password && errors.password)}>
-                                        <InputLabel htmlFor="password" error={Boolean(touched.password && errors.password)}>
+                                        <InputLabel htmlFor='password' error={Boolean(touched.password && errors.password)}>
                                             {'Enter your password'}
                                         </InputLabel>
                                         <Input
-                                            id="password"
-                                            name="password"
-                                            type="password"
-                                            autoComplete="off"
+                                            id='password'
+                                            name='password'
+                                            type='password'
+                                            autoComplete='off'
                                             value={values.password}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
@@ -168,13 +168,13 @@ export default class LoginHome extends Component {
                                     </FormHelperText>
                                     <Button
                                         type='submit'
-                                        variant="contained"
-                                        size="small"
-                                        color="primary"
+                                        variant='contained'
+                                        size='small'
+                                        color='primary'
                                         disabled={Boolean(!isValid || isSubmitting)}
                                         style={{ margin: '16px' }}>
                                         Login </Button>
-                                    <Link style={{ color: 'black' }} to="/forgotPassword">Forgot Password !!</Link>
+                                    <Link style={{ color: 'black' }} to='/forgotPassword'>Forgot Password !!</Link>
                                 </form>
                             </Paper>
                         </div>

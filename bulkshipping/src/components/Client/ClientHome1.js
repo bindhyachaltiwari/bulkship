@@ -26,7 +26,7 @@ class ClientHome extends Component {
         dischargePoint: '',
         cargo: '',
         cargoIntake: '',
-        onwerName: ''
+        ownerName: ''
       },
       performanceDetails: {},
       isPeformancePage: false,
@@ -59,8 +59,8 @@ class ClientHome extends Component {
   handleCpDateChange = e => {
     const { vesselList, selectedVessel } = this.state;
     let vesselDetails = vesselList.find(m => m.vesselName === selectedVessel && m.cpDate === e.value);
-    vesselDetails = (({ chartererName, vesselName, vesselSize, cpDate, loadPort, cargo, cargoIntake, onwerName }) => (
-      { chartererName, vesselName, vesselSize, cpDate, loadPort, cargo, cargoIntake, onwerName }))(vesselDetails);
+    vesselDetails = (({ chartererName, vesselName, vesselSize, cpDate, loadPort, cargo, cargoIntake, ownerName }) => (
+      { chartererName, vesselName, vesselSize, cpDate, loadPort, cargo, cargoIntake, ownerName }))(vesselDetails);
     this.setState({
       vesselDetails: vesselDetails,
       selectedCpDate: e.value,
