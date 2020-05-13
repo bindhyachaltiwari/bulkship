@@ -74,7 +74,30 @@ router.get('/getAllVoyageDetails', (req, res) => {
     });
 });
 
+router.delete('/:pid', (req, res) => {
+    voyageDetails.deleteOne({ '_id': req.params.pid }).then(() => {
+        res.json({
+            status: true
+        })
+    }).catch(e => {
+        res.json({
+            status: false
+        });
+    })
+});
 
+router.post('/updateVoyageDetails', (req, res) => {
+    console.log(req.body.data);
+    voyageDetails.findOneAndUpdate({ '_id': req.body.data._id }, req.body.data).then(() => {
+        res.json({
+            status: true
+        })
+    }).catch(e => {
+        res.json({
+            status: false
+        });
+    })
+});
 
 
 module.exports = router;

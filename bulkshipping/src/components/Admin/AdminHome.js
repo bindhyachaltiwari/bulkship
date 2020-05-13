@@ -21,7 +21,7 @@ class AdminHome extends Component {
 
                     <Link style={{ width: '300px', height: '40px', marginRight: '80px', color: 'green' }} to='/fillVoyageDetails'> Fill Voyage Details</Link>
                     <Link style={{ width: '300px', height: '40px', marginRight: '80px', color: 'green' }} to='/viewVoyageDetails' >View Voyage Details</Link>
-                    <Link style={{ width: '300px', height: '40px', marginRight: '80px', pointerEvents: 'none' }} to='/editVoyageDetails'> Edit Voyage Details</Link><br /><br />
+                    <Link style={{ width: '300px', height: '40px', marginRight: '80px', color: 'green' }} to='/editVoyageDetails'> Edit Voyage Details</Link><br /><br />
 
                     <Link style={{ width: '300px', height: '40px', marginRight: '80px', color: 'Blue' }} to='/fillPerformanceDetails' >Fill Performance Details</Link>
                     <Link style={{ width: '300px', height: '40px', marginRight: '80px', pointerEvents: 'none' }} to='/viewPerformanceDetails' >View Performance Details</Link>

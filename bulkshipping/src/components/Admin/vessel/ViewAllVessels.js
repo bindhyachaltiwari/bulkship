@@ -30,7 +30,6 @@ class ViewAllVessels extends Component {
             });
         } else {
             this.setState({ error: true });
-            return;
         }
     }
 
@@ -93,8 +92,20 @@ class ViewAllVessels extends Component {
                             colSize: '80px',
                             editable: false,
                         }, {
+                            id: 'DWT',
+                            label: ' DWT (MT)',
+                            colSize: '80px',
+                            editable: false,
+                        }, {
                             id: 'flag',
                             label: 'Flag',
+                            colSize: '80px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
+                        }, {
+                            id: 'vesselType',
+                            label: 'Vessel Type',
                             colSize: '80px',
                             editable: true,
                             dataType: 'text',
@@ -106,11 +117,6 @@ class ViewAllVessels extends Component {
                             editable: true,
                             dataType: 'text',
                             inputType: 'input'
-                        }, {
-                            id: 'DWT',
-                            label: ' DWT (MT)',
-                            colSize: '80px',
-                            editable: false,
                         }, {
                             id: 'draft',
                             label: 'Draft',
@@ -154,6 +160,13 @@ class ViewAllVessels extends Component {
                             dataType: 'text',
                             inputType: 'input'
                         }, {
+                            id: 'holdsHatches',
+                            label: 'Holds/Hatches',
+                            colSize: '80px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
+                        }, {
                             id: 'grainCapacity',
                             label: 'Grain Capacity (CBM)',
                             colSize: '80px',
@@ -186,7 +199,7 @@ class ViewAllVessels extends Component {
                         },
                     ],
                     rows: [
-                        ...vesselList.map(({ vesselName, IMO, flag, built, DWT, draft, LOA, beam, GRT, NRT, TPC, grainCapacity, baleCapacity, cranes, grabs, _id }) => ({ vesselName, IMO, flag, built, DWT, draft, LOA, beam, GRT, NRT, TPC, grainCapacity, baleCapacity, cranes, grabs, _id, otherFields: true }))
+                        ...vesselList.map(({ vesselName, IMO, flag, built, DWT, draft, LOA, beam, GRT, NRT, TPC, grainCapacity, baleCapacity, cranes, grabs, holdsHatches, vesselType, _id }) => ({ vesselName, IMO, flag, built, DWT, draft, LOA, beam, GRT, NRT, TPC, grainCapacity, baleCapacity, cranes, grabs, holdsHatches, vesselType, _id, otherFields: true }))
                     ],
                 }
             }
@@ -203,7 +216,6 @@ class ViewAllVessels extends Component {
                 });
                 options.dimensions.datatable.width = '90%';
             }
-
         }
 
         this.refreshRows = () => {

@@ -3,7 +3,7 @@ const vesselDetails = require('../models/vesselDetails');
 const router = express.Router();
 
 router.post('/insertVesselDetails', (req, res) => {
-    const vesseldata = new vesselDetails(req.body.data);
+    const vesseldata = new vesselDetails(req.body.data.vesselDetails);
     vesseldata.save().then(() => {
         res.json({
             status: true
@@ -61,7 +61,7 @@ router.delete('/:pid', (req, res) => {
     })
 });
 
-router.post('/updateVessel', (req, res) => {
+router.post('/updateVesselDetails', (req, res) => {
     console.log(req.body.data);
     vesselDetails.findOneAndUpdate({ '_id': req.body.data._id }, req.body.data).then(() => {
         res.json({

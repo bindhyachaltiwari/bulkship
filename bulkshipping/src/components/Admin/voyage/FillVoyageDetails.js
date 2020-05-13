@@ -242,23 +242,6 @@ class FillVoyageDetails extends Component {
               <tr>
                 <td>
                   <label>
-                    Vessel Size
-                </label>
-                </td>
-                <td>
-                  <input type='text' name='vesselSize' onChange={this.handleAdminChange} />
-                </td>
-                <td>
-                  <Checkbox
-                    name='vesselSize'
-                    color='primary'
-                    onChange={this.handleCheckBoxChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <label>
                     CP Date *
                 </label>
                 </td>
@@ -270,6 +253,23 @@ class FillVoyageDetails extends Component {
                   <Checkbox
                     defaultChecked
                     disabled
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    Vessel Size
+                </label>
+                </td>
+                <td>
+                  <input type='text' name='vesselSize' onChange={this.handleAdminChange} />
+                </td>
+                <td>
+                  <Checkbox
+                    name='vesselSize'
+                    color='primary'
+                    onChange={this.handleCheckBoxChange}
                   />
                 </td>
               </tr>

@@ -7,11 +7,15 @@ import { Button } from '@material-ui/core';
 class ViewVoyageDetails extends Component {
 
     localState = {
-        voyageList: []
+        voyageList: [],
+        isEditPage: false,
     }
 
     constructor(props) {
         super(props);
+        if (props && props.history && props.history.location.pathname === '/editVoyageDetails') {
+            this.localState.isEditPage = true;
+        }
         this.state = { ...this.localState };
         this.handleBackButton = this.handleBackButton.bind(this);
     }
@@ -25,7 +29,6 @@ class ViewVoyageDetails extends Component {
             });
         } else {
             this.setState({ error: true });
-            return;
         }
     }
 
@@ -33,10 +36,10 @@ class ViewVoyageDetails extends Component {
         this.props.history.goBack();
     }
 
-    handleEditClick = e => {
-        const { voyageList } = this.state;
-        const c = voyageList.find(m => m['id'] === e.target.id);
-    }
+    // handleEditClick = e => {
+    //     const { voyageList } = this.state;
+    //     const c = voyageList.find(m => m['id'] === e.target.id);
+    // }
 
     buildCustomTableBodyCell = ({ cellVal, column, rowId }) => {
         let val;
@@ -55,7 +58,7 @@ class ViewVoyageDetails extends Component {
     };
 
     render() {
-        let { voyageList } = this.state;
+        let { voyageList, isEditPage } = this.state;
         let options;
         if (voyageList.length) {
             options = {
@@ -77,6 +80,11 @@ class ViewVoyageDetails extends Component {
                     canDownload: true,
                     canPrint: true,
                     canOrderColumns: true,
+                    canRefreshRows: true,
+                    rowsPerPage: {
+                        available: [5, 10, 25, 50, 100],
+                        selected: 10
+                    },
                 },
                 data: {
                     columns: [
@@ -84,89 +92,146 @@ class ViewVoyageDetails extends Component {
                             id: 'chartererName',
                             label: 'Charterer Name',
                             colSize: '50px',
+                            editable: false,
                         }, {
                             id: 'vesselName',
                             label: 'Vessel Name',
                             colSize: '50px',
+                            editable: false,
                         }, {
                             id: 'cpDate',
                             label: 'CP Date',
                             colSize: '50px',
+                            editable: false,
                         }, {
                             id: 'vesselSize',
                             label: ' Vessel Size',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'loadPort',
                             label: ' Load Port',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'dischargePoint',
                             label: 'Discharge Point',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'cargo',
                             label: 'Cargo',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'cargoIntake',
                             label: ' Cargo Intake',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'ownerName',
                             label: 'Owner Name',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'shipper',
                             label: 'Shipper',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'loadPortAgent',
                             label: 'Load Port Agent',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'dischargePortAgent',
                             label: 'Discharge Port Agent',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'receiver',
                             label: 'Receiver',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'onHireSurveyor',
                             label: 'On Hire Surveyor',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'offHireSurveyor',
                             label: 'Off Hire Surveyor',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'bunkerSupplier',
                             label: 'Bunker Supplier',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'bunkerTrader',
                             label: 'Bunker Trader',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'pniInsurance',
                             label: 'PNI Insurance',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }, {
                             id: 'weatherRoutingCompany',
                             label: ' Weather Routing Company',
                             colSize: '50px',
+                            editable: true,
+                            dataType: 'text',
+                            inputType: 'input'
                         }
                     ],
                     rows: [
                         ...voyageList.map(({
-                            shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePoint, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id
+                            shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePoint, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, otherFields, fieldVisibility
                         }) => ({
-                            shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePoint, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, edit: true, otherFields: true, fieldVisibility: true
+                            shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePoint, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, edit: true, otherFields, fieldVisibility
                         }))
                     ],
                 }
             }
+
+            if (isEditPage) {
+                options.features.canEdit = true;
+                options.features.canDelete = true;
+            }
+
             if (voyageList.some(f => f.otherFields)) {
                 options.data.columns.push({
                     id: 'otherFields',
@@ -184,12 +249,40 @@ class ViewVoyageDetails extends Component {
             }
         }
 
+        this.refreshRows = () => {
+            window.location.reload();
+        };
+
+        this.actionsRow = async e => {
+            if (!e || !e.type) {
+                return;
+            }
+
+            switch (e.type) {
+                case 'save':
+                    await api.updateVoyageDetails(e.payload);
+                    break;
+                case 'delete':
+                    let resp = await api.deleteVoyageDetails(e.payload['_id']);
+                    if (resp.data.status) {
+                        voyageList = voyageList.filter(f => f['_id'] !== e.payload['_id']);
+                        options.data.rows = voyageList;
+                    } else {
+                        this.refreshRows();
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
         return (
             <span>
                 <button className='backButton' onClick={this.handleBackButton}>Back</button>
                 <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
                 < div id='table' className={'tooltipBoundary'} style={{ marginTop: '2%', marginLeft: '2%', display: 'flex' }}>
-                    <Datatable options={options} stripped CustomTableBodyCell={this.buildCustomTableBodyCell} />
+                    <Datatable options={options} actions={this.actionsRow} refreshRows={this.refreshRows} stripped CustomTableBodyCell={this.buildCustomTableBodyCell} />
                 </div >
             </span>
         );

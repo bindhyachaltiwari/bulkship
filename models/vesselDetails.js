@@ -68,6 +68,14 @@ var vesselDetails = new Schema({
         type: String,
         trim: true
     },
+    holdsHatches: {
+        type: String,
+        trim: true
+    },
+    vesselType: {
+        type: String,
+        trim: true
+    }
 }, {
     collection: 'vesselDetails'
 });

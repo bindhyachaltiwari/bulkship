@@ -7,26 +7,16 @@ import AddDynamicField from '../common/AddDynamicField';
 
 class AddNewVessel extends Component {
 
-  localState = {
-    vesselDetails: {
-      vesselName: '',
-      IMO: '',
-      DWT: '',
-      built: '',
-      LOA: '',
-      beam: '',
-      cranes: '',
-      grabs: '',
-      otherFields: {},
-    },
-    success: true,
-    errorMsg: '',
-    newFields: []
-  }
-
   constructor(props) {
     super(props);
-    this.state = { ...this.localState };
+    this.state = {
+      vesselDetails: {
+        otherFields: {}
+      },
+      success: true,
+      errorMsg: '',
+      newFields: []
+    };
     this.handleVesselDetailsChange = this.handleVesselDetailsChange.bind(this);
     this.handleAddNewVesselSubmit = this.handleAddNewVesselSubmit.bind(this);
     this.handleBackButton = this.handleBackButton.bind(this);
@@ -46,24 +36,24 @@ class AddNewVessel extends Component {
 
   async handleAddNewVesselSubmit(event) {
     event.preventDefault();
-    const data = await api.insertVesselDetails({ ...this.state.vesselDetails });
+    const { vesselDetails } = this.state;
+    const data = await api.insertVesselDetails({ vesselDetails });
     if (data.data.status.errors || data.data.status.errmsg) {
       this.setState({
         success: false,
-        errorMsg: data.data.status.errmsg
+        errorMsg: data.data.status['_message']
       });
       return;
     } else {
       this.setState({
-        ...this.localState,
+        vesselDetails: {},
         success: false,
-        errorMsg: 'Success!! New vessel created = ' + this.state.vesselDetails.vesselName,
+        errorMsg: 'Success!! New vessel created = ' + vesselDetails.vesselName,
       });
       document.getElementById('vesselDetailsForm').reset();
       if (document.getElementById('newFieldForm')) {
         document.getElementById('newFieldForm').reset();
       }
-      return;
     }
   }
 
@@ -72,8 +62,9 @@ class AddNewVessel extends Component {
     console.log(e)
     const inputs = e.target.querySelectorAll('input');
     if (inputs && inputs.length) {
-      const vesselDetails = this.state.vesselDetails;
-      Object.assign(vesselDetails.otherFields, { [inputs[0].value.trim()]: inputs[1].value.trim() });
+      const { vesselDetails } = this.state;
+      const { otherFields } = vesselDetails;
+      Object.assign(otherFields, { [inputs[0].value.trim()]: inputs[1].value.trim() });
       this.setState({ vesselDetails });
       document.getElementById('newFieldForm').reset();
       this.displayOtherFields();
@@ -83,14 +74,10 @@ class AddNewVessel extends Component {
   handleNewFieldDetailsChange = e => {
     e.preventDefault();
     const { name, value } = e.target;
-    const otherFields = this.state.vesselDetails.otherFields;
+    const { vesselDetails } = this.state;
+    const { otherFields } = vesselDetails;
     Object.assign(otherFields, { [name]: value.trim() });
-    this.setState({
-      vesselDetails: {
-        ...this.state.vesselDetails,
-        otherFields
-      }
-    });
+    this.setState({ vesselDetails });
   }
 
   render() {
@@ -136,6 +123,16 @@ class AddNewVessel extends Component {
               <tr>
                 <td>
                   <label>
+                    DWT (MT) *
+                </label>
+                </td>
+                <td>
+                  <input type='text' name='DWT' required onChange={this.handleVesselDetailsChange} autoComplete='off' />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
                     Flag
                 </label>
                 </td>
@@ -146,21 +143,21 @@ class AddNewVessel extends Component {
               <tr>
                 <td>
                   <label>
-                    Built Year
+                    Vessel Type
                 </label>
                 </td>
                 <td>
-                  <input type='text' name='built' onChange={this.handleVesselDetailsChange} autoComplete='off' />
+                  <input type='text' name='vesselType' onChange={this.handleVesselDetailsChange} autoComplete='off' />
                 </td>
               </tr>
               <tr>
                 <td>
                   <label>
-                    DWT (MT) *
+                    Built Year
                 </label>
                 </td>
                 <td>
-                  <input type='text' name='DWT' required onChange={this.handleVesselDetailsChange} autoComplete='off' />
+                  <input type='text' name='built' onChange={this.handleVesselDetailsChange} autoComplete='off' />
                 </td>
               </tr>
               <tr>
@@ -223,6 +220,17 @@ class AddNewVessel extends Component {
                   <input type='text' name='TPC' onChange={this.handleVesselDetailsChange} autoComplete='off' />
                 </td>
               </tr>
+              <tr>
+                <td>
+                  <label>
+                  Holds/Hatches
+                </label>
+                </td>
+                <td>
+                  <input type='text' name='holdsHatches' onChange={this.handleVesselDetailsChange} autoComplete='off' />
+                </td>
+              </tr>
+
               <tr>
                 <td>
                   <label>

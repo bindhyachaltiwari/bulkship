@@ -97,16 +97,32 @@ class API {
         });
     }
 
-    deleteVessel = data => {
+    deleteVesselDetails = data => {
         return axios.delete(this.apiUrl + '/vesselDetails/' + data);
     }
 
-    updateVessel = data=>{
-        return axios.post(this.apiUrl + '/vesselDetails/updateVessel', {
+    updateVesselDetails = data=>{
+        return axios.post(this.apiUrl + '/vesselDetails/updateVesselDetails', {
             headers: { 'Content-Type': 'application/json' },
             data,
         });
     }
+
+    deleteVoyageDetails = data => {
+        return axios.delete(this.apiUrl + '/voyageDetails/' + data);
+    }
+
+    updateVoyageDetails = data=>{
+        return axios.post(this.apiUrl + '/voyageDetails/updateVoyageDetails', {
+            headers: { 'Content-Type': 'application/json' },
+            data,
+        });
+    }
+
+
+
+
+
 };
 
 const api = new API();
