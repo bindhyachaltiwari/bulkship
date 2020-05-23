@@ -34,6 +34,11 @@ class AddNewUser extends Component {
       ViewPerformance: false,
       EditPerformance: false,
     },
+    clientDisplay: {
+      ViewPerformance: false,
+      ViewVoyage: false,
+      ViewDocuments: false
+    }
   };
 
   roles = [{ label: 'Client', value: 'Client' }, { label: 'Manager', value: 'Manager' }];
@@ -59,11 +64,21 @@ class AddNewUser extends Component {
     });
   };
 
-  handleMultiSelect = (event) => {
+  handleMultiSelectManager = (event) => {
     console.log(event);
     this.setState({
       ...this.state, managerRoles: {
         ...this.state.managerRoles,
+        [event.target.name]: event.target.checked
+      }
+    });
+  };
+
+  handleMultiSelectClient = (event) => {
+    console.log(event);
+    this.setState({
+      ...this.state, clientDisplay: {
+        ...this.state.clientDisplay,
         [event.target.name]: event.target.checked
       }
     });
@@ -91,8 +106,10 @@ class AddNewUser extends Component {
 
   async handleAddNewUserSubmit(event) {
     event.preventDefault();
-    const { userName, password, displayName, companyName, role, clientType, managerRoles } = this.state;
+    const { userName, password, displayName, companyName, role, clientType, managerRoles, clientDisplay } = this.state;
     if (!userName || !displayName || !password || !role || !companyName || (role === 'Client' && !clientType)) {
+      const { AddUser, ViewUsers, EditUser, AddVessel, ViewVessels, EditVessels, FillVoyage, ViewVoyage, EditVoyage, FillPerformance, ViewPerformance, EditPerformance } = managerRoles;
+      const error = [AddUser, ViewUsers, EditUser, AddVessel, ViewVessels, EditVessels, FillVoyage, ViewVoyage, EditVoyage, FillPerformance, ViewPerformance, EditPerformance].filter((v) => v).length < 1;
       this.setState({
         success: false,
         errorMsg: 'Please fill the required details'
@@ -112,18 +129,30 @@ class AddNewUser extends Component {
       }
     }
 
+    if (role === 'Client') {
+      const { ViewDocuments, ViewPerformance, ViewVoyage } = clientDisplay;
+      const error = [ViewDocuments, ViewPerformance, ViewVoyage].filter((v) => v).length < 1;
+      if (error) {
+        this.setState({
+          success: false,
+          errorMsg: 'Please select minimum one role'
+        });
+        return;
+      }
+    }
+
     if (!clientType) {
       this.state.clientType = role;
     }
 
     let data = await api.insertUserDetails({ ...this.state });
-    if (data.data.status.errors || data.data.status.errmsg) {
-      if (data.data.status.errmsg.indexOf('duplicate key error') >= 0) {
-        data.data.status.errmsg = 'Username already exits.'
+    if (data.data.status.errors || data.data.status.errorMsg) {
+      if (data.data.status.errorMsg.indexOf('duplicate key error') >= 0) {
+        data.data.status.errorMsg = 'Username already exits.'
       }
       this.setState({
         success: false,
-        errorMsg: data.data.status.errmsg
+        errorMsg: data.data.status.errorMsg
       });
       return;
     } else {
@@ -139,11 +168,11 @@ class AddNewUser extends Component {
 
   render() {
     const role = this.state.role;
-    const { AddUser, ViewUsers, EditUser, AddVessel, ViewVessels, EditVessels, FillVoyage, ViewVoyage, EditVoyage, FillPerformance, ViewPerformance, EditPerformance } = this.state.managerRoles;
-    const error = [AddUser, ViewUsers, EditUser, AddVessel, ViewVessels, EditVessels, FillVoyage, ViewVoyage, EditVoyage, FillPerformance, ViewPerformance, EditPerformance].filter((v) => v).length < 1;
     let tableData;
     if (role === 'Client') {
-      tableData = <tr>
+      const { ViewDocuments, ViewPerformance, ViewVoyage } = this.state.clientDisplay;
+      const error = [ViewDocuments, ViewPerformance, ViewVoyage].filter((v) => v).length < 1;
+      tableData = <><tr>
         <td>
           <label>
             Client Type *
@@ -159,7 +188,38 @@ class AddNewUser extends Component {
           />
         </td>
       </tr>
+        <tr>
+          <td>
+            <label>
+              Select Client Display *
+          </label>
+          </td>
+          <td>
+            <FormControl required error={error} component='fieldset' style={{ display: 'flex' }}>
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox checked={ViewPerformance} onChange={this.handleMultiSelectClient} name='ViewPerformance' />}
+                  label='View Performance'
+                />
+                <FormControlLabel
+                  control={<Checkbox checked={ViewVoyage} onChange={this.handleMultiSelectClient} name='ViewVoyage' />}
+                  label='View Voyage Details'
+                />
+                <FormControlLabel
+                  control={<Checkbox checked={ViewDocuments} onChange={this.handleMultiSelectClient} name='ViewDocuments' />}
+                  label='View Documents'
+                />
+              </FormGroup>
+              <FormHelperText>Please select minimum one role</FormHelperText>
+            </FormControl>
+          </td>
+        </tr>
+      </>
+
+
     } else if (role === 'Manager') {
+      const { AddUser, ViewUsers, EditUser, AddVessel, ViewVessels, EditVessels, FillVoyage, ViewVoyage, EditVoyage, FillPerformance, ViewPerformance, EditPerformance } = this.state.managerRoles;
+      const error = [AddUser, ViewUsers, EditUser, AddVessel, ViewVessels, EditVessels, FillVoyage, ViewVoyage, EditVoyage, FillPerformance, ViewPerformance, EditPerformance].filter((v) => v).length < 1;
       tableData = <tr>
         <td>
           <label>
@@ -170,51 +230,51 @@ class AddNewUser extends Component {
           <FormControl required error={error} component='fieldset' style={{ display: 'flex' }}>
             <FormGroup>
               <FormControlLabel
-                control={<Checkbox checked={AddUser} onChange={this.handleMultiSelect} name='AddUser' />}
+                control={<Checkbox checked={AddUser} onChange={this.handleMultiSelectManager} name='AddUser' />}
                 label='Add New User'
               />
               <FormControlLabel
-                control={<Checkbox checked={ViewUsers} onChange={this.handleMultiSelect} name='ViewUsers' />}
+                control={<Checkbox checked={ViewUsers} onChange={this.handleMultiSelectManager} name='ViewUsers' />}
                 label='View All Users'
               />
               <FormControlLabel
-                control={<Checkbox checked={EditUser} onChange={this.handleMultiSelect} name='EditUser' />}
+                control={<Checkbox checked={EditUser} onChange={this.handleMultiSelectManager} name='EditUser' />}
                 label='Edit User Details'
               />
               <FormControlLabel
-                control={<Checkbox checked={AddVessel} onChange={this.handleMultiSelect} name='AddVessel' />}
+                control={<Checkbox checked={AddVessel} onChange={this.handleMultiSelectManager} name='AddVessel' />}
                 label='Add New Vessel'
               />
               <FormControlLabel
-                control={<Checkbox checked={ViewVessels} onChange={this.handleMultiSelect} name='ViewVessels' />}
+                control={<Checkbox checked={ViewVessels} onChange={this.handleMultiSelectManager} name='ViewVessels' />}
                 label='View All Vessels'
               />
               <FormControlLabel
-                control={<Checkbox checked={EditVessels} onChange={this.handleMultiSelect} name='EditVessels' />}
+                control={<Checkbox checked={EditVessels} onChange={this.handleMultiSelectManager} name='EditVessels' />}
                 label='Edit Vessel Details'
               />
               <FormControlLabel
-                control={<Checkbox checked={FillVoyage} onChange={this.handleMultiSelect} name='FillVoyage' />}
+                control={<Checkbox checked={FillVoyage} onChange={this.handleMultiSelectManager} name='FillVoyage' />}
                 label='Fill Voyage Details'
               />
               <FormControlLabel
-                control={<Checkbox checked={ViewVoyage} onChange={this.handleMultiSelect} name='ViewVoyage' />}
+                control={<Checkbox checked={ViewVoyage} onChange={this.handleMultiSelectManager} name='ViewVoyage' />}
                 label='View All Voyage Details'
               />
               <FormControlLabel
-                control={<Checkbox checked={EditVoyage} onChange={this.handleMultiSelect} name='EditVoyage' />}
+                control={<Checkbox checked={EditVoyage} onChange={this.handleMultiSelectManager} name='EditVoyage' />}
                 label='Edit Voyage Details'
               />
               <FormControlLabel
-                control={<Checkbox checked={FillPerformance} onChange={this.handleMultiSelect} name='FillPerformance' />}
+                control={<Checkbox checked={FillPerformance} onChange={this.handleMultiSelectManager} name='FillPerformance' />}
                 label='Fill Performance Details'
               />
               <FormControlLabel
-                control={<Checkbox checked={ViewPerformance} onChange={this.handleMultiSelect} name='ViewPerformance' />}
+                control={<Checkbox checked={ViewPerformance} onChange={this.handleMultiSelectManager} name='ViewPerformance' />}
                 label='View All Performance Details'
               />
               <FormControlLabel
-                control={<Checkbox checked={EditPerformance} onChange={this.handleMultiSelect} name='EditPerformance' />}
+                control={<Checkbox checked={EditPerformance} onChange={this.handleMultiSelectManager} name='EditPerformance' />}
                 label='Edit Performance Details'
               />
             </FormGroup>

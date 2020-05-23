@@ -28,7 +28,7 @@ class AddNewVessel extends Component {
     e.preventDefault();
     const { name, value } = e.target;
     const { vesselDetails } = this.state;
-    Object.assign(vesselDetails, { [name]: value.trim() });
+    Object.assign(vesselDetails, { [name]: value });
     this.setState({ success: true, errorMsg: '', vesselDetails });
   }
 
@@ -38,7 +38,7 @@ class AddNewVessel extends Component {
     event.preventDefault();
     const { vesselDetails } = this.state;
     const data = await api.insertVesselDetails({ vesselDetails });
-    if (data.data.status.errors || data.data.status.errmsg) {
+    if (data.data.status.errors || data.data.status.errorMsg) {
       this.setState({
         success: false,
         errorMsg: data.data.status['_message']
@@ -64,7 +64,7 @@ class AddNewVessel extends Component {
     if (inputs && inputs.length) {
       const { vesselDetails } = this.state;
       const { otherFields } = vesselDetails;
-      Object.assign(otherFields, { [inputs[0].value.trim()]: inputs[1].value.trim() });
+      Object.assign(otherFields, { [inputs[0].value]: inputs[1].value });
       this.setState({ vesselDetails });
       document.getElementById('newFieldForm').reset();
       this.displayOtherFields();
@@ -76,7 +76,7 @@ class AddNewVessel extends Component {
     const { name, value } = e.target;
     const { vesselDetails } = this.state;
     const { otherFields } = vesselDetails;
-    Object.assign(otherFields, { [name]: value.trim() });
+    Object.assign(otherFields, { [name]: value });
     this.setState({ vesselDetails });
   }
 
@@ -223,7 +223,7 @@ class AddNewVessel extends Component {
               <tr>
                 <td>
                   <label>
-                  Holds/Hatches
+                    Holds/Hatches
                 </label>
                 </td>
                 <td>

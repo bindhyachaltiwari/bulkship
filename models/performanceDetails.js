@@ -21,71 +21,79 @@ var performanceDetails = new Schema({
         type: String,
         unique: false,
         required: true
-    }, NumberOfDaysOrg: {
+    }, loadPort: {
         type: String,
-    }, NumberOfDaysAct: {
+    }, dischargePort: {
         type: String,
-    }, BunkerConsumptionIFOOrg: {
-        type: String,
-    }, BunkerConsumptionIFOAct: {
-        type: String,
-    }, BunkerConsumptionMDOOrg: {
-        type: String,
-    }, BunkerConsumptionMDOAct: {
-        type: String,
-    }, BunkerPriceIFOOrg: {
-        type: String,
-    }, BunkerPriceIFOAct: {
-        type: String,
-    }, DWTBunkerPriceMDOOrg: {
-        type: String,
-    }, BunkerPriceMDOAct: {
-        type: String,
-    }, LoadPortDAOrg: {
-        type: String,
-    }, LoadPortDAAct: {
-        type: String,
-    }, DischargePortDAOrg: {
-        type: String,
-    }, DischargePortDAAct: {
-        type: String,
-    }, ILOHCandCVEOrg: {
-        type: String,
-    }, ILOHCandCVEAct: {
-        type: String,
-    }, BunkerSurveyCostBendsOrg: {
-        type: String,
-    }, BunkerSurveyCostBendsAct: {
-        type: String,
-    }, WXRoutingExpenseOrg: {
-        type: String,
-    }, WXRoutingExpenseAct: {
-        type: String,
-    }, PNIInsuranceOrg: {
-        type: String,
-    }, PNIInsuranceAct: {
-        type: String,
-    }, DespatchPaidOrg: {
-        type: String,
-    }, DespatchPaidAct: {
-        type: String,
-    }, OtherExpenseOrg: {
-        type: String,
-    }, OtherExpenseAct: {
-        type: String,
-    }, HRA_WARRiskOrg: {
-        type: String,
-    }, HRA_WARRiskAct: {
-        type: String,
-    }, DemmurrageReceivedOrg: {
-        type: String,
-    }, DemmurrageReceivedAct: {
-        type: String,
-    }, CargoQuantityOrg: {
-        type: String,
+    }, tcHire: {
+        type: Number
+    }, addressCommission: {
+        type: Number
     }, CargoQuantityAct: {
-        type: String,
-    },
+        type: Number
+    }, CargoQuantityOrg: {
+        type: Number
+    }, ILOHCandCVEAct$: {
+        type: Number
+    }, ILOHCandCVEOrg$: {
+        type: Number
+    }, PNIInsuranceAct$: {
+        type: Number
+    }, PNIInsuranceOrg$: {
+        type: Number
+    }, addressCommission: {
+        type: Number
+    }, bunkerIFOAct: {
+        type: Object
+    }, bunkerIFOOrg: {
+        type: Object
+    }, bunkerMDOAct: {
+        type: Object
+    }, bunkerMDOOrg: {
+        type: Object
+    }, dischargePortDelay: {
+        type: Object
+    }, bunkerSurveyCostBendsAct$: {
+        type: Number
+    }, despatchPaidAct$: {
+        type: Number
+    }, despatchPaidOrg$: {
+        type: Number
+    }, bunkerSurveyCostBendsOrg$: {
+        type: Number
+    }, dischargePortDAAct$: {
+        type: Number
+    }, dischargePortDAOrg$: {
+        type: Number
+    }, freightAct: {
+        type: Number
+    }, freightOrg: {
+        type: Number
+    }, intermediatePortDelay: {
+        type: Object
+    }, loadPortDelay: {
+        type: Object
+    }, voyageDays: {
+        type: Object
+    }, loadPortDAAct$: {
+        type: Number
+    }, loadPortDAOrg$: {
+        type: Number
+    }, otherExpenseOrg$: {
+        type: Number
+    }, otherExpenseAct$: {
+        type: Number
+    }, wXRoutingExpenseAct$: {
+        type: Number
+    }, wXRoutingExpenseOrg$: {
+        type: Number
+    }, tcHire: {
+        type: Number
+    }, remarks :{
+        type: String
+    }
+
+
 }, {
     collection: 'performanceDetails'
 });

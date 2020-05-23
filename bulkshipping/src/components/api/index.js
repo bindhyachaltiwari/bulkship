@@ -56,17 +56,13 @@ class API {
         return axios.get(this.apiUrl + '/userDetails/getAllManager');
     }
 
-    getAllVesselsPerformance = data => {
-        return axios.post(this.apiUrl + '/performanceDetails/getAllVessels', {
-            headers: { 'Content-Type': 'application/json' },
-            data,
-        });
+    getAllVesselsPerformance = () => {
+        return axios.get(this.apiUrl + '/performanceDetails/getAllVessels');
     }
 
     getAllVoyage = data => {
-        return axios.post(this.apiUrl + '/voyageDetails/getAllVoyage', {
-            headers: { 'Content-Type': 'application/json' },
-            data,
+        return axios.get(this.apiUrl + '/voyageDetails/getAllVoyage/' + data.companyName, {
+            headers: { 'Content-Type': 'application/json' }
         });
     }
 
@@ -86,7 +82,7 @@ class API {
         return axios.get(this.apiUrl + '/vesselDetails/getAllVesselDetails');
     }
 
-    getAllVoyageDetails=()=>{
+    getAllVoyageDetails = () => {
         return axios.get(this.apiUrl + '/voyageDetails/getAllVoyageDetails');
     }
 
@@ -101,7 +97,7 @@ class API {
         return axios.delete(this.apiUrl + '/vesselDetails/' + data);
     }
 
-    updateVesselDetails = data=>{
+    updateVesselDetails = data => {
         return axios.post(this.apiUrl + '/vesselDetails/updateVesselDetails', {
             headers: { 'Content-Type': 'application/json' },
             data,
@@ -112,16 +108,16 @@ class API {
         return axios.delete(this.apiUrl + '/voyageDetails/' + data);
     }
 
-    updateVoyageDetails = data=>{
+    updateVoyageDetails = data => {
         return axios.post(this.apiUrl + '/voyageDetails/updateVoyageDetails', {
             headers: { 'Content-Type': 'application/json' },
             data,
         });
     }
 
-
-
-
+    getPortDetails = data => {
+        return axios.get(this.apiUrl + '/voyageDetails/getPortDetails/' + data.userName + '/' + data.vesselName + '/' + data.cpDate);
+    }
 
 };
 

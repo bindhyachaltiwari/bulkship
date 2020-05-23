@@ -153,10 +153,10 @@ class FillVoyageDetails extends Component {
 
     let data = await api.insertPerformanceData({ cpDate, vesselName, chartererName, isDetailsFilled: false });
     data = await api.insertVoyageData({ voyageDetails });
-    if (data.data.status.errors || data.data.status.errmsg) {
+    if (data.data.status.errors || data.data.status.errorMsg) {
       this.setState({
         success: false,
-        errorMsg: data.data.status.errmsg
+        errorMsg: data.data.status.errorMsg
       });
       return;
     } else {
@@ -280,7 +280,7 @@ class FillVoyageDetails extends Component {
                 </label>
                 </td>
                 <td>
-                  <input type='text' name='loadPort' onChange={this.handleAdminChange} />
+                  <input type='text' required name='loadPort' onChange={this.handleAdminChange} />
                 </td>
                 <td>
                   <Checkbox
@@ -297,7 +297,7 @@ class FillVoyageDetails extends Component {
                 </label>
                 </td>
                 <td>
-                  <input type='text' name='dischargePoint' onChange={this.handleAdminChange} />
+                  <input type='text' required name='dischargePoint' onChange={this.handleAdminChange} />
                 </td>
                 <td>
                   <Checkbox
