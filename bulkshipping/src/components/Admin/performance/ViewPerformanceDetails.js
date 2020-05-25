@@ -1,286 +1,544 @@
 import React, { Component } from 'react';
-import { Datatable } from '@o2xp/react-datatable';
 import api from '../../api';
-import DisplaySelectedVesselDetails from '../../Client/DisplaySelectedVesselDetails';
-import Popup from 'reactjs-popup';
 import { Button } from '@material-ui/core';
+import ShowDropDownAdmin from '../common/ShowDropDownAdmin';
+import FormHelperText from '@material-ui/core/FormHelperText'
+import '../../../css/Admin.css';
+import ViewPerformanceModule from './ViewPerformanceModule';
 
 class ViewPerformanceDetails extends Component {
 
-    localState = {
-        vesselList: [],
-        isEditPage: false,
-    }
-
     constructor(props) {
         super(props);
-        if (props && props.history && props.history.location.pathname === '/editVesselDetails') {
-            this.localState.isEditPage = true;
+        this.state = {
+            vesselList: [],
+            selectedClient: '',
+            selectedVessel: '',
+            selectedCpDate: '',
+            allClients: [],
+            allVslForSelectedClient: [],
+            allCpDatesForSelectedClient: [],
+            error: false,
+            performanceDetails: {
+                tcHire: 0,
+                addressCommission: 0,
+            },
         }
-        this.state = { ...this.localState };
-        this.getAllVesselDetails();
         this.handleBackButton = this.handleBackButton.bind(this);
-    }
-
-    getAllVesselDetails = async () => {
-        const res = await api.getAllVesselsDetails();
-        if (res.data.status) {
-            this.setState({
-                vesselList: res.data.vesselList,
-                error: false,
-            });
-
-        } else {
-            this.setState({ error: true });
-            return;
-        }
     }
 
     handleBackButton() {
         this.props.history.goBack();
     }
-
-    buildCustomTableBodyCell = ({ cellVal, column, rowId }) => {
-        let val;
-        switch (column.id) {
-            case 'otherFields':
-                val = this.getPopupContent(cellVal, rowId);
-                break;
-            default:
-                val = <div title={cellVal} style={{ color: 'blue' }}>{cellVal}</div>;
-                break;
+    async componentDidMount() {
+        const res = await api.getAllVesselsPerformance({ isDetailsFilled: true });
+        if (res.data.status) {
+            const allClients = [...new Set(res.data.vesselList.map(m => m.chartererName))];
+            this.setState({
+                vesselList: res.data.vesselList,
+                allClients,
+                error: false,
+            });
+        } else {
+            this.setState({ error: true, errorMsg: 'Failed to fetch data' });
         }
-        return val;
+    }
+
+    handleCpDateChange = async e => {
+        const { vesselList, selectedVessel, selectedClient, selectedCpDate } = this.state;
+        if (selectedCpDate && e.value === selectedCpDate) return;
+        const performanceDetails = vesselList.find(m => m.vesselName === selectedVessel && m.chartererName === selectedClient && m.cpDate === e.value);
+        const res = await api.getPortDetails({ userName: selectedClient, vesselName: selectedVessel, cpDate: e.value });
+        if (res.data.status) {
+            this.setState({
+                portDetails: res.data.portDetails,
+                performanceDetails,
+                selectedCpDate: e.value,
+                error: false,
+            });
+        } else {
+            this.setState({ error: true, errorMsg: 'Failed to fetch data' });
+        }
+
+
+        // const res = await api.getCompletePerformanceDetailsForView({ userName: selectedClient, vesselName: selectedVessel, cpDate: e.value });
+        // if (res.data.status) {
+        //   this.setState({
+        //     performanceDetails: res.data.performanceDetails,
+        //     vesselDetails,
+        //     selectedCpDate: e.value,
+        //     error: false,
+        //     performanceDetails: {}
+        //   });
+        // } else {
+        //   this.setState({ error: true, errorMsg: 'Failed to fetch data' });
+        // }
+        this.setState({
+            performanceDetails,
+            selectedCpDate: e.value,
+            error: false
+        });
+
     };
 
-    render() {
-        let { vesselList, isEditPage } = this.state;
-        let options;
-        if (vesselList.length) {
-            options = {
-                title: 'Vessel List',
-                keyColumn: '_id',
-                font: 'Arial',
-                dimensions: {
-                    datatable: {
-                        width: '80%',
-                        height: '648px',
-                    },
-                    row: {
-                        height: '10px'
-                    }
-                },
-                stripped: true,
-                features: {
-                    canSearch: true,
-                    canDownload: true,
-                    canPrint: true,
-                    canOrderColumns: true,
-                    canRefreshRows: true,
-                    rowsPerPage: {
-                        available: [5, 10, 25, 50, 100],
-                        selected: 10
-                    },
-                },
-                data: {
-                    columns: [
-                        {
-                            id: 'vesselName',
-                            label: 'Vessel Name',
-                            colSize: '80px',
-                            editable: false,
-                        }, {
-                            id: 'IMO',
-                            label: 'IMO',
-                            colSize: '80px',
-                            editable: false,
-                        }, {
-                            id: 'flag',
-                            label: 'Flag',
-                            colSize: '80px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'built',
-                            label: 'Built Year',
-                            colSize: '80px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'DWT',
-                            label: ' DWT (MT)',
-                            colSize: '80px',
-                            editable: false,
-                        }, {
-                            id: 'draft',
-                            label: 'Draft',
-                            colSize: '80px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'LOA',
-                            label: 'LOA (M)',
-                            colSize: '80px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input',
-                        }, {
-                            id: 'beam',
-                            label: 'Beam (M)',
-                            colSize: '80px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'GRT',
-                            label: 'GRT (MT)',
-                            colSize: '80px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'NRT',
-                            label: 'NRT (MT)',
-                            colSize: '80px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'TPC',
-                            label: 'TPC (MT/CBM)',
-                            colSize: '80px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'grainCapacity',
-                            label: 'Grain Capacity (CBM)',
-                            colSize: '80px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'baleCapacity',
-                            label: 'Bale Capacity (CBM)',
-                            colSize: '80px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        },
-                        {
-                            id: 'cranes',
-                            label: 'Cranes (MT)',
-                            colSize: '80px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        },
-                        {
-                            id: 'grabs',
-                            label: 'Grabs (CBM)',
-                            colSize: '80px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        },
-                    ],
-                    rows: [
-                        ...vesselList.map(({ vesselName, IMO, flag, built, DWT, draft, LOA, beam, GRT, NRT, TPC, grainCapacity, baleCapacity, cranes, grabs, _id }) => ({ vesselName, IMO, flag, built, DWT, draft, LOA, beam, GRT, NRT, TPC, grainCapacity, baleCapacity, cranes, grabs, _id, otherFields: true }))
-                    ],
-                }
-            }
-            if (isEditPage) {
-                options.features.canEdit = true;
-                options.features.canDelete = true;
-            }
-
-            if (vesselList.some(f => f.otherFields)) {
-                options.data.columns.push({
-                    id: 'otherFields',
-                    label: 'Other Details',
-                    colSize: '80px',
-                });
-                options.dimensions.datatable.width = '90%';
-            }
-
-        }
-
-        this.refreshRows = () => {
-            window.location.reload();
-        };
-
-        this.actionsRow = async e => {
-            if (!e || !e.type) {
-                return;
-            }
-
-            switch (e.type) {
-                case 'save':
-                    await api.updateVessel(e.payload);
-                    break;
-                case 'delete':
-                    let resp = await api.deleteVessel(e.payload['_id']);
-                    if (resp.data.status) {
-                        vesselList = vesselList.filter(f => f['_id'] !== e.payload['_id']);
-                        options.data.rows = vesselList;
-                    } else {
-                        this.refreshRows();
-                    }
-
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        return (
-            <span>
-                <button className='backButton' onClick={this.handleBackButton}>Back</button>
-                <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
-                < div id='table' className={'tooltipBoundary'} style={{ margin: '2% 0 6% 2%', display: 'flex' }}>
-                    <Datatable options={options} tooltip='abc' stripped actions={this.actionsRow} refreshRows={this.refreshRows} CustomTableBodyCell={this.buildCustomTableBodyCell} />
-                </div >
-            </span>
-        );
-    }
-
-    capitalize = s => {
-        if (typeof s !== 'string') return ''
-        return s.charAt(0).toUpperCase() + s.slice(1)
-    }
-
-    getPopupContent = (cellVal, rowId) => {
-        const { vesselList } = this.state;
-        if (!vesselList.some(f => f.otherFields)) {
+    handleVesselListChange = async e => {
+        const { selectedVessel, vesselList, selectedClient } = this.state;
+        if (selectedVessel && e.value === selectedVessel) return;
+        const allCpDates = vesselList.filter(f => f.vesselName === e.value && f.chartererName === selectedClient).map(m => m.cpDate);
+        if (!allCpDates.length || (allCpDates.length === 1 && allCpDates[0] === '')) {
+            this.setState({
+                allCpDatesForSelectedClient: [],
+                selectedVessel: e.value,
+                selectedCpDate: '',
+                error: true,
+                errorMsg: 'Failed to fetch data'
+            });
             return;
         }
+        this.setState({
+            allCpDatesForSelectedClient: allCpDates,
+            selectedVessel: e.value,
+            selectedCpDate: '',
+            error: false,
+            performanceDetails: {}
+        });
+    }
 
-        let vsl = vesselList.find(m => m['_id'] === rowId);
-        let content = <p></p>;
-        if (vsl && vsl.otherFields && Object.keys(vsl.otherFields).length) {
-            return content =
-                <Popup
-                    trigger={
-                        <Button
-                            variant='contained'
-                            size='small'
-                            color='primary'
-                        >
-                            Details </Button>}
-                    position={['bottom right', 'bottom center', 'left top', 'top center']}
-                    on='hover'
-                    keepTooltipInside='.tooltipBoundary'
-                >
-                    <div className='content'>
-                        <DisplaySelectedVesselDetails vesselDetails={vsl.otherFields} />
-                    </div>
-                </Popup>
+    handleClientListChange = e => {
+        const { selectedClient, vesselList } = this.state;
+        if (selectedClient && e.value === selectedClient) return;
+        const allVessels = [...new Set(vesselList.filter(m => m.chartererName === e.value).map(m => m.vesselName))];
+        if (!allVessels.length || (allVessels.length === 1 && allVessels[0] === '')) {
+            this.setState({
+                allVslForSelectedClient: [],
+                selectedClient: e.value,
+                selectedVessel: '',
+                selectedCpDate: '',
+                error: true,
+                errorMsg: 'Failed to fetch data'
+            });
+            return;
         }
+        this.setState({
+            allVslForSelectedClient: allVessels,
+            selectedClient: e.value,
+            selectedVessel: '',
+            selectedCpDate: '',
+            error: false,
+            performanceDetails: {}
+        });
+    }
 
-        return content;
+    render() {
+        const { selectedCpDate, error, performanceDetails, portDetails } = this.state;
+        const { addressCommission, bunkerIFOAct, bunkerIFOOrg, bunkerMDOAct, bunkerMDOOrg, dischargePortDAAct$, dischargePortDAOrg$,
+            dischargePortDelay, intermediatePortDelay, loadPortDAAct$, loadPortDAOrg$, loadPortDelay, tcHire, freightAct, freightOrg,
+            totalAct, totalOrg, voyageDays, CargoQuantityAct, CargoQuantityOrg, ILOHCandCVEAct$, ILOHCandCVEOrg$, PNIInsuranceAct$, PNIInsuranceOrg$,
+            bunkerSurveyCostBendsAct$, bunkerSurveyCostBendsOrg$, despatchPaidAct$, despatchPaidOrg$, otherExpenseOrg$, otherExpenseAct$, wXRoutingExpenseAct$, wXRoutingExpenseOrg$,
+            demmurrageReceivedOrg$, demmurrageReceivedAct$, HraWarRiskOrg$, HraWarRiskAct$, remarks, loadPort, dischargePort } = performanceDetails;
+        let showTable;
+        if (selectedCpDate) {
+            showTable = <div>
+                <form style={{ margin: '1%' }}>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label> Load Port</label>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={portDetails ? portDetails.loadPort : ''} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label> Discharge Port</label>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={portDetails ? portDetails.dischargePort : ''} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>  TC Hire (Per day)</label>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={tcHire || 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>   Address Commission</label>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={addressCommission || 0} />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+                <br />
+                <form style={{ margin: '1%' }}>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Original</th>
+                                <th>Actual</th>
+                                <th>Original ($)</th>
+                                <th>Actual ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label>Voyage Days</label>
+                                </td>
+                                <ViewPerformanceModule obj={voyageDays} />
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Delays at Port</label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Load Port Delay</label>
+                                </td>
+                                <ViewPerformanceModule obj={loadPortDelay} />
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label> Discharge Port Delay</label>
+                                </td>
+                                <ViewPerformanceModule obj={dischargePortDelay} />
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label> Intermediate Port Delays</label>
+                                </td>
+                                <ViewPerformanceModule obj={intermediatePortDelay} />
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label> Bunker Consumption (MT)</label>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>IFO</label>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={bunkerIFOOrg && bunkerIFOOrg.consumption ? bunkerIFOOrg.consumption : 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={bunkerIFOAct && bunkerIFOAct.consumption ? bunkerIFOAct.consumption : 0} />
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label> MDO</label>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={bunkerMDOOrg && bunkerMDOOrg.consumption ? bunkerMDOOrg.consumption : 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={bunkerMDOAct && bunkerMDOAct.consumption ? bunkerMDOAct.consumption : 0} />
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Bunker Price (USD)</label>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>IFO</label></td>
+                                <td>
+                                    <input type='text' disabled value={bunkerIFOOrg && bunkerIFOOrg.price ? bunkerIFOOrg.price : 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={bunkerIFOAct && bunkerIFOAct.price ? bunkerIFOAct.price : 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={bunkerIFOOrg && bunkerIFOOrg.bunkerIFOOrg$ ? bunkerIFOOrg.bunkerIFOOrg$ : 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={bunkerIFOAct && bunkerIFOAct.bunkerIFOAct$ ? bunkerIFOAct.bunkerIFOAct$ : 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>MDO</label>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={bunkerMDOOrg && bunkerMDOOrg.price ? bunkerMDOOrg.price : 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={bunkerMDOAct && bunkerMDOAct.price ? bunkerMDOAct.price : 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={bunkerMDOOrg && bunkerMDOOrg.bunkerMDOOrg$ ? bunkerMDOOrg.bunkerMDOOrg$ : 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={bunkerMDOAct && bunkerMDOAct.bunkerMDOAct$ ? bunkerMDOAct.bunkerMDOAct$ : 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label> Load Port DA</label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={loadPortDAOrg$ || 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={loadPortDAAct$ || 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Discharge Port DA</label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={dischargePortDAOrg$ || 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={dischargePortDAAct$ || 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>ILOHC and CVE</label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={ILOHCandCVEOrg$ || 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={ILOHCandCVEAct$ || 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Bunker Survey Cost Bends</label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={bunkerSurveyCostBendsOrg$ || 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={bunkerSurveyCostBendsAct$ || 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>WX Routing Expense</label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={wXRoutingExpenseOrg$ || 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={wXRoutingExpenseAct$ || 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>PNI Insurance</label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={PNIInsuranceOrg$ || 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={PNIInsuranceAct$ || 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Despatch Paid</label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={despatchPaidOrg$ || 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={despatchPaidAct$ || 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Other Expense</label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={otherExpenseOrg$ || 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={otherExpenseAct$ || 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>HRA/WAR Risk</label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={HraWarRiskOrg$ || 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={HraWarRiskAct$ || 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Demmurrage Received</label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={demmurrageReceivedOrg$ || 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={demmurrageReceivedAct$ || 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Cargo Quantity (MT)</label>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={CargoQuantityOrg || 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={CargoQuantityAct || 0} />
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Total</label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={totalOrg || 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={totalAct || 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Freight (USD/MT)</label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={freightOrg || 0} />
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={freightAct || 0} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Remark</label>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type='text' disabled value={remarks || ''} />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div >
+        }
+        return (
+            <div className='about_us_2 about_us_2_animated'>
+                <h2>View Performance Details</h2>
+                <FormHelperText style={{ textAlign: 'center', fontSize: 'large' }} error={error}>
+                    {error ? this.state.errorMsg : ''}
+                </FormHelperText>
+                <Button variant='contained' color='primary' onClick={this.handleBackButton} style={{ top: '4%', left: '10%', position: 'fixed' }}>
+                    Back
+            </Button>
+                <ShowDropDownAdmin
+                    handleClientListChange={this.handleClientListChange}
+                    handleVesselListChange={this.handleVesselListChange}
+                    handleCpDateChange={this.handleCpDateChange}
+                    state={this.state}
+                />
+                <br />
+                {showTable}
+            </div>
+        )
     }
 }
 

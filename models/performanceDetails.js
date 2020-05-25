@@ -89,11 +89,21 @@ var performanceDetails = new Schema({
         type: Number
     }, tcHire: {
         type: Number
-    }, remarks :{
+    }, remarks: {
         type: String
+    }, totalAct: {
+        type: Number
+    }, totalOrg: {
+        type: Number
+    }, demmurrageReceivedOrg$: {
+        type: Number
+    }, demmurrageReceivedAct$: {
+        type: Number
+    }, HraWarRiskOrg$: {
+        type: Number
+    }, HraWarRiskAct$: {
+        type: Number
     }
-
-
 }, {
     collection: 'performanceDetails'
 });

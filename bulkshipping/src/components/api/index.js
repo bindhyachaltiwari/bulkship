@@ -56,8 +56,8 @@ class API {
         return axios.get(this.apiUrl + '/userDetails/getAllManager');
     }
 
-    getAllVesselsPerformance = () => {
-        return axios.get(this.apiUrl + '/performanceDetails/getAllVessels');
+    getAllVesselsPerformance = data => {
+        return axios.get(this.apiUrl + '/performanceDetails/getAllVessels/' + data.isDetailsFilled);
     }
 
     getAllVoyage = data => {
@@ -117,6 +117,13 @@ class API {
 
     getPortDetails = data => {
         return axios.get(this.apiUrl + '/voyageDetails/getPortDetails/' + data.userName + '/' + data.vesselName + '/' + data.cpDate);
+    }
+    getPerformanceDetails = data => {
+        return axios.get(this.apiUrl + '/performanceDetails/getPerformanceDetails/' + data.chartererName + '/' + data.vesselName + '/' + data.cpDate);
+    }
+
+    getCompletePerformanceDetailsForView = data =>{
+        return axios.get(this.apiUrl + '/performanceDetails/getCompletePerformanceDetailsForView/' + data.userName + '/' + data.vesselName + '/' + data.cpDate);
     }
 
 };

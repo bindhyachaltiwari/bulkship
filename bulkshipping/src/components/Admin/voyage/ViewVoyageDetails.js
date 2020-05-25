@@ -118,7 +118,7 @@ class ViewVoyageDetails extends Component {
                             dataType: 'text',
                             inputType: 'input'
                         }, {
-                            id: 'dischargePoint',
+                            id: 'dischargePort',
                             label: 'Discharge Point',
                             colSize: '50px',
                             editable: true,
@@ -219,9 +219,9 @@ class ViewVoyageDetails extends Component {
                     ],
                     rows: [
                         ...voyageList.map(({
-                            shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePoint, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, otherFields, fieldVisibility
+                            shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePort, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, otherFields, fieldVisibility
                         }) => ({
-                            shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePoint, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, edit: true, otherFields, fieldVisibility
+                            shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePort, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, edit: true, otherFields, fieldVisibility
                         }))
                     ],
                 }

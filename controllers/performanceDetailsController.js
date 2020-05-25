@@ -1,6 +1,5 @@
 
 const PerformanceDetails = require('../models/performanceDetails');
-const vesselDetails = require('../models/vesselDetails');
 
 exports.addPerformanceData = (req, res) => {
     const performanceDetailsData = new PerformanceDetails(req.body.data);
@@ -19,35 +18,28 @@ exports.addPerformanceData = (req, res) => {
     });
 }
 
-// exports.getAllPerformanceDetails = (req, res) => {
-//     vesselDetails.find({ $and: [{ chartererName: req.params.userName }, { vesselName: req.params.vesselName }, { cpDate: req.params.cpDate }] }, (err, v) => {
-//         if (!v.length || err) {
-//             res.json({ status: false, error: 'No details found' });
-//             return;
-//         }
-//         if (v.length) {
-//             v = v[0];
-//             res.json({
-//                 status: true,
-//                 performanceDetails: {
-//                     vesselName: v.vesselName,
-//                     vesselSize: v.vesselSize,
-//                     cpDate: v.cpDate,
-//                     loadPort: v.loadPort,
-//                     dischargePoint: v.dischargePoint,
-//                     cargo: v.cargo,
-//                     cargoIntake: v.cargoIntake,
-//                     ownerName: v.ownerName
-//                 }
-//             });
-//         } else {
-//             res.json({ status: false });
-//         }
-//     });
-// }
+exports.getCompletePerformanceDetailsForView = (req, res) => {
+   console.log('==>')
+    console.log(req.params);
+    PerformanceDetails.find({ $and: [{ chartererName: req.params.userName }, { vesselName: req.params.vesselName }, { cpDate: req.params.cpDate }] }, (err, v) => {
+        if (!v.length || err) {
+            res.json({ status: false, error: 'No details found' });
+            return;
+        }
+        if (v.length) {
+            v = v[0];
+            res.json({
+                status: true,
+                performanceDetails: v
+            });
+        } else {
+            res.json({ status: false });
+        }
+    });
+}
 
 exports.getAllVessels = (req, res) => {
-    PerformanceDetails.find({ isDetailsFilled: false }, (err, vl) => {
+    PerformanceDetails.find({ isDetailsFilled: req.params.isDetailsFilled }, (err, vl) => {
         if (!vl) {
             res.json({ status: false, error: err });
             return;
@@ -72,43 +64,104 @@ exports.fillPerformanceDetails = (req, res) => {
             {
                 $set: {
                     'isDetailsFilled': true,
-                    NumberOfDaysOrg: data.NumberOfDaysOrg,
-                    NumberOfDaysAct: data.NumberOfDaysAct,
-                    BunkerConsumptionIFOOrg: data.BunkerConsumptionIFOOrg,
-                    BunkerConsumptionIFOAct: data.BunkerConsumptionIFOAct,
-                    BunkerConsumptionMDOOrg: data.BunkerConsumptionMDOOrg,
-                    BunkerConsumptionMDOAct: data.BunkerConsumptionMDOAct,
-                    BunkerPriceIFOOrg: data.BunkerPriceIFOOrg,
-                    BunkerPriceIFOAct: data.BunkerPriceIFOAct,
-                    BunkerPriceMDOOrg: data.BunkerPriceMDOOrg,
-                    BunkerPriceMDOAct: data.BunkerPriceMDOAct,
-                    LoadPortDAOrg: data.LoadPortDAOrg,
-                    LoadPortDAAct: data.LoadPortDAAct,
-                    DischargePortDAOrg: data.DischargePortDAOrg,
-                    DischargePortDAAct: data.DischargePortDAAct,
-                    ILOHCandCVEOrg: data.ILOHCandCVEOrg,
-                    ILOHCandCVEAct: data.ILOHCandCVEAct,
-                    BunkerSurveyCostBendsOrg: data.BunkerSurveyCostBendsOrg,
-                    BunkerSurveyCostBendsAct: data.BunkerSurveyCostBendsAct,
-                    WXRoutingExpenseOrg: data.WXRoutingExpenseOrg,
-                    WXRoutingExpenseAct: data.WXRoutingExpenseAct,
-                    PNIInsuranceOrg: data.PNIInsuranceOrg,
-                    PNIInsuranceAct: data.PNIInsuranceAct,
-                    DespatchPaidOrg: data.DespatchPaidOrg,
-                    DespatchPaidAct: data.DespatchPaidAct,
-                    OtherExpenseOrg: data.OtherExpenseOrg,
-                    OtherExpenseAct: data.OtherExpenseAct,
-                    HRA_WARRiskOrg: data.HRA_WARRiskOrg,
-                    HRA_WARRiskAct: data.HRA_WARRiskAct,
-                    DemmurrageReceivedOrg: data.DemmurrageReceivedOrg,
-                    DemmurrageReceivedAct: data.DemmurrageReceivedAct,
-                    CargoQuantityOrg: data.CargoQuantityOrg,
-                    CargoQuantityAct: data.CargoQuantityAct,
+                    addressCommission: data.addressCommission,
+                    bunkerIFOAct: data.bunkerIFOAct,
+                    bunkerIFOOrg: data.bunkerIFOOrg,
+                    bunkerMDOAct: data.bunkerMDOAct,
+                    bunkerMDOOrg: data.bunkerMDOOrg,
+                    dischargePortDAAct$: data.dischargePortDAAct$,
+                    dischargePortDAOrg$: data.dischargePortDAOrg$,
+                    dischargePortDelay: data.dischargePortDelay,
+                    intermediatePortDelay: data.intermediatePortDelay,
+                    loadPortDAAct$: data.loadPortDAAct$,
+                    loadPortDAOrg$: data.loadPortDAOrg$,
+                    loadPortDelay: data.loadPortDelay,
+                    tcHire: data.tcHire,
+                    freightAct: data.freightAct,
+                    freightOrg: data.freightOrg,
+                    totalAct: data.totalAct,
+                    totalOrg: data.totalOrg,
+                    voyageDays: data.voyageDays,
+                    CargoQuantityAct: data.CargoQuantityAct || 0,
+                    CargoQuantityOrg: data.CargoQuantityOrg || 0,
+                    ILOHCandCVEAct$: data.ILOHCandCVEAct$ || 0,
+                    ILOHCandCVEOrg$: data.ILOHCandCVEOrg$ || 0,
+                    PNIInsuranceAct$: data.PNIInsuranceAct$ || 0,
+                    PNIInsuranceOrg$: data.PNIInsuranceOrg$ || 0,
+                    bunkerSurveyCostBendsAct$: data.bunkerSurveyCostBendsAct$ || 0,
+                    bunkerSurveyCostBendsOrg$: data.bunkerSurveyCostBendsOrg$ || 0,
+                    despatchPaidAct$: data.despatchPaidAct$ || 0,
+                    despatchPaidOrg$: data.despatchPaidOrg$ || 0,
+                    otherExpenseOrg$: data.otherExpenseOrg$ || 0,
+                    otherExpenseAct$: data.otherExpenseAct$ || 0,
+                    wXRoutingExpenseAct$: data.wXRoutingExpenseAct$ || 0,
+                    wXRoutingExpenseOrg$: data.wXRoutingExpenseOrg$ || 0,
+                    demmurrageReceivedOrg$: data.demmurrageReceivedOrg$ || 0,
+                    demmurrageReceivedAct$: data.demmurrageReceivedAct$ || 0,
+                    HraWarRiskOrg$: data.HraWarRiskOrg$,
+                    HraWarRiskAct$: data.HraWarRiskAct$,
+                    remarks: data.remarks
                 }
             }
         ).then(e => {
             res.json({ status: true });
             return;
         });
+    });
+}
+
+exports.getPerformanceDetails = (req,res) => {
+    console.log(req.params);
+    PerformanceDetails.findOne({ $and: [{chartererName: req.params.chartererName},{vesselName:req.params.vesselName},{cpDate:req.params.cpDate}] })
+    .then((performance) => {
+      if (!performance) {
+        res.json({ status: false, err: 'performance not found' });
+                return;
+        }
+      console.log(performance);
+    res.json({ status: true, 
+        performanceDetails: {
+            addressCommission: performance.addressCommission,
+            bunkerIFOAct: performance.bunkerIFOAct,
+            bunkerIFOOrg: performance.bunkerIFOOrg,
+            bunkerMDOAct: performance.bunkerMDOAct,
+            bunkerMDOOrg: performance.bunkerMDOOrg,
+            dischargePortDAAct$: performance.dischargePortDAAct$,
+            dischargePortDAOrg$: performance.dischargePortDAOrg$,
+            dischargePortDelay: performance.dischargePortDelay,
+            intermediatePortDelay: performance.intermediatePortDelay,
+            loadPortDAAct$: performance.loadPortDAAct$,
+            loadPortDAOrg$: performance.loadPortDAOrg$,
+            loadPortDelay: performance.loadPortDelay,
+            tcHire: performance.tcHire,
+            freightAct: performance.freightAct,
+            freightOrg: performance.freightOrg,
+            totalAct: performance.totalAct,
+            totalOrg: performance.totalOrg,
+            voyageDays: performance.voyageDays,
+            CargoQuantityAct: performance.CargoQuantityAct,
+            CargoQuantityOrg: performance.CargoQuantityOrg,
+            ILOHCandCVEAct$: performance.ILOHCandCVEAct$,
+            ILOHCandCVEOrg$: performance.ILOHCandCVEOrg$,
+            PNIInsuranceAct$: performance.PNIInsuranceAct$,
+            PNIInsuranceOrg$: performance.PNIInsuranceOrg$,
+            bunkerSurveyCostBendsAct$: performance.bunkerSurveyCostBendsAct$,
+            bunkerSurveyCostBendsOrg$: performance.bunkerSurveyCostBendsOrg$,
+            despatchPaidAct$: performance.despatchPaidAct$,
+            despatchPaidOrg$: performance.despatchPaidOrg$,
+            otherExpenseOrg$: performance.otherExpenseOrg$,
+            otherExpenseAct$: performance.otherExpenseAct$,
+            wXRoutingExpenseAct$: performance.wXRoutingExpenseAct$,
+            wXRoutingExpenseOrg$: performance.wXRoutingExpenseOrg$,
+            demmurrageReceivedOrg$: performance.demmurrageReceivedOrg$,
+            demmurrageReceivedAct$: performance.demmurrageReceivedAct$,
+            HraWarRiskOrg$: performance.HraWarRiskOrg$,
+            HraWarRiskAct$: performance.HraWarRiskAct$,
+            remarks: performance.remarks
+        }
+    });
+    })
+    .catch((e) => {
+        res.json({ status: false });
     });
 }

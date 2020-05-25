@@ -29,7 +29,7 @@ var voyageDetails = new Schema({
         type: String,
         unique: false,
     },
-    dischargePoint: {
+    dischargePort: {
         type: String,
         unique: false,
     },

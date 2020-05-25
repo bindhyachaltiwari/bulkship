@@ -4,10 +4,12 @@ const router = express.Router();
 
 router.post('/insertPerformanceData', performanceDetailsController.addPerformanceData);
 
-// router.post('/getPerformanceDetails:/userName/:vesselName/:cpDate', performanceDetailsController.getAllPerformanceDetails);
+router.get('/getCompletePerformanceDetailsForView/:userName/:vesselName/:cpDate', performanceDetailsController.getCompletePerformanceDetailsForView);
 
-router.get('/getAllVessels', performanceDetailsController.getAllVessels);
+router.get('/getAllVessels/:isDetailsFilled', performanceDetailsController.getAllVessels);
 
 router.post('/fillPerformanceDetails', performanceDetailsController.fillPerformanceDetails);
+
+router.get('/getPerformanceDetails/:chartererName/:vesselName/:cpDate',performanceDetailsController.getPerformanceDetails);
 
 module.exports = router;

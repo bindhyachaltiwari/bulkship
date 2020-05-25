@@ -23,7 +23,7 @@ class ClientHome extends Component {
         vesselSize: '',
         cpDate: '',
         loadPort: '',
-        dischargePoint: '',
+        dischargePort: '',
         cargo: '',
         cargoIntake: '',
         ownerName: ''

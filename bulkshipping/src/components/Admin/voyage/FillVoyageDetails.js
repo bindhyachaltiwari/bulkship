@@ -24,7 +24,7 @@ class FillVoyageDetails extends Component {
       ownerName: '',
       shipper: '',
       loadPortAgent: '',
-      dischargePoint: '',
+      dischargePort: '',
       receiver: '',
       onHireSurveyor: '',
       offHireSurveyor: '',
@@ -276,7 +276,7 @@ class FillVoyageDetails extends Component {
               <tr>
                 <td>
                   <label>
-                    Load Port
+                    Load Port *
                 </label>
                 </td>
                 <td>
@@ -293,15 +293,15 @@ class FillVoyageDetails extends Component {
               <tr>
                 <td>
                   <label>
-                    Discharge Point
+                    Discharge Port *
                 </label>
                 </td>
                 <td>
-                  <input type='text' required name='dischargePoint' onChange={this.handleAdminChange} />
+                  <input type='text' required name='dischargePort' onChange={this.handleAdminChange} />
                 </td>
                 <td>
                   <Checkbox
-                    name='dischargePoint'
+                    name='dischargePort'
                     color='primary'
                     onChange={this.handleCheckBoxChange}
                   />

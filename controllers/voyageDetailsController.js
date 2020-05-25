@@ -44,7 +44,7 @@ exports.getVoyageDetails = (req, res) => {
                     vesselSize: v.vesselSize,
                     cpDate: v.cpDate,
                     loadPort: v.loadPort,
-                    dischargePoint: v.dischargePoint,
+                    dischargePort: v.dischargePort,
                     cargo: v.cargo,
                     cargoIntake: v.cargoIntake,
                     onwerName: v.onwerName
@@ -106,7 +106,7 @@ exports.getPortDetails = (req, res) => {
                 status: true,
                 portDetails: {
                     loadPort: v.loadPort,
-                    dischargePoint: v.dischargePoint,
+                    dischargePort: v.dischargePort,
                 }
             });
         }

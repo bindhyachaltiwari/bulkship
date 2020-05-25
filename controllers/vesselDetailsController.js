@@ -3,7 +3,7 @@ const vesselDetails = require('../models/vesselDetails');
 
 
 exports.insertVesselDetails = (req, res) => {
-    const vesseldata = new vesselDetails(req.body.data);
+    const vesseldata = new vesselDetails(req.body.data.vesselDetails);
     vesseldata.save().then(() => {
         res.json({
             status: true

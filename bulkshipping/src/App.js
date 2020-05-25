@@ -51,7 +51,7 @@ function App() {
 
           <PrivateRoute path='/fillPerformanceDetails' component={FillPerformanceDetails}></PrivateRoute>
           <PrivateRoute path='/viewPerformanceDetails' component={ViewPerformanceDetails}></PrivateRoute>
-          <PrivateRoute path='/editPerformanceDetails' component={ViewPerformanceDetails}></PrivateRoute>
+          <PrivateRoute path='/editPerformanceDetails' component={FillPerformanceDetails}></PrivateRoute>
          
           <PrivateRoute path='/checkPerformance' component={CheckPerformance}></PrivateRoute>
           <Route path='/pieChart' component={PieCharts}></Route>

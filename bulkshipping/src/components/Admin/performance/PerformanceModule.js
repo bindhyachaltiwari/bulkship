@@ -17,12 +17,13 @@ export default class PerformanceModule extends Component {
         const updateOriginal$ = this.commonFunction(original);
         const updateActual$ = this.commonFunction(actual);
         const localObj = {
-            original,
-            original$: updateOriginal$,
-            actual,
-            actual$: updateActual$
+            original:original ? original : (this.props.voyageDays?this.props.voyageDays.original : 0),
+            original$: updateOriginal$? updateOriginal$ : (this.props.voyageDays?this.props.voyageDays.original$ : 0),
+            actual:actual? actual : (this.props.voyageDays? this.props.voyageDays.actual: 0),
+            actual$: updateActual$?updateActual$ : (this.props.voyageDays?this.props.voyageDays.actual$ : 0)
         }
         this.setState({ ...localObj });
+        
         this.props.onOriginalActualChange(localObj);
     }
 
@@ -47,30 +48,39 @@ export default class PerformanceModule extends Component {
     }
 
     getOriginalValue(e) {
-        const updateOriginal$ = this.commonFunction(e.target.value);
-        const { actual, actual$ } = this.state;
-        const localObj = {
-            original: parseFloat(e.target.value),
-            original$: updateOriginal$ ? updateOriginal$ : 0,
-            actual,
-            actual$
-        }
-        this.setState({ ...localObj });
-        this.props.onOriginalActualChange(localObj);
+        //if (e.target.value) {
+            const value = e.target.value ? e.target.value : 0;
+            const updateOriginal$ = this.commonFunction(value);
+            const { actual, actual$ } = this.state;
+            const localObj = {
+                original: parseFloat(value),
+                original$: updateOriginal$ ? updateOriginal$ : 0,
+                actual,
+                actual$
+            }
+            this.setState({ ...localObj });
+            this.props.onOriginalActualChange(localObj);
+        //}
+        
     }
 
     getActualValue(e) {
-        const updateActual$ = this.commonFunction(e.target.value);
-        const { original, original$ } = this.state;
-        const localObj = {
-            original,
-            original$,
-            actual: parseFloat(e.target.value),
-            actual$: updateActual$
-        }
+        //if (e.target.value) {
+            const value = e.target.value ? e.target.value : 0;
+            
+            const updateActual$ = this.commonFunction(value);
+            const { original, original$ } = this.state;
+            const localObj = {
+                original,
+                original$,
+                actual: parseFloat(value),
+                actual$: updateActual$
+            }
 
-        this.setState({ ...localObj });
-        this.props.onOriginalActualChange(localObj);
+            this.setState({ ...localObj });
+            this.props.onOriginalActualChange(localObj);
+        //}
+        
     }
 
     render() {
@@ -78,16 +88,16 @@ export default class PerformanceModule extends Component {
         return (
             <>
                 <td>
-                    <input type='text' required onChange={this.getOriginalValue} autoComplete='off' />
+                    <input type='text' required={this.props.required} onChange={this.getOriginalValue} autoComplete='off' value ={this.props.voyageDays? this.props.voyageDays.original: 0}/>
                 </td>
                 <td>
-                    <input type='text' required onChange={this.getActualValue} autoComplete='off' />
+                    <input type='text' required={this.props.required} onChange={this.getActualValue} autoComplete='off' value ={this.props.voyageDays?this.props.voyageDays.actual : 0}/>
                 </td>
                 <td>
-                    <input type='text' disabled value={original$ || 0} />
+                    <input type='text' disabled value={original$? original$ : (this.props.voyageDays?this.props.voyageDays.original$ : 0)}/>
                 </td>
                 <td>
-                    <input type='text' disabled value={actual$ || 0} />
+                    <input type='text' disabled value={actual$ ? actual$: (this.props.voyageDays?this.props.voyageDays.actual$ : 0)}/>
                 </td>
             </>
         )
