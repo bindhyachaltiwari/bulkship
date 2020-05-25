@@ -92,9 +92,10 @@ class FillPerformanceDetails extends Component {
 
   handlePerformanceDetailsChange = e => {
     e.preventDefault();
-    const { name, value } = e.target;
+    let { name, value } = e.target;
     const { performanceDetails } = this.state;
-    if (value && parseFloat(value) >= 0) {
+    value = value ? value : 0;
+    //if (value && parseFloat(value) >= 0) {
       Object.assign(performanceDetails, { [name]: parseFloat(value) });
       const totalOrg = this.getTotalOrg(performanceDetails);
       const totalAct = this.getTotalAct(performanceDetails);
@@ -109,10 +110,9 @@ class FillPerformanceDetails extends Component {
         Object.assign(performanceDetails, { freightAct });
       }
       this.setState({ performanceDetails });
-    } else if (name === 'remarks') {
+    //}  
+    if (name === 'remarks') {
       Object.assign(performanceDetails, { [name]: value });
-    } else {
-      return;
     }
   }
 
@@ -322,13 +322,14 @@ class FillPerformanceDetails extends Component {
   handleIFOChange(e) {
     const { performanceDetails } = this.state;
     const { name, value } = e.target;
-    if (value && parseFloat(value) >= 0) {
+    //if (value && parseFloat(value) >= 0) {
+      const fValue = value ? value : 0
       const str = name.split('IFO');
       if (str && str.length >= 2 && str[1] === 'Act') {
         if (!performanceDetails.bunkerIFOAct) {
           performanceDetails.bunkerIFOAct = {};
         }
-        Object.assign(performanceDetails.bunkerIFOAct, { [str[0]]: parseFloat(value) });
+        Object.assign(performanceDetails.bunkerIFOAct, { [str[0]]: parseFloat(fValue) });
         const { consumption, price } = performanceDetails.bunkerIFOAct;
         if (parseFloat(consumption) >= 0 && parseFloat(price) >= 0) {
           Object.assign(performanceDetails.bunkerIFOAct, { bunkerIFOAct$: (consumption * price) });
@@ -337,7 +338,7 @@ class FillPerformanceDetails extends Component {
         if (!performanceDetails.bunkerIFOOrg) {
           performanceDetails.bunkerIFOOrg = {};
         }
-        Object.assign(performanceDetails.bunkerIFOOrg, { [str[0]]: parseFloat(value) });
+        Object.assign(performanceDetails.bunkerIFOOrg, { [str[0]]: parseFloat(fValue) });
         const { consumption, price } = performanceDetails.bunkerIFOOrg;
         if (parseFloat(consumption) >= 0 && parseFloat(price) >= 0) {
           Object.assign(performanceDetails.bunkerIFOOrg, { bunkerIFOOrg$: (consumption * price) });
@@ -356,21 +357,20 @@ class FillPerformanceDetails extends Component {
         Object.assign(performanceDetails, { freightAct });
       }
       this.setState({ performanceDetails });
-    } else {
-      return;
-    }
+    //} 
   }
 
   handleMDOChange(e) {
     const { performanceDetails } = this.state;
     const { name, value } = e.target;
-    if (value && parseFloat(value) >= 0) {
+   // if (value && parseFloat(value) >= 0) {
+    const fValue = value ? value : 0
       const str = name.split('MDO');
       if (str && str.length >= 2 && str[1] === 'Act') {
         if (!performanceDetails.bunkerMDOAct) {
           performanceDetails.bunkerMDOAct = {};
         }
-        Object.assign(performanceDetails.bunkerMDOAct, { [str[0]]: parseFloat(value) });
+        Object.assign(performanceDetails.bunkerMDOAct, { [str[0]]: parseFloat(fValue) });
         const { consumption, price } = performanceDetails.bunkerMDOAct;
         if (parseFloat(consumption) >= 0 && parseFloat(price) >= 0) {
           Object.assign(performanceDetails.bunkerMDOAct, { bunkerMDOAct$: (consumption * price) });
@@ -379,7 +379,7 @@ class FillPerformanceDetails extends Component {
         if (!performanceDetails.bunkerMDOOrg) {
           performanceDetails.bunkerMDOOrg = {};
         }
-        Object.assign(performanceDetails.bunkerMDOOrg, { [str[0]]: parseFloat(value) });
+        Object.assign(performanceDetails.bunkerMDOOrg, { [str[0]]: parseFloat(fValue) });
         const { consumption, price } = performanceDetails.bunkerMDOOrg;
         if (parseFloat(consumption) >= 0 && parseFloat(price) >= 0) {
           Object.assign(performanceDetails.bunkerMDOOrg, { bunkerMDOOrg$: (consumption * price) });
@@ -399,9 +399,7 @@ class FillPerformanceDetails extends Component {
       }
 
       this.setState({ performanceDetails });
-    } else {
-      return;
-    }
+    //}
   }
 
   onIntermediatePortDelayChange(obj) {
@@ -528,7 +526,7 @@ class FillPerformanceDetails extends Component {
                 </label>
                 </td>
                 <td>
-                  <input type='text' name='tcHire' required onChange={this.tcHireChange} autoComplete='off' value={tcHire}/>
+                  <input type='text' name='tcHire' required onChange={this.tcHireChange} autoComplete='off' value={tcHire || 0}/>
                 </td>
               </tr>
               <tr>
@@ -538,7 +536,7 @@ class FillPerformanceDetails extends Component {
                 </label>
                 </td>
                 <td>
-                  <input type='text' name='addressCommission' required onChange={this.addressCommissionChange} autoComplete='off' value = {addressCommission}/>
+                  <input type='text' name='addressCommission' required onChange={this.addressCommissionChange} autoComplete='off' value = {addressCommission || 0}/>
                 </td>
               </tr>
             </tbody>
@@ -707,10 +705,10 @@ class FillPerformanceDetails extends Component {
                 <td>
                 </td>
                 <td>
-                  <input type='text' name='loadPortDAOrg$' required onChange={this.handlePerformanceDetailsChange} autoComplete='off' value = {loadPortDAOrg$}/>
+                  <input type='text' name='loadPortDAOrg$' required onChange={this.handlePerformanceDetailsChange} autoComplete='off' value = {loadPortDAOrg$ || 0}/>
                 </td>
                 <td>
-                  <input type='text' name='loadPortDAAct$' required onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {loadPortDAAct$}/>
+                  <input type='text' name='loadPortDAAct$' required onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {loadPortDAAct$ || 0}/>
                 </td>
               </tr>
               <tr>
@@ -724,10 +722,10 @@ class FillPerformanceDetails extends Component {
                 <td>
                 </td>
                 <td>
-                  <input type='text' name='dischargePortDAOrg$' required onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={dischargePortDAAct$}/>
+                  <input type='text' name='dischargePortDAOrg$' required onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={dischargePortDAOrg$ || 0}/>
                 </td>
                 <td>
-                  <input type='text' name='dischargePortDAAct$' required onChange={this.handlePerformanceDetailsChange} autoComplete='off' value = {dischargePortDAOrg$}/>
+                  <input type='text' name='dischargePortDAAct$' required onChange={this.handlePerformanceDetailsChange} autoComplete='off' value = {dischargePortDAAct$ || 0}/>
                 </td>
               </tr>
               <tr>
@@ -741,10 +739,10 @@ class FillPerformanceDetails extends Component {
                 <td>
                 </td>
                 <td>
-                  <input type='text' name='ILOHCandCVEOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={ILOHCandCVEOrg$}/>
+                  <input type='text' name='ILOHCandCVEOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={ILOHCandCVEOrg$ || 0}/>
                 </td>
                 <td>
-                  <input type='text' name='ILOHCandCVEAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {ILOHCandCVEAct$}/>
+                  <input type='text' name='ILOHCandCVEAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {ILOHCandCVEAct$ || 0}/>
                 </td>
               </tr>
               <tr>
@@ -758,10 +756,10 @@ class FillPerformanceDetails extends Component {
                 <td>
                 </td>
                 <td>
-                  <input type='text' name='bunkerSurveyCostBendsOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={bunkerSurveyCostBendsOrg$}/>
+                  <input type='text' name='bunkerSurveyCostBendsOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={bunkerSurveyCostBendsOrg$ || 0}/>
                 </td>
                 <td>
-                  <input type='text' name='bunkerSurveyCostBendsAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {bunkerSurveyCostBendsAct$}/>
+                  <input type='text' name='bunkerSurveyCostBendsAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {bunkerSurveyCostBendsAct$ || 0}/>
                 </td>
               </tr>
               <tr>
@@ -775,10 +773,10 @@ class FillPerformanceDetails extends Component {
                 <td>
                 </td>
                 <td>
-                  <input type='text' name='wXRoutingExpenseOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {wXRoutingExpenseOrg$}/>
+                  <input type='text' name='wXRoutingExpenseOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {wXRoutingExpenseOrg$ || 0}/>
                 </td>
                 <td>
-                  <input type='text' name='wXRoutingExpenseAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {wXRoutingExpenseAct$}/>
+                  <input type='text' name='wXRoutingExpenseAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {wXRoutingExpenseAct$ || 0}/>
                 </td>
               </tr>
               <tr>
@@ -792,10 +790,10 @@ class FillPerformanceDetails extends Component {
                 <td>
                 </td>
                 <td>
-                  <input type='text' name='PNIInsuranceOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {PNIInsuranceOrg$}/>
+                  <input type='text' name='PNIInsuranceOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {PNIInsuranceOrg$ || 0}/>
                 </td>
                 <td>
-                  <input type='text' name='PNIInsuranceAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {PNIInsuranceAct$}/>
+                  <input type='text' name='PNIInsuranceAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {PNIInsuranceAct$ || 0}/>
                 </td>
               </tr>
               <tr>
@@ -809,10 +807,10 @@ class FillPerformanceDetails extends Component {
                 <td>
                 </td>
                 <td>
-                  <input type='text' name='despatchPaidOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {despatchPaidOrg$}/>
+                  <input type='text' name='despatchPaidOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {despatchPaidOrg$ || 0}/>
                 </td>
                 <td>
-                  <input type='text' name='despatchPaidAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {despatchPaidAct$}/>
+                  <input type='text' name='despatchPaidAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {despatchPaidAct$ || 0}/>
                 </td>
               </tr>
               <tr>
@@ -826,10 +824,10 @@ class FillPerformanceDetails extends Component {
                 <td>
                 </td>
                 <td>
-                  <input type='text' name='otherExpenseOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {otherExpenseOrg$}/>
+                  <input type='text' name='otherExpenseOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {otherExpenseOrg$ || 0}/>
                 </td>
                 <td>
-                  <input type='text' name='otherExpenseAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value = {otherExpenseAct$}/>
+                  <input type='text' name='otherExpenseAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value = {otherExpenseAct$ || 0}/>
                 </td>
               </tr>
               <tr>
@@ -843,10 +841,10 @@ class FillPerformanceDetails extends Component {
                 <td>
                 </td>
                 <td>
-                  <input type='text' name='HraWarRiskOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={HraWarRiskOrg$}/>
+                  <input type='text' name='HraWarRiskOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={HraWarRiskOrg$ || 0}/>
                 </td>
                 <td>
-                  <input type='text' name='HraWarRiskAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={HraWarRiskAct}/>
+                  <input type='text' name='HraWarRiskAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={HraWarRiskAct || 0}/>
                 </td>
               </tr>
               <tr>
@@ -860,10 +858,10 @@ class FillPerformanceDetails extends Component {
                 <td>
                 </td>
                 <td>
-                  <input type='text' name='demmurrageReceivedOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {demmurrageReceivedOrg$}/>
+                  <input type='text' name='demmurrageReceivedOrg$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {demmurrageReceivedOrg$ || 0}/>
                 </td>
                 <td>
-                  <input type='text' name='demmurrageReceivedAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {demmurrageReceivedAct$}/>
+                  <input type='text' name='demmurrageReceivedAct$' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {demmurrageReceivedAct$ || 0}/>
                 </td>
               </tr>
               <tr>
@@ -873,10 +871,10 @@ class FillPerformanceDetails extends Component {
               </label>
                 </td>
                 <td>
-                  <input type='text' name='CargoQuantityOrg' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {CargoQuantityOrg}/>
+                  <input type='text' name='CargoQuantityOrg' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {CargoQuantityOrg || 0}/>
                 </td>
                 <td>
-                  <input type='text' name='CargoQuantityAct' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {CargoQuantityAct}/>
+                  <input type='text' name='CargoQuantityAct' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {CargoQuantityAct || 0}/>
                 </td>
                 <td>
                 </td>
@@ -930,7 +928,7 @@ class FillPerformanceDetails extends Component {
                 <td>
                 </td>
                 <td>
-                  <input type='text' name='remarks' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {remarks}/>
+                  <input type='text' name='remarks' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value= {remarks || ''}/>
                 </td>
               </tr>
             </tbody>
