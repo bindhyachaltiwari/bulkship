@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 class API {
-    apiUrl = '';
+    apiUrl = 'http://localhost:3003';
 
     checkUsername = data => {
         return axios.post(this.apiUrl + '/userDetails/checkUsername', {

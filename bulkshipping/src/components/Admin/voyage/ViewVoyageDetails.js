@@ -16,6 +16,9 @@ class ViewVoyageDetails extends Component {
         if (props && props.history && props.history.location.pathname === '/editVoyageDetails') {
             this.localState.isEditPage = true;
         }
+        if (props && props.history && props.history.location && props.history.location.state) {
+            this.localState.userNameFromViewUsers = props.history.location.state.userName
+        }
         this.state = { ...this.localState };
         this.handleBackButton = this.handleBackButton.bind(this);
     }
@@ -36,11 +39,6 @@ class ViewVoyageDetails extends Component {
         this.props.history.goBack();
     }
 
-    // handleEditClick = e => {
-    //     const { voyageList } = this.state;
-    //     const c = voyageList.find(m => m['id'] === e.target.id);
-    // }
-
     buildCustomTableBodyCell = ({ cellVal, column, rowId }) => {
         let val;
         switch (column.id) {
@@ -58,9 +56,12 @@ class ViewVoyageDetails extends Component {
     };
 
     render() {
-        let { voyageList, isEditPage } = this.state;
+        let { voyageList, isEditPage, userNameFromViewUsers } = this.state;
         let options;
         if (voyageList.length) {
+            if (userNameFromViewUsers) {
+                voyageList = voyageList.filter(f => f.chartererName === this.state.userNameFromViewUsers)
+            }
             options = {
                 title: 'Client List',
                 keyColumn: '_id',
@@ -281,7 +282,7 @@ class ViewVoyageDetails extends Component {
             <span>
                 <button className='backButton' onClick={this.handleBackButton}>Back</button>
                 <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
-                < div id='table' className={'tooltipBoundary'} style={{ marginTop: '2%', marginLeft: '2%', display: 'flex' }}>
+                < div id='table' className={'tooltipBoundary'} style={{ margin: '2% 0 6% 2%', display: 'flex' }}>
                     <Datatable options={options} actions={this.actionsRow} refreshRows={this.refreshRows} stripped CustomTableBodyCell={this.buildCustomTableBodyCell} />
                 </div >
             </span>

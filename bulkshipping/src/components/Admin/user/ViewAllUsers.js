@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Datatable } from '@o2xp/react-datatable';
 import api from '../../api';
-
+import DisplaySelectedVesselDetails from '../../Client/DisplaySelectedVesselDetails';
+import Popup from 'reactjs-popup';
+import { Button } from '@material-ui/core';
 class ViewAllUsers extends Component {
 
     localState = {
@@ -14,7 +16,7 @@ class ViewAllUsers extends Component {
         this.handleBackButton = this.handleBackButton.bind(this);
     }
 
-    async componentDidMount() {
+    componentDidMount = async e => {
         const res = await api.getAllUserDetails();
         if (res.data.status) {
             this.setState({
@@ -27,20 +29,34 @@ class ViewAllUsers extends Component {
         }
     }
 
-    handleBackButton() {
+    handleBackButton = () => {
         this.props.history.goBack();
     }
 
-    handleEditClick = e => {
+    handleViewVesselList = e => {
         const { clientList } = this.state;
-        const c = clientList.find(m => m['id'] === e.target.id);
+        const cl = clientList.find(m => m['id'] === e.target.id);
+        if (cl && cl.companyName) {
+            this.props.history.push({
+                pathname: '/viewVoyageDetails',
+                state: { userName: cl.companyName }
+            });
+        }
     }
 
     buildCustomTableBodyCell = ({ cellVal, column, rowId }) => {
         let val;
         switch (column.id) {
-            case 'edit':
-                val = <button style={{ color: 'blue', textAlign: 'center', marginLeft: '20%' }} id={rowId} type='button' onClick={this.handleEditClick}>Edit</button>;
+            case 'viewVesselList':
+                const { clientList } = this.state;
+                const cl = clientList.find(m => m['id'] === rowId);
+                if (cl && cl.role === 'Client') {
+                    val = <button style={{ color: 'blue', textAlign: 'center', marginLeft: '20%' }} id={rowId} type='button' onClick={this.handleViewVesselList}>View Vessels</button>;
+                } else if (cl && cl.role === 'Manager') {
+                    val = this.getPopupContent_ManagerRoles(cl);
+                } else {
+                    val = ''
+                }
                 break;
             default:
                 val = <div style={{ color: 'blue' }}>{cellVal}</div>;
@@ -49,6 +65,32 @@ class ViewAllUsers extends Component {
         return val;
     };
 
+    getPopupContent_ManagerRoles = (vsl) => {
+        let content = <p></p>;
+        let active = [];
+        if (vsl && vsl.managerRoles && Object.keys(vsl.managerRoles).length) {
+            const identifiers = Object.keys(vsl.managerRoles)
+            active = identifiers.filter(function (id) {
+                return vsl.managerRoles[id]
+            })
+            if(active && active.length){
+                active = active.map(m=>m.replace(/([A-Z])/g, ' $1').trim());
+            }
+            return content =
+                <Popup trigger={
+                    <button style={{ color: 'blue', textAlign: 'center', marginLeft: '20%' }} type='button'>View Roles</button>
+                }
+                    position={['bottom right', 'bottom center', 'left top', 'top center']}
+                    on='hover'
+                    keepTooltipInside='.tooltipBoundary'>
+                    <div className='content'>
+                        <DisplaySelectedVesselDetails vesselDetails={active} />
+                    </div>
+                </Popup>
+        }
+
+        return content;
+    }
     render() {
         let { clientList } = this.state;
         let options;
@@ -59,7 +101,7 @@ class ViewAllUsers extends Component {
                 font: 'Arial',
                 dimensions: {
                     datatable: {
-                        width: '60%',
+                        width: '90%',
                         height: '648px',
                     },
                     row: {
@@ -72,14 +114,13 @@ class ViewAllUsers extends Component {
                     canDownload: true,
                     canPrint: true,
                     canOrderColumns: true,
+                    rowsPerPage: {
+                        available: [5, 10, 25, 50, 100],
+                        selected: 10
+                    },
                 },
                 data: {
                     columns: [
-                        // {
-                        //     id: 'edit',
-                        //     label: 'Edit',
-                        //     colSize: '50px',
-                        // },
                         {
                             id: 'userName',
                             label: 'User Name',
@@ -105,9 +146,14 @@ class ViewAllUsers extends Component {
                             label: 'User Type',
                             colSize: '50px',
                         },
+                        {
+                            id: 'viewVesselList',
+                            label: 'View',
+                            colSize: '50px',
+                        },
                     ],
                     rows: [
-                        ...clientList.map(({ userName, displayName, companyName, role, clientType, id }) => ({ userName, displayName, companyName, role, clientType, id, edit: true }))
+                        ...clientList.map(({ userName, displayName, companyName, role, clientType, id, viewVesselList }) => ({ userName, displayName, companyName, role, clientType, id, viewVesselList: true }))
                     ],
                 }
             }
@@ -116,7 +162,7 @@ class ViewAllUsers extends Component {
             <span>
                 <button className='backButton' onClick={this.handleBackButton}>Back</button>
                 <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
-                < div id='table' style={{ marginTop: '2%', marginLeft: '2%', display: 'flex' }}>
+                < div id='table' className={'tooltipBoundary'} style={{ margin: '2% 0 6% 2%', display: 'flex' }}>
                     <Datatable options={options} stripped CustomTableBodyCell={this.buildCustomTableBodyCell} />
                 </div >
             </span>

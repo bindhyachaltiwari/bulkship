@@ -60,7 +60,7 @@ class ViewAllVessels extends Component {
                 font: 'Arial',
                 dimensions: {
                     datatable: {
-                        width: '80%',
+                        width: '90%',
                         height: '648px',
                     },
                     row: {
