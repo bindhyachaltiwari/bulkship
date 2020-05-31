@@ -157,14 +157,15 @@ class FillPerformanceDetails extends Component {
       this.setState({ error: true, errorMsg: 'Failed to fetch data' });
     }
 
-    if (this.localState.isEditPage && selectedClient && selectedVessel && selectedCpDate) {
-      const response = await api.getPerformanceDetails({ cpDate: selectedClient, vesselName: selectedVessel, chartererName: selectedClient });
-      if (response && response.data && response.data.status) {
-        this.localState.isEditContinue = false;
-        this.setState({
-          performanceDetails: response.data.performanceDetails
-        })
-      }
+    if (this.localState.isEditPage && selectedClient && selectedVessel && e.value) {
+      this.setState({performanceDetails:vesselDetails});
+      // const response = await api.getPerformanceDetails({ cpDate: e.value, vesselName: selectedVessel, chartererName: selectedClient });
+      // if (response && response.data && response.data.status) {
+      //   this.localState.isEditContinue = false;
+      //   this.setState({
+      //     performanceDetails: response.data.performanceDetails
+      //   })
+      // }
     }
   };
 

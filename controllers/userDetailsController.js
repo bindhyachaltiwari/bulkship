@@ -1,6 +1,7 @@
 const userDetails = require('../models/userDetails');
 const tokenGenerator = 'CiI1qd4zu0Hn3ZQGJNtAFglzmYeRaGeO';
-exports.insertUserDetails = (req,res)=> {
+const bcrypt = require("bcrypt");
+exports.insertUserDetails = (req, res) => {
     const userDetailsData = new userDetails(req.body.data);
     userDetailsData.save().then(() => {
         res.json({
@@ -20,23 +21,34 @@ exports.login = (req, res) => {
             return;
         }
 
-        if (user && user.password === req.body.data.password) {
-            res.json({
-                status: true,
-                role: user.role,
-                displayName: user.displayName,
-                companyName: user.companyName,
-                userName: user.userName,
-                token: tokenGenerator,
-                managerRoles: user.managerRoles
-            });
-        } else {
-            res.json({ status: false, err: 'Wrong Credentials' });
-        }
+        bcrypt.compare(req.body.data.password, user.password, (error, verified) => {
+            if (error) {
+                res.json({ status: false, err: 'Wrong Credentials' });
+            }
+
+            if (verified) {
+                let respObj = {
+                    status: true,
+                    role: user.role,
+                    displayName: user.displayName,
+                    companyName: user.companyName,
+                    userName: user.userName,
+                    token: tokenGenerator,
+                };
+
+                if (user.role === 'Manager') {
+                    respObj.managerRoles = user.managerRoles
+                } else if (user.role === 'Client') {
+                    respObj.clientDisplay = user.clientDisplay
+                }
+
+                res.json({ ...respObj });
+            } else {
+                res.json({ status: false, err: 'Wrong Credentials' });
+            }
+        });
     });
 }
-
-
 
 exports.checkUsername = (req, res) => {
     userDetails.findOne({ userName: req.body.data.userName }, (err, user) => {
@@ -117,32 +129,4 @@ exports.getAllUserDetails = (req, res) => {
             res.json({ status: false });
         }
     });
-}
-
-exports.getAllManager = (req, res) => {
-    userDetails.find({ role: 'Manager' }, (err, cl) => {
-        if (!cl) {
-            res.json({ status: false, error: err });
-            return;
-        }
-        if (cl.length) {
-            res.json({ status: true, managerList: cl.map(m => m.userName) });
-        } else {
-            res.json({ status: false });
-        }
-    });
-}
-
-exports.addRightsValue = (req, res) => {
-
-    for (var i = 0; i < req.body.data.adminList.length; i++) {
-        userDetails.update(
-            { userName: req.body.data.adminList[i] },
-            { $set: { 'isAdmin': true } },
-            { multi: true }
-        ).then(e => {
-            res.json({ status: true });
-        });
-    }
-
 }

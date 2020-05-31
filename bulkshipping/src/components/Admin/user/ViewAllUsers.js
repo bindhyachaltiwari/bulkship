@@ -73,8 +73,8 @@ class ViewAllUsers extends Component {
             active = identifiers.filter(function (id) {
                 return vsl.managerRoles[id]
             })
-            if(active && active.length){
-                active = active.map(m=>m.replace(/([A-Z])/g, ' $1').trim());
+            if (active && active.length) {
+                active = active.map(m => m.replace(/([A-Z])/g, ' $1').trim());
             }
             return content =
                 <Popup trigger={
@@ -93,71 +93,72 @@ class ViewAllUsers extends Component {
     }
     render() {
         let { clientList } = this.state;
-        let options;
-        if (clientList.length) {
-            options = {
-                title: 'User List',
-                keyColumn: 'id',
-                font: 'Arial',
-                dimensions: {
-                    datatable: {
-                        width: '90%',
-                        height: '648px',
-                    },
-                    row: {
-                        height: '10px'
-                    }
+        const options = {
+            title: 'User List',
+            keyColumn: 'id',
+            font: 'Arial',
+            dimensions: {
+                datatable: {
+                    width: '90%',
+                    height: '648px',
                 },
-                stripped: true,
-                features: {
-                    canSearch: true,
-                    canDownload: true,
-                    canPrint: true,
-                    canOrderColumns: true,
-                    rowsPerPage: {
-                        available: [5, 10, 25, 50, 100],
-                        selected: 10
-                    },
-                },
-                data: {
-                    columns: [
-                        {
-                            id: 'userName',
-                            label: 'User Name',
-                            colSize: '50px',
-                        },
-                        {
-                            id: 'displayName',
-                            label: 'Display Name',
-                            colSize: '50px',
-                        },
-                        {
-                            id: 'companyName',
-                            label: 'Company Name',
-                            colSize: '50px',
-                        },
-                        {
-                            id: 'role',
-                            label: 'Role',
-                            colSize: '50px',
-                        },
-                        {
-                            id: 'clientType',
-                            label: 'User Type',
-                            colSize: '50px',
-                        },
-                        {
-                            id: 'viewVesselList',
-                            label: 'View',
-                            colSize: '50px',
-                        },
-                    ],
-                    rows: [
-                        ...clientList.map(({ userName, displayName, companyName, role, clientType, id, viewVesselList }) => ({ userName, displayName, companyName, role, clientType, id, viewVesselList: true }))
-                    ],
+                row: {
+                    height: '10px'
                 }
+            },
+            stripped: true,
+            features: {
+                canSearch: true,
+                canDownload: true,
+                canPrint: true,
+                canOrderColumns: true,
+                rowsPerPage: {
+                    available: [5, 10, 25, 50, 100],
+                    selected: 10
+                },
+            },
+            data: {
+                columns: [
+                    {
+                        id: 'userName',
+                        label: 'User Name',
+                        colSize: '50px',
+                    },
+                    {
+                        id: 'displayName',
+                        label: 'Display Name',
+                        colSize: '50px',
+                    },
+                    {
+                        id: 'companyName',
+                        label: 'Company Name',
+                        colSize: '50px',
+                    },
+                    {
+                        id: 'role',
+                        label: 'Role',
+                        colSize: '50px',
+                    },
+                    {
+                        id: 'clientType',
+                        label: 'User Type',
+                        colSize: '50px',
+                    },
+                    {
+                        id: 'viewVesselList',
+                        label: 'View',
+                        colSize: '50px',
+                    },
+                ],
+                rows: [],
             }
         }
+
+        if (clientList && clientList.length) {
+            options.data.rows = [...clientList.map(({ userName, displayName, companyName, role, clientType, id, viewVesselList }) => ({ userName, displayName, companyName, role, clientType, id, viewVesselList: true }))
+            ]
+        }
+
         return (
             <span>
                 <button className='backButton' onClick={this.handleBackButton}>Back</button>

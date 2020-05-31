@@ -52,10 +52,6 @@ class API {
         });
     }
 
-    getAllManager = () => {
-        return axios.get(this.apiUrl + '/userDetails/getAllManager');
-    }
-
     getAllVesselsPerformance = data => {
         return axios.get(this.apiUrl + '/performanceDetails/getAllVessels/' + data.isDetailsFilled);
     }

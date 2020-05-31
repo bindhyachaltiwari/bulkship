@@ -57,197 +57,197 @@ class ViewVoyageDetails extends Component {
 
     render() {
         let { voyageList, isEditPage, userNameFromViewUsers } = this.state;
-        let options;
-        if (voyageList.length) {
-            if (userNameFromViewUsers) {
-                voyageList = voyageList.filter(f => f.chartererName === this.state.userNameFromViewUsers)
-            }
-            options = {
-                title: 'Client List',
-                keyColumn: '_id',
-                font: 'Arial',
-                dimensions: {
-                    datatable: {
-                        width: '90%',
-                        height: '648px',
-                    },
-                    row: {
-                        height: '10px'
-                    }
+        if (userNameFromViewUsers) {
+            voyageList = voyageList.filter(f => f.chartererName === this.state.userNameFromViewUsers)
+        }
+        const options = {
+            title: 'Client List',
+            keyColumn: '_id',
+            font: 'Arial',
+            dimensions: {
+                datatable: {
+                    width: '90%',
+                    height: '648px',
                 },
-                stripped: true,
-                features: {
-                    canSearch: true,
-                    canDownload: true,
-                    canPrint: true,
-                    canOrderColumns: true,
-                    canRefreshRows: true,
-                    rowsPerPage: {
-                        available: [5, 10, 25, 50, 100],
-                        selected: 10
-                    },
-                },
-                data: {
-                    columns: [
-                        {
-                            id: 'chartererName',
-                            label: 'Charterer Name',
-                            colSize: '50px',
-                            editable: false,
-                        }, {
-                            id: 'vesselName',
-                            label: 'Vessel Name',
-                            colSize: '50px',
-                            editable: false,
-                        }, {
-                            id: 'cpDate',
-                            label: 'CP Date',
-                            colSize: '50px',
-                            editable: false,
-                        }, {
-                            id: 'vesselSize',
-                            label: ' Vessel Size',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'loadPort',
-                            label: ' Load Port',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'dischargePort',
-                            label: 'Discharge Point',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'cargo',
-                            label: 'Cargo',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'cargoIntake',
-                            label: ' Cargo Intake',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'ownerName',
-                            label: 'Owner Name',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'shipper',
-                            label: 'Shipper',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'loadPortAgent',
-                            label: 'Load Port Agent',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'dischargePortAgent',
-                            label: 'Discharge Port Agent',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'receiver',
-                            label: 'Receiver',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'onHireSurveyor',
-                            label: 'On Hire Surveyor',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'offHireSurveyor',
-                            label: 'Off Hire Surveyor',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'bunkerSupplier',
-                            label: 'Bunker Supplier',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'bunkerTrader',
-                            label: 'Bunker Trader',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'pniInsurance',
-                            label: 'PNI Insurance',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }, {
-                            id: 'weatherRoutingCompany',
-                            label: ' Weather Routing Company',
-                            colSize: '50px',
-                            editable: true,
-                            dataType: 'text',
-                            inputType: 'input'
-                        }
-                    ],
-                    rows: [
-                        ...voyageList.map(({
-                            shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePort, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, otherFields, fieldVisibility
-                        }) => ({
-                            shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePort, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, edit: true, otherFields, fieldVisibility
-                        }))
-                    ],
+                row: {
+                    height: '10px'
                 }
+            },
+            stripped: true,
+            features: {
+                canSearch: true,
+                canDownload: true,
+                canPrint: true,
+                canOrderColumns: true,
+                canRefreshRows: true,
+                rowsPerPage: {
+                    available: [5, 10, 25, 50, 100],
+                    selected: 10
+                },
+            },
+            data: {
+                columns: [
+                    {
+                        id: 'chartererName',
+                        label: 'Charterer Name',
+                        colSize: '50px',
+                        editable: false,
+                    }, {
+                        id: 'vesselName',
+                        label: 'Vessel Name',
+                        colSize: '50px',
+                        editable: false,
+                    }, {
+                        id: 'cpDate',
+                        label: 'CP Date',
+                        colSize: '50px',
+                        editable: false,
+                    }, {
+                        id: 'vesselSize',
+                        label: ' Vessel Size',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'loadPort',
+                        label: ' Load Port',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'dischargePort',
+                        label: 'Discharge Point',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'cargo',
+                        label: 'Cargo',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'cargoIntake',
+                        label: ' Cargo Intake',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'ownerName',
+                        label: 'Owner Name',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'shipper',
+                        label: 'Shipper',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'loadPortAgent',
+                        label: 'Load Port Agent',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'dischargePortAgent',
+                        label: 'Discharge Port Agent',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'receiver',
+                        label: 'Receiver',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'onHireSurveyor',
+                        label: 'On Hire Surveyor',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'offHireSurveyor',
+                        label: 'Off Hire Surveyor',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'bunkerSupplier',
+                        label: 'Bunker Supplier',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'bunkerTrader',
+                        label: 'Bunker Trader',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'pniInsurance',
+                        label: 'PNI Insurance',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }, {
+                        id: 'weatherRoutingCompany',
+                        label: ' Weather Routing Company',
+                        colSize: '50px',
+                        editable: true,
+                        dataType: 'text',
+                        inputType: 'input'
+                    }
+                ],
+                rows: [],
             }
+        }
 
-            if (isEditPage) {
-                options.features.canEdit = true;
-                options.features.canDelete = true;
-            }
+        if (voyageList && voyageList.length) {
+            options.data.rows = [...voyageList.map(({
+                shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePort, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, otherFields, fieldVisibility
+            }) => ({
+                shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePort, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, edit: true, otherFields, fieldVisibility
+            }))
+            ]
+        }
 
-            if (voyageList.some(f => f.otherFields)) {
-                options.data.columns.push({
-                    id: 'otherFields',
-                    label: 'Other Details',
-                    colSize: '80px',
-                });
-            }
+        if (isEditPage) {
+            options.features.canEdit = true;
+            options.features.canDelete = true;
+        }
 
-            if (voyageList.some(f => f.fieldVisibility)) {
-                options.data.columns.push({
-                    id: 'fieldVisibility',
-                    label: 'Visible',
-                    colSize: '80px',
-                });
-            }
+        if (voyageList && voyageList.some(f => f.otherFields)) {
+            options.data.columns.push({
+                id: 'otherFields',
+                label: 'Other Details',
+                colSize: '80px',
+            });
+        }
+
+        if (voyageList && voyageList.some(f => f.fieldVisibility)) {
+            options.data.columns.push({
+                id: 'fieldVisibility',
+                label: 'Visible',
+                colSize: '80px',
+            });
         }
 
         this.refreshRows = () => {

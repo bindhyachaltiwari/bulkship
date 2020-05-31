@@ -16,8 +16,4 @@ router.get('/getAllClientList', userDetailsController.getAllClientList);
 
 router.get('/getAllUserDetails', userDetailsController.getAllUserDetails);
 
-router.get('/getAllManager', userDetailsController.getAllManager);
-
-router.post('/addRightsValue', userDetailsController.addRightsValue);
-
 module.exports = router;

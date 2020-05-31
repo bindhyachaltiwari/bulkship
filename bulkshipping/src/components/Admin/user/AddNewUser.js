@@ -8,7 +8,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
 import api from '../../api';
-
 class AddNewUser extends Component {
 
   userDetails = {
@@ -54,7 +53,7 @@ class AddNewUser extends Component {
     this.handleBackButton = this.handleBackButton.bind(this);
   }
 
-  handleUserDetailsChange = e => {
+  handleUserDetailsChange = async e => {
     e.preventDefault();
     const { name, value } = e.target;
     this.setState({
