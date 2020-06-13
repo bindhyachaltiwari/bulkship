@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { Datatable } from '@o2xp/react-datatable';
+import { withRouter, Link } from 'react-router-dom';
 import api from '../../api';
 import DisplaySelectedVesselDetails from '../../Client/DisplaySelectedVesselDetails';
 import Popup from 'reactjs-popup';
 import { Button } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
+import LeftMenu from '../../../components/Common/LeftMenu';
 class ViewVoyageDetails extends Component {
 
     localState = {
@@ -18,6 +21,9 @@ class ViewVoyageDetails extends Component {
         }
         if (props && props.history && props.history.location && props.history.location.state) {
             this.localState.userNameFromViewUsers = props.history.location.state.userName
+        }
+        if (localStorage.getItem('managerRoles')) {
+            this.localState.isEditPage = JSON.parse(localStorage.getItem('managerRoles')).EditVoyage;
         }
         this.state = { ...this.localState };
         this.handleBackButton = this.handleBackButton.bind(this);
@@ -57,6 +63,10 @@ class ViewVoyageDetails extends Component {
 
     render() {
         let { voyageList, isEditPage, userNameFromViewUsers } = this.state;
+        let showAddVoyage = false;
+        if ((localStorage.getItem('userRole').toLowerCase() ==='admin') || (localStorage.getItem('managerRoles') && JSON.parse(localStorage.getItem('managerRoles')).FillVoyage)) {
+            showAddVoyage = true;
+        }
         if (userNameFromViewUsers) {
             voyageList = voyageList.filter(f => f.chartererName === this.state.userNameFromViewUsers)
         }
@@ -214,19 +224,20 @@ class ViewVoyageDetails extends Component {
                         editable: true,
                         dataType: 'text',
                         inputType: 'input'
+                    }, {
+                        id: 'otherFields',
+                        label: 'Other Details',
+                        colSize: '80px',
+                        editable: false,
+                    }, {
+                        id: 'fieldVisibility',
+                        label: 'Visible',
+                        colSize: '80px',
+                        editable: false
                     }
                 ],
                 rows: [],
             }
-        }
-
-        if (voyageList && voyageList.length) {
-            options.data.rows = [...voyageList.map(({
-                shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePort, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, otherFields, fieldVisibility
-            }) => ({
-                shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePort, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, edit: true, otherFields, fieldVisibility
-            }))
-            ]
         }
 
         if (isEditPage) {
@@ -234,20 +245,13 @@ class ViewVoyageDetails extends Component {
             options.features.canDelete = true;
         }
 
-        if (voyageList && voyageList.some(f => f.otherFields)) {
-            options.data.columns.push({
-                id: 'otherFields',
-                label: 'Other Details',
-                colSize: '80px',
-            });
-        }
-
-        if (voyageList && voyageList.some(f => f.fieldVisibility)) {
-            options.data.columns.push({
-                id: 'fieldVisibility',
-                label: 'Visible',
-                colSize: '80px',
-            });
+        if (voyageList && voyageList.length) {
+            options.data.rows = [...voyageList.map(({
+                shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePort, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, otherFields, fieldVisibility
+            }) => ({
+                shipper, bunkerSupplier, bunkerTrader, cargo, cargoIntake, chartererName, ownerName, cpDate, dischargePort, loadPort, loadPortAgent, dischargePortAgent, offHireSurveyor, onHireSurveyor, pniInsurance, receiver, vesselName, vesselSize, weatherRoutingCompany, _id, otherFields, fieldVisibility
+            }))
+            ]
         }
 
         this.refreshRows = () => {
@@ -279,13 +283,30 @@ class ViewVoyageDetails extends Component {
         }
 
         return (
-            <span>
-                <button className='backButton' onClick={this.handleBackButton}>Back</button>
-                <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
-                < div id='table' className={'tooltipBoundary'} style={{ margin: '2% 0 6% 2%', display: 'flex' }}>
+            <Grid container direction='row' className='main-container'>
+            <LeftMenu/>
+                <Grid item xs={12} md={9} lg={9}>
+            <section className='right right-section'>
+                <div className='right-container'>
+                  <section className='component-wrapper'>
+                  <Button variant='contained' color='primary' onClick={this.handleBackButton} style={{ right: '2%', position: 'fixed' }}>
+                    Back
+            </Button>
+                  <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
+                  <div className="linkContainer">
+                  { showAddVoyage ? (<Link className='addLink' to='/fillVoyageDetails'>Fill Voyage Details</Link>) : (<div></div>)}
+                  </div>
+            <div>
+                
+                <div id='table' className={'tooltipBoundary'} style={{ margin: '2% 0 6% 2%', display: 'flex' }}>
                     <Datatable options={options} actions={this.actionsRow} refreshRows={this.refreshRows} stripped CustomTableBodyCell={this.buildCustomTableBodyCell} />
                 </div >
-            </span>
+            </div>
+            </section>
+                </div>
+                </section>
+                </Grid>
+                </Grid>
         );
     }
 

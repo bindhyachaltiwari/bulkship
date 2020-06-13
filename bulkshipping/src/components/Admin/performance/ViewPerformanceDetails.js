@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import api from '../../api';
 import { Button } from '@material-ui/core';
+import { withRouter, Link } from 'react-router-dom';
 import ShowDropDownAdmin from '../common/ShowDropDownAdmin';
 import FormHelperText from '@material-ui/core/FormHelperText'
 import '../../../css/Admin.css';
 import ViewPerformanceModule from './ViewPerformanceModule';
+import { Grid } from '@material-ui/core';
+import LeftMenu from '../../../components/Common/LeftMenu';
 
 class ViewPerformanceDetails extends Component {
 
@@ -137,6 +140,10 @@ class ViewPerformanceDetails extends Component {
             bunkerSurveyCostBendsAct$, bunkerSurveyCostBendsOrg$, despatchPaidAct$, despatchPaidOrg$, otherExpenseOrg$, otherExpenseAct$, wXRoutingExpenseAct$, wXRoutingExpenseOrg$,
             demmurrageReceivedOrg$, demmurrageReceivedAct$, HraWarRiskOrg$, HraWarRiskAct$, remarks, loadPort, dischargePort } = performanceDetails;
         let showTable;
+        let showAddPerformance = false;
+        if ((localStorage.getItem('userRole').toLowerCase() ==='admin') || (localStorage.getItem('managerRoles') && JSON.parse(localStorage.getItem('managerRoles')).FillPerformance)) {
+            showAddPerformance = true;
+        }
         if (selectedCpDate) {
             showTable = <div>
                 <form style={{ margin: '1%' }}>
@@ -521,14 +528,25 @@ class ViewPerformanceDetails extends Component {
             </div >
         }
         return (
+            <Grid container direction='row' className='main-container'>
+            <LeftMenu/>
+                <Grid item xs={12} md={9} lg={9}>
+            <section className='right right-section'>
+                <div className='right-container'>
+                  <section className='component-wrapper'>
+                  <Button variant='contained' color='primary' onClick={this.handleBackButton} style={{right: '2%',  position: 'fixed' }}>
+                    Back
+            </Button>
+                  <h2>View Performance Details</h2>
+                  <div className="linkContainer">
+                  { showAddPerformance ? (<Link className='addLink' to='/fillPerformanceDetails'>Fill Performance Details</Link>) : (<div></div>)}
+                  </div>
             <div className='about_us_2 about_us_2_animated'>
-                <h2>View Performance Details</h2>
+                
                 <FormHelperText style={{ textAlign: 'center', fontSize: 'large' }} error={error}>
                     {error ? this.state.errorMsg : ''}
                 </FormHelperText>
-                <Button variant='contained' color='primary' onClick={this.handleBackButton} style={{ top: '4%', left: '10%', position: 'fixed' }}>
-                    Back
-            </Button>
+                
                 <ShowDropDownAdmin
                     handleClientListChange={this.handleClientListChange}
                     handleVesselListChange={this.handleVesselListChange}
@@ -538,6 +556,11 @@ class ViewPerformanceDetails extends Component {
                 <br />
                 {showTable}
             </div>
+            </section>
+                </div>
+                </section>
+                </Grid>
+                </Grid>
         )
     }
 }
