@@ -11,7 +11,7 @@ class ViewVoyageDetails extends Component {
 
     localState = {
         voyageList: [],
-        isEditPage: false,
+        isEditPage: true,
     }
 
     constructor(props) {
