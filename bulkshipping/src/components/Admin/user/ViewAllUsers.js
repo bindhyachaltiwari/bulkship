@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Datatable } from '@o2xp/react-datatable';
-import { withRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import api from '../../api';
 import DisplaySelectedVesselDetails from '../../Client/DisplaySelectedVesselDetails';
 import Popup from 'reactjs-popup';
-import { Button } from '@material-ui/core';
 import { Grid } from '@material-ui/core';
 import LeftMenu from '../../../components/Common/LeftMenu';
 class ViewAllUsers extends Component {
@@ -15,9 +14,7 @@ class ViewAllUsers extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { ...this.localState,
-         };
-        this.handleBackButton = this.handleBackButton.bind(this);
+        this.state = { ...this.localState };
     }
 
     componentDidMount = async e => {
@@ -31,10 +28,6 @@ class ViewAllUsers extends Component {
             this.setState({ error: true });
             return;
         }
-    }
-
-    handleBackButton = () => {
-        this.props.history.goBack();
     }
 
     handleViewVesselList = e => {
@@ -98,7 +91,7 @@ class ViewAllUsers extends Component {
     render() {
         let { clientList } = this.state;
         let showAddUser = false;
-        if ((localStorage.getItem('userRole').toLowerCase() ==='admin') || (localStorage.getItem('managerRoles') && JSON.parse(localStorage.getItem('managerRoles')).AddUser)) {
+        if ((localStorage.getItem('userRole').toLowerCase() === 'admin') || (localStorage.getItem('managerRoles') && JSON.parse(localStorage.getItem('managerRoles')).AddUser)) {
             showAddUser = true;
         }
         const options = {
@@ -169,29 +162,21 @@ class ViewAllUsers extends Component {
 
         return (
             <Grid container direction='row' className='main-container'>
-            <LeftMenu/>
+                <LeftMenu />
                 <Grid item xs={12} md={9} lg={9}>
-            <section className='right right-section'>
-                <div className='right-container'>
-                  <section className='component-wrapper'>
-                  <Button variant='contained' color='primary' onClick={this.handleBackButton} style={{ right: '2%', position: 'fixed' }}>
-                    Back
-            </Button>
-                <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
-                <div className="linkContainer">
-                { showAddUser ? (<Link className="addLink" to='/addNewUser'>Add New User </Link>) : (<div></div>)}
-                  </div>
-            <div>
-               
-                <div id='table' className={'tooltipBoundary'} style={{ margin: '2% 0 6% 2%', display: 'flex' }}>
-                    <Datatable options={options} stripped CustomTableBodyCell={this.buildCustomTableBodyCell} />
-                </div >
-            </div>
-            </section>
-                </div>
-                </section>
+                    <section className='right right-section'>
+                        <div className='right-container'>
+                            <section className='component-wrapper'>
+                                <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
+                                {showAddUser ? (<Link className="addLink" to='/addNewUser'>Add New User </Link>) : (<></>)}
+                                <div id='table' className={'tooltipBoundary'} style={{ margin: '2% 0 6% 2%', display: 'flex' }}>
+                                    <Datatable options={options} stripped CustomTableBodyCell={this.buildCustomTableBodyCell} />
+                                </div >
+                            </section>
+                        </div>
+                    </section>
                 </Grid>
-                </Grid>
+            </Grid >
         );
     }
 

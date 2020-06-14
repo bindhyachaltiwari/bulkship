@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Datatable } from '@o2xp/react-datatable';
-import { withRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import api from '../../api';
 import DisplaySelectedVesselDetails from '../../Client/DisplaySelectedVesselDetails';
 import Popup from 'reactjs-popup';
@@ -19,14 +19,10 @@ class ViewVoyageDetails extends Component {
         if (props && props.history && props.history.location.pathname === '/editVoyageDetails') {
             this.localState.isEditPage = true;
         }
-        if (props && props.history && props.history.location && props.history.location.state) {
-            this.localState.userNameFromViewUsers = props.history.location.state.userName
-        }
         if (localStorage.getItem('managerRoles')) {
             this.localState.isEditPage = JSON.parse(localStorage.getItem('managerRoles')).EditVoyage;
         }
         this.state = { ...this.localState };
-        this.handleBackButton = this.handleBackButton.bind(this);
     }
 
     async componentDidMount() {
@@ -41,9 +37,7 @@ class ViewVoyageDetails extends Component {
         }
     }
 
-    handleBackButton() {
-        this.props.history.goBack();
-    }
+    handleBackButton = () => this.props.history.goBack();
 
     buildCustomTableBodyCell = ({ cellVal, column, rowId }) => {
         let val;
@@ -62,13 +56,16 @@ class ViewVoyageDetails extends Component {
     };
 
     render() {
-        let { voyageList, isEditPage, userNameFromViewUsers } = this.state;
+        let { voyageList, isEditPage } = this.state;
+        const { history } = this.props;
         let showAddVoyage = false;
-        if ((localStorage.getItem('userRole').toLowerCase() ==='admin') || (localStorage.getItem('managerRoles') && JSON.parse(localStorage.getItem('managerRoles')).FillVoyage)) {
+        let showBackButton = false;
+        if ((localStorage.getItem('userRole').toLowerCase() === 'admin') || (localStorage.getItem('managerRoles') && JSON.parse(localStorage.getItem('managerRoles')).FillVoyage)) {
             showAddVoyage = true;
         }
-        if (userNameFromViewUsers) {
-            voyageList = voyageList.filter(f => f.chartererName === this.state.userNameFromViewUsers)
+        if (history && history.location && history.location.state) {
+            voyageList = voyageList.filter(f => f.chartererName === history.location.state.userName);
+            showBackButton = true;
         }
         const options = {
             title: 'Client List',
@@ -284,29 +281,25 @@ class ViewVoyageDetails extends Component {
 
         return (
             <Grid container direction='row' className='main-container'>
-            <LeftMenu/>
+                <LeftMenu />
                 <Grid item xs={12} md={9} lg={9}>
-            <section className='right right-section'>
-                <div className='right-container'>
-                  <section className='component-wrapper'>
-                  <Button variant='contained' color='primary' onClick={this.handleBackButton} style={{ right: '2%', position: 'fixed' }}>
-                    Back
-            </Button>
-                  <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
-                  <div className="linkContainer">
-                  { showAddVoyage ? (<Link className='addLink' to='/fillVoyageDetails'>Fill Voyage Details</Link>) : (<div></div>)}
-                  </div>
-            <div>
-                
-                <div id='table' className={'tooltipBoundary'} style={{ margin: '2% 0 6% 2%', display: 'flex' }}>
-                    <Datatable options={options} actions={this.actionsRow} refreshRows={this.refreshRows} stripped CustomTableBodyCell={this.buildCustomTableBodyCell} />
-                </div >
-            </div>
-            </section>
-                </div>
-                </section>
+                    <section className='right right-section'>
+                        <div className='right-container'>
+                            <section className='component-wrapper'>
+                                {showBackButton ? <Button variant='contained' color='primary' onClick={this.handleBackButton} style={{ right: '2%', position: 'fixed' }}> Back </Button> : (<></>)}
+                                <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
+                                {showAddVoyage ? (<Link className='addLink' to='/fillVoyageDetails'>Fill Voyage Details</Link>) : (<></>)}
+                                <div>
+
+                                    <div id='table' className={'tooltipBoundary'} style={{ margin: '2% 0 6% 2%', display: 'flex' }}>
+                                        <Datatable options={options} actions={this.actionsRow} refreshRows={this.refreshRows} stripped CustomTableBodyCell={this.buildCustomTableBodyCell} />
+                                    </div >
+                                </div>
+                            </section>
+                        </div>
+                    </section>
                 </Grid>
-                </Grid>
+            </Grid>
         );
     }
 

@@ -34,9 +34,7 @@ class LeftMenu extends React.Component {
         let { menuItems } = this.state;
 
         return (
-
             <>
-
                 <Grid item md={3} lg={3} className='left left-section'>
                     <div className="left-menu-wrapper">
 
@@ -47,14 +45,14 @@ class LeftMenu extends React.Component {
                                 <ul className='menu-items'>
                                     {menuItems && menuItems.length && menuItems.map((item, index) => {
                                         if (index === 2) {
-                                            return <li className='list-item'>
+                                            return <li className='list-item' key={item.title}>
                                                 <span>{item.title}</span>
                                                 <Link style={{ cursor: 'pointer' }} to={item.linksTo1} navigation={item.links1} title={item.titles1}>{item.link1}</Link>
                                                 <Link style={{ cursor: 'pointer' }} to={item.linksTo2} navigation={item.links2} title={item.titles2}>{item.link2}</Link>
                                             </li>
                                         }
                                         else {
-                                            return <li className='list-item'>
+                                            return <li className='list-item' key={item.titles}>
                                                 <span>{item.title}</span>
                                                 <Link style={{ cursor: 'pointer' }} to={item.linksTo} navigation={item.links} title={item.titles}>{item.link}</Link>
                                             </li>

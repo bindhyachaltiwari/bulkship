@@ -9,7 +9,6 @@ import api from '../../api';
 import { Checkbox } from '@material-ui/core';
 import AddDynamicField from '../common/AddDynamicField';
 
-
 class FillVoyageDetails extends Component {
 
   localState = {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 class API {
-    apiUrl = '';
+    apiUrl = 'http://localhost:3003';
 
     checkUsername = data => {
         return axios.post(this.apiUrl + '/userDetails/checkUsername', {
@@ -114,11 +114,12 @@ class API {
     getPortDetails = data => {
         return axios.get(this.apiUrl + '/voyageDetails/getPortDetails/' + data.userName + '/' + data.vesselName + '/' + data.cpDate);
     }
+    
     getPerformanceDetails = data => {
         return axios.get(this.apiUrl + '/performanceDetails/getPerformanceDetails/' + data.chartererName + '/' + data.vesselName + '/' + data.cpDate);
     }
 
-    getCompletePerformanceDetailsForView = data =>{
+    getCompletePerformanceDetailsForView = data => {
         return axios.get(this.apiUrl + '/performanceDetails/getCompletePerformanceDetailsForView/' + data.userName + '/' + data.vesselName + '/' + data.cpDate);
     }
 

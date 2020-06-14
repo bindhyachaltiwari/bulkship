@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Datatable } from '@o2xp/react-datatable';
-import { withRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import api from '../../api';
 import DisplaySelectedVesselDetails from '../../Client/DisplaySelectedVesselDetails';
 import Popup from 'reactjs-popup';
@@ -24,8 +24,6 @@ class ViewAllVessels extends Component {
             this.localState.isEditPage = JSON.parse(localStorage.getItem('managerRoles')).EditVessels;
         }
         this.state = { ...this.localState };
-        this.handleBackButton = this.handleBackButton.bind(this);
-        
     }
 
     async componentDidMount() {
@@ -38,10 +36,6 @@ class ViewAllVessels extends Component {
         } else {
             this.setState({ error: true });
         }
-    }
-
-    handleBackButton() {
-        this.props.history.goBack();
     }
 
     buildCustomTableBodyCell = ({ cellVal, column, rowId }) => {
@@ -60,7 +54,7 @@ class ViewAllVessels extends Component {
     render() {
         let { vesselList, isEditPage } = this.state;
         let showAddVessel = false;
-        if ((localStorage.getItem('userRole').toLowerCase() ==='admin') || (localStorage.getItem('managerRoles') && JSON.parse(localStorage.getItem('managerRoles')).AddVessel)) {
+        if ((localStorage.getItem('userRole').toLowerCase() === 'admin') || (localStorage.getItem('managerRoles') && JSON.parse(localStorage.getItem('managerRoles')).AddVessel)) {
             showAddVessel = true;
         }
         const options = {
@@ -227,9 +221,7 @@ class ViewAllVessels extends Component {
             ]
         }
 
-        this.refreshRows = () => {
-            window.location.reload();
-        };
+        this.refreshRows = () => window.location.reload();
 
         this.actionsRow = async e => {
             if (!e || !e.type) {
@@ -257,29 +249,21 @@ class ViewAllVessels extends Component {
 
         return (
             <Grid container direction='row' className='main-container'>
-            <LeftMenu/>
+                <LeftMenu />
                 <Grid item xs={12} md={9} lg={9}>
-            <section className='right right-section'>
-                <div className='right-container'>
-                  <section className='component-wrapper'>
-                  <Button variant='contained' color='primary' onClick={this.handleBackButton} style={{ right: '2%', position: 'fixed' }}>
-                    Back
-            </Button>
-                <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
-                <div className="linkContainer">
-                { showAddVessel ? (<Link className="addLink" to='/addNewVessel'>Add New Vessel</Link>):(<div></div>)}
-                  </div>
-            <div>
-                
-                <div id='table' className={'tooltipBoundary'} style={{ margin: '2% 0 6% 2%', display: 'flex' }}>
-                    <Datatable options={options} stripped actions={this.actionsRow} refreshRows={this.refreshRows} CustomTableBodyCell={this.buildCustomTableBodyCell} />
-                </div >
-            </div>
-            </section>
-                </div>
-                </section>
+                    <section className='right right-section'>
+                        <div className='right-container'>
+                            <section className='component-wrapper'>
+                                <h2> Welcome Mr. {this.capitalize(localStorage.getItem('displayName'))}</h2>
+                                {showAddVessel ? (<Link className="addLink" to='/addNewVessel'>Add New Vessel</Link>) : (<></>)}
+                                <div id='table' className={'tooltipBoundary'} style={{ margin: '2% 0 6% 2%', display: 'flex' }}>
+                                    <Datatable options={options} stripped actions={this.actionsRow} refreshRows={this.refreshRows} CustomTableBodyCell={this.buildCustomTableBodyCell} />
+                                </div >
+                            </section>
+                        </div>
+                    </section>
                 </Grid>
-                </Grid>
+            </Grid>
         );
     }
 

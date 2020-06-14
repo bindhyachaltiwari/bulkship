@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import api from '../../api';
-import { Button } from '@material-ui/core';
-import { withRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ShowDropDownAdmin from '../common/ShowDropDownAdmin';
 import FormHelperText from '@material-ui/core/FormHelperText'
 import '../../../css/Admin.css';
@@ -27,12 +26,8 @@ class ViewPerformanceDetails extends Component {
                 addressCommission: 0,
             },
         }
-        this.handleBackButton = this.handleBackButton.bind(this);
     }
 
-    handleBackButton() {
-        this.props.history.goBack();
-    }
     async componentDidMount() {
         const res = await api.getAllVesselsPerformance({ isDetailsFilled: true });
         if (res.data.status) {
@@ -62,20 +57,6 @@ class ViewPerformanceDetails extends Component {
         } else {
             this.setState({ error: true, errorMsg: 'Failed to fetch data' });
         }
-
-
-        // const res = await api.getCompletePerformanceDetailsForView({ userName: selectedClient, vesselName: selectedVessel, cpDate: e.value });
-        // if (res.data.status) {
-        //   this.setState({
-        //     performanceDetails: res.data.performanceDetails,
-        //     vesselDetails,
-        //     selectedCpDate: e.value,
-        //     error: false,
-        //     performanceDetails: {}
-        //   });
-        // } else {
-        //   this.setState({ error: true, errorMsg: 'Failed to fetch data' });
-        // }
         this.setState({
             performanceDetails,
             selectedCpDate: e.value,
@@ -141,8 +122,12 @@ class ViewPerformanceDetails extends Component {
             demmurrageReceivedOrg$, demmurrageReceivedAct$, HraWarRiskOrg$, HraWarRiskAct$, remarks, loadPort, dischargePort } = performanceDetails;
         let showTable;
         let showAddPerformance = false;
-        if ((localStorage.getItem('userRole').toLowerCase() ==='admin') || (localStorage.getItem('managerRoles') && JSON.parse(localStorage.getItem('managerRoles')).FillPerformance)) {
+        let showEditPerformance = false;
+        if ((localStorage.getItem('userRole').toLowerCase() === 'admin') || (localStorage.getItem('managerRoles') && JSON.parse(localStorage.getItem('managerRoles')).FillPerformance)) {
             showAddPerformance = true;
+        }
+        if ((localStorage.getItem('userRole').toLowerCase() === 'admin') || (localStorage.getItem('managerRoles') && JSON.parse(localStorage.getItem('managerRoles')).EditPerformance)) {
+            showEditPerformance = true;
         }
         if (selectedCpDate) {
             showTable = <div>
@@ -529,38 +514,32 @@ class ViewPerformanceDetails extends Component {
         }
         return (
             <Grid container direction='row' className='main-container'>
-            <LeftMenu/>
+                <LeftMenu />
                 <Grid item xs={12} md={9} lg={9}>
-            <section className='right right-section'>
-                <div className='right-container'>
-                  <section className='component-wrapper'>
-                  <Button variant='contained' color='primary' onClick={this.handleBackButton} style={{right: '2%',  position: 'fixed' }}>
-                    Back
-            </Button>
-                  <h2>View Performance Details</h2>
-                  <div className="linkContainer">
-                  { showAddPerformance ? (<Link className='addLink' to='/fillPerformanceDetails'>Fill Performance Details</Link>) : (<div></div>)}
-                  </div>
-            <div className='about_us_2 about_us_2_animated'>
-                
-                <FormHelperText style={{ textAlign: 'center', fontSize: 'large' }} error={error}>
-                    {error ? this.state.errorMsg : ''}
-                </FormHelperText>
-                
-                <ShowDropDownAdmin
-                    handleClientListChange={this.handleClientListChange}
-                    handleVesselListChange={this.handleVesselListChange}
-                    handleCpDateChange={this.handleCpDateChange}
-                    state={this.state}
-                />
-                <br />
-                {showTable}
-            </div>
-            </section>
-                </div>
-                </section>
+                    <section className='right right-section'>
+                        <div className='right-container'>
+                            <section className='component-wrapper'>
+                                <h2>View Performance Details</h2>
+                                {showAddPerformance ? (<Link className='addLink' to='/fillPerformanceDetails'>Fill Performance Details</Link>) : (<></>)}
+                                {showEditPerformance ? (<Link className='addLink' to='/editPerformanceDetails'>Edit Performance Details</Link>) : (<></>)}
+                                <div className='about_us_2 about_us_2_animated'>
+                                    <FormHelperText style={{ textAlign: 'center', fontSize: 'large' }} error={error}>
+                                        {error ? this.state.errorMsg : ''}
+                                    </FormHelperText>
+                                    <ShowDropDownAdmin
+                                        handleClientListChange={this.handleClientListChange}
+                                        handleVesselListChange={this.handleVesselListChange}
+                                        handleCpDateChange={this.handleCpDateChange}
+                                        state={this.state}
+                                    />
+                                    <br />
+                                    {showTable}
+                                </div>
+                            </section>
+                        </div>
+                    </section>
                 </Grid>
-                </Grid>
+            </Grid>
         )
     }
 }
