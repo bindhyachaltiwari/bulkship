@@ -8,16 +8,13 @@ import PerformanceModule from './PerformanceModule';
 
 class FillPerformanceDetails extends Component {
   localState = {
-    isEditPage: true,
+    isEditPage: false,
     isEditContinue: true
   }
   constructor(props) {
     super(props);
     if (props && props.history && props.history.location.pathname === '/editPerformanceDetails') {
       this.localState.isEditPage = true;
-    }
-    if (localStorage.getItem('managerRoles')) {
-        this.localState.isEditPage = JSON.parse(localStorage.getItem('managerRoles')).EditPerformance;
     }
     this.handleVesselListChange = this.handleVesselListChange.bind(this);
     this.handleClientListChange = this.handleClientListChange.bind(this);
