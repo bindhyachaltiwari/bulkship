@@ -1,0 +1,11 @@
+const actionTypes = {
+    LOGIN: 'LOGIN',
+    LOGIN_ASYNC: 'LOGIN_ASYNC',
+    FAILURE: 'FAILURE',
+    USERDETAIL: 'USERDETAIL',
+    USERDETAIL_ASYNC: 'USERDETAIL_ASYNC',
+    SET_ACTIVE_TAB: 'SET_ACTIVE_TAB',
+    SET_OVERLAY: 'SET_OVERLAY'
+};
+
+export default actionTypes;

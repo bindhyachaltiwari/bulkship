@@ -1,22 +1,28 @@
-export function addItem(payload) {
+export  function addItem(payload){
     return {
-        type: 'ADD',
+        type:'ADD',
         payload
     }
 }
 export function getApiActionCal() {
     return {
-        type: 'APICALL'
+        type:'APICALL'
     }
 }
 export function getDataLoaded(payload) {
     return {
-        type: 'DATA-LOADED',
+        type:'DATA-LOADED',
         payload
     }
 }
 export function getDataError() {
     return {
-        type: 'DATA-ERROR'
+        type:'DATA-ERROR'
+    }
+}
+export function registrationAPICall(payload) {
+    return {
+        type:'REGISTRATION',
+        payload
     }
 }
