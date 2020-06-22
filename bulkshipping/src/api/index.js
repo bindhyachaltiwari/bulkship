@@ -2,7 +2,7 @@ import axios from 'axios';
 
 class API {
     constructor() {
-        this.apiUrl = '';
+        this.apiUrl = 'http://localhost:3003';
     }
 
     /*
