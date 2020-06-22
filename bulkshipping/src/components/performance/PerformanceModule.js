@@ -91,10 +91,10 @@ export default class PerformanceModule extends Component {
         return (
             <>
                 <td className='table-performance-td-th'>
-                    <input className='table-performance-input' type='text' required={this.props.required} maxLength='10' disabled ={this.props.disabled} onChange={this.getOriginalValue} autoComplete='off' value={this.props.voyageDays ? this.props.voyageDays.original : 0} />
+                    <input className='table-performance-input' type='text' required={this.props.required} maxLength='10' disabled={this.props.disabled} onChange={this.getOriginalValue} autoComplete='off' value={this.props.voyageDays ? this.props.voyageDays.original : 0} />
                 </td>
                 <td className='table-performance-td-th'>
-                    <input className='table-performance-input' type='text' required={this.props.required} maxLength='10' disabled ={this.props.disabled} onChange={this.getActualValue} autoComplete='off' value={this.props.voyageDays ? this.props.voyageDays.actual : 0} />
+                    <input className='table-performance-input' type='text' required={this.props.required} maxLength='10' disabled={this.props.disabled} onChange={this.getActualValue} autoComplete='off' value={this.props.voyageDays ? this.props.voyageDays.actual : 0} />
                 </td>
                 <td className='table-performance-td-th'>
                     <input className='table-performance-input' type='text' disabled value={original$ ? original$ : (this.props.voyageDays ? this.props.voyageDays.original$ : 0)} />

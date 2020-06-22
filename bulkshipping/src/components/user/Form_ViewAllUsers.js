@@ -24,6 +24,10 @@ class ViewAllUsers extends Component {
     }
   }
 
+  onRowClick = (event, rowData) => {
+    this.props.handleRowClicked(rowData);
+  }
+
   handleCancelAlert = () => this.setState({
     alertDetails: {
       openAlert: false,
@@ -38,13 +42,15 @@ class ViewAllUsers extends Component {
     { field: 'companyName', title: 'Company Name' },
     { field: 'role', title: 'Role' },
     { field: 'clientType', title: 'User Type' },
-    { field: 'viewVesselList', title: 'View' }];
+    { field: 'clientDisplay', title: 'Client Display' },
+    { field: 'managerRoles', title: 'Roles' },
+  ];
 
     const { clientList, alertDetails } = this.state;
     return (
       <form>
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
-        <UserTable title={'View All Users'} data={clientList} columns={columns} />
+        <UserTable title={'View All Users'} data={clientList} columns={columns} onRowClick={this.onRowClick} />
       </form>
     );
   }

@@ -37,11 +37,28 @@ class LeftMenu extends React.Component {
     }
 
     render() {
-        const { ui } = this.props;
-        let { menuItem, activeOverlay } = ui;
+        const { ui, detail } = this.props;
+        let { activeOverlay } = ui;
         const isMenuActive = this.state.activeMenu;
         const showOverlay = activeOverlay === 'menu-overlay';
-        menuItem = ['user', 'vessel', 'voyage', 'performance'];
+        let menuItem = [];
+        if (detail.role === 'Admin') {
+            menuItem = ['user', 'vessel', 'voyage', 'performance'];
+        } else if (detail.role === "Manager") {
+            const mr = this.props.detail.managerRoles;
+            if (mr.some(s => s.indexOf('User') >= 0)) {
+                menuItem.push('user')
+            }
+            if (mr.some(s => s.indexOf('Vessel') >= 0)) {
+                menuItem.push('vessel')
+            }
+            if (mr.some(s => s.indexOf('Voyage') >= 0)) {
+                menuItem.push('voyage')
+            }
+            if (mr.some(s => s.indexOf('Performance') >= 0)) {
+                menuItem.push('performance')
+            }
+        }
         return (
             <>
                 <div className={`left-menu-wrapper ${isMenuActive ? 'active-menu' : ''}`}>
@@ -76,9 +93,9 @@ class LeftMenu extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-    const { ui } = state;
+    const { ui, detail } = state;
     return {
-        ui
+        ui, detail
     };
 }
 

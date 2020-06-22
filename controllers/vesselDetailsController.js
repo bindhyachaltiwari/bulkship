@@ -62,7 +62,6 @@ exports.deletePid = (req, res) => {
 }
 
 exports.updateVessel = (req, res) => {
-    console.log(req.body.data);
     vesselDetails.findOneAndUpdate({ '_id': req.body.data._id }, req.body.data).then(() => {
         res.json({
             status: true

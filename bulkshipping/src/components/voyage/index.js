@@ -36,6 +36,21 @@ class Voyage extends Component {
   }
 
   handleIconDetail = (event, value) => {
+    const { detail } = this.props;
+    let localValue = 2;
+    if (detail && detail.role === 'Manager' && !detail.managerRoles.some(m => m.indexOf('Fill Voyage Details') >= 0)) {
+      localValue = 1;
+    }
+    if (value === localValue) {
+      this.setState({
+        alertDetails: {
+          openAlert: true,
+          titleMsg: 'Sorry !!',
+          descrMsg: 'You cannot directly click the tab. Please click record from the table to edit'
+        }
+      });
+      return;
+    }
     this.setState({ onRowClickedData: {} });
     if (value !== this.state.activeTabIndex) {
       const { isDirty } = this.state;
@@ -92,28 +107,95 @@ class Voyage extends Component {
   }
 
   handleBlocking = e => this.setState({ isDirty: e });
-  handleRowClicked = e => this.setState({ activeTabIndex: 1, localClickedtTab: 1, onRowClickedData: e });
+  handleRowClicked = e => {
+    const { detail } = this.props;
 
-  getTabData = () => {
-    const tabs = {
-      tabsLabel: [{
-        icon: <AccountCircleIcon className='labelColor' />,
-        label: <span className='labelColor'>VIEW VOYAGE DETAILS</span>
-      }, {
-        icon: <AccountCircleIcon className='labelColor' />,
-        label: <span className='labelColor'>FILL VOYAGE DETAILS</span>
-      },
-      ],
-      tabPanelChild:
-        [{
-          child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} />
-        },
-        {
-          child: <FillVoyageDetails handleBlocking={this.handleBlocking} onRowClickedData={this.state.onRowClickedData} />
-        }]
+    let localValue = 2;
+    if (detail && detail.role === 'Manager') {
+      if (!detail.managerRoles.some(m => m.indexOf('Fill Voyage Details') >= 0)) {
+        localValue = 1
+      }
+
+      if (!detail.managerRoles.some(m => m.indexOf('Edit Voyage Details') >= 0)) {
+        return;
+      }
+    } else {
+      localValue = 2
     }
 
-    return tabs;
+    this.setState({ activeTabIndex: localValue, localClickedtTab: localValue, onRowClickedData: e });
+  };
+
+  getTabData = () => {
+    if (this.props && this.props.detail && this.props.detail.role === 'Manager') {
+      const tabs = {
+        tabsLabel: [],
+        tabPanelChild: []
+      }
+      const assignedRoles = this.props.detail.managerRoles.filter(m => m.indexOf('Voyage') >= 0);
+      for (let i = 0; i < assignedRoles.length; i++) {
+        const role = assignedRoles[i];
+        if (role === 'View All Voyage Details') {
+          tabs.tabsLabel.push({
+            icon: <AccountCircleIcon className='labelColor' />,
+            label: <span className='labelColor'>VIEW VOYAGE DETAILS</span>
+          });
+          tabs.tabPanelChild.push({
+            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} />
+          })
+        } else if (role === 'Fill Voyage Details') {
+          tabs.tabsLabel.push({
+            icon: <AccountCircleIcon className='labelColor' />,
+            label: <span className='labelColor'>FILL VOYAGE DETAILS</span>
+          });
+          tabs.tabPanelChild.push({
+            child: <FillVoyageDetails handleBlocking={this.handleBlocking} />
+          })
+        } else if (role === 'Edit Voyage Details') {
+          tabs.tabsLabel.push({
+            icon: <AccountCircleIcon className='labelColor' />,
+            label: <span className='labelColor'>VIEW VOYAGE DETAILS</span>
+          });
+          tabs.tabPanelChild.push({
+            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} />
+          })
+          tabs.tabsLabel.push({
+            icon: <AccountCircleIcon className='labelColor' />,
+            label: <span className='labelColor'>EDIT VOYAGE DETAILS</span>
+          });
+          tabs.tabPanelChild.push({
+            child: <FillVoyageDetails handleBlocking={this.handleBlocking} onRowClickedData={this.state.onRowClickedData} />
+          })
+        }
+      }
+
+      return tabs;
+    } else {
+      const tabs = {
+        tabsLabel: [{
+          icon: <AccountCircleIcon className='labelColor' />,
+          label: <span className='labelColor'>VIEW VOYAGE DETAILS</span>
+        }, {
+          icon: <AccountCircleIcon className='labelColor' />,
+          label: <span className='labelColor'>FILL VOYAGE DETAILS</span>
+        }, {
+          icon: <AccountCircleIcon className='labelColor' />,
+          label: <span className='labelColor'>EDIT VOYAGE DETAILS</span>
+        },
+        ],
+        tabPanelChild:
+          [{
+            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} />
+          },
+          {
+            child: <FillVoyageDetails handleBlocking={this.handleBlocking} />
+          }, {
+            child: <FillVoyageDetails handleBlocking={this.handleBlocking} onRowClickedData={this.state.onRowClickedData} />
+          }]
+      }
+
+      return tabs;
+    }
   }
 
   /* tab data end */

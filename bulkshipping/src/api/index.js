@@ -118,6 +118,17 @@ class API {
         return axios.delete(this.apiUrl + '/voyageDetails/' + data);
     }
 
+    deleteUserDetails = data => {
+        return axios.delete(this.apiUrl + '/UserDetails/' + data);
+    }
+
+    updateUserDetails = data => {
+        return axios.post(this.apiUrl + '/userDetails/updateUserDetails', {
+            headers: { 'Content-Type': 'application/json' },
+            data,
+        });
+    }
+
     updateVoyageDetails = data => {
         return axios.post(this.apiUrl + '/voyageDetails/updateVoyageDetails', {
             headers: { 'Content-Type': 'application/json' },

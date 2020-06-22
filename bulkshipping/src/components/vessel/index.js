@@ -34,10 +34,25 @@ class Vessel extends Component {
     this.handleCancelAlert = this.handleCancelAlert.bind(this);
     this.handleSuccessAlert = this.handleSuccessAlert.bind(this);
     this.handleRowClicked = this.handleRowClicked.bind(this);
-    this.setState({ onRowClickedData: {} });
   }
 
   handleIconDetail = (event, value) => {
+    const { detail } = this.props;
+    let localValue = 2;
+    if (detail && detail.role === 'Manager' && !detail.managerRoles.some(m => m.indexOf('Add New Vessel') >= 0)) {
+     localValue = 1; 
+    }
+    if (value === localValue) {
+      this.setState({
+        alertDetails: {
+          openAlert: true,
+          titleMsg: 'Sorry !!',
+          descrMsg: 'You cannot directly click the tab. Please click record from the table to edit'
+        }
+      });
+      return;
+    }
+    this.setState({ onRowClickedData: {} });
     if (value !== this.state.activeTabIndex) {
       const { isDirty } = this.state;
       if (isDirty) {
@@ -93,28 +108,95 @@ class Vessel extends Component {
   }
 
   handleBlocking = e => this.setState({ isDirty: e });
-  handleRowClicked = e => this.setState({ activeTabIndex: 1, localClickedtTab: 1, onRowClickedData: e });
+  handleRowClicked = e => {
+    const { detail } = this.props;
+    let localValue = 2;
+    if (detail && detail.role === 'Manager') {
+      if (!detail.managerRoles.some(m => m.indexOf('Add New Vessel') >= 0)) {
+        localValue = 1
+      }
 
-  getTabData = () => {
-    const tabs = {
-      tabsLabel: [{
-        icon: <AccountCircleIcon className='labelColor' />,
-        label: <span className='labelColor'>VIEW ALL VESSELS</span>
-      }, {
-        icon: <AccountCircleIcon className='labelColor' />,
-        label: <span className='labelColor'>ADD NEW VESSEL</span>
-      },
-      ],
-      tabPanelChild:
-        [{
-          child: <ViewAllVessels handleRowClicked={this.handleRowClicked} />
-        },
-        {
-          child: <AddNewVessel handleBlocking={this.handleBlocking} onRowClickedData={this.state.onRowClickedData} />
-        }]
+      if (!detail.managerRoles.some(m => m.indexOf('Edit Vessel Details') >= 0)) {
+        return;
+      }
+    } else {
+      localValue = 2
     }
 
-    return tabs;
+    this.setState({ activeTabIndex: localValue, localClickedtTab: localValue, onRowClickedData: e });
+  };
+
+  getTabData = () => {
+    if (this.props && this.props.detail && this.props.detail.role === 'Manager') {
+      const tabs = {
+        tabsLabel: [],
+        tabPanelChild: []
+      }
+      const assignedRoles = this.props.detail.managerRoles.filter(m => m.indexOf('Vessel') >= 0);
+      for (let i = 0; i < assignedRoles.length; i++) {
+        const role = assignedRoles[i];
+        if (role === 'View All Vessels') {
+          tabs.tabsLabel.push({
+            icon: <AccountCircleIcon className='labelColor' />,
+            label: <span className='labelColor'>VIEW ALL VESSELS</span>
+          });
+          tabs.tabPanelChild.push({
+            child: <ViewAllVessels handleRowClicked={this.handleRowClicked} />
+          })
+        } else if (role === 'Add New Vessel') {
+          tabs.tabsLabel.push({
+            icon: <AccountCircleIcon className='labelColor' />,
+            label: <span className='labelColor'>ADD NEW VESSEL</span>
+          });
+          tabs.tabPanelChild.push({
+            child: <AddNewVessel handleBlocking={this.handleBlocking} />
+          })
+        } else if (role === 'Edit Vessel Details') {
+          tabs.tabsLabel.push({
+            icon: <AccountCircleIcon className='labelColor' />,
+            label: <span className='labelColor'>VIEW ALL VESSELS</span>
+          });
+          tabs.tabPanelChild.push({
+            child: <ViewAllVessels handleRowClicked={this.handleRowClicked} />
+          })
+          tabs.tabsLabel.push({
+            icon: <AccountCircleIcon className='labelColor' />,
+            label: <span className='labelColor'>EDIT VESSEL DETAILS</span>
+          });
+          tabs.tabPanelChild.push({
+            child: <AddNewVessel handleBlocking={this.handleBlocking} onRowClickedData={this.state.onRowClickedData} />
+          })
+        }
+      }
+
+      return tabs;
+    } else {
+      const tabs = {
+        tabsLabel: [{
+          icon: <AccountCircleIcon className='labelColor' />,
+          label: <span className='labelColor'>VIEW ALL VESSELS</span>
+        }, {
+          icon: <AccountCircleIcon className='labelColor' />,
+          label: <span className='labelColor'>ADD NEW VESSEL</span>
+        }, {
+          icon: <AccountCircleIcon className='labelColor' />,
+          label: <span className='labelColor'>EDIT VESSEL DETAILS</span>
+        },
+        ],
+        tabPanelChild:
+          [{
+            child: <ViewAllVessels handleRowClicked={this.handleRowClicked} />
+          },
+          {
+            child: <AddNewVessel handleBlocking={this.handleBlocking} />
+          },
+          {
+            child: <AddNewVessel handleBlocking={this.handleBlocking} onRowClickedData={this.state.onRowClickedData} />
+          }]
+      }
+
+      return tabs;
+    }
   }
 
   /* tab data end */

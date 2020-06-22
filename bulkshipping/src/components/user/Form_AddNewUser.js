@@ -13,6 +13,7 @@ class AddNewUser extends Component {
     super(props);
     this.state = {
       isDirty: false,
+      isTyped: false,
       confAlertDetails: {
         openAlert: false,
         titleMsg: '',
@@ -24,13 +25,20 @@ class AddNewUser extends Component {
         titleMsg: '',
         descrMsg: ''
       },
-      userDetails: {},
+      userDetails: props && props.onRowClickedData ? { ...props.onRowClickedData } : {},
+      isEditPage: props && props.onRowClickedData && Object.keys(props.onRowClickedData).length ? true : false,
       validity: {},
       isformValid: true
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancelAlert = this.handleCancelAlert.bind(this);
     this.handleSuccessAlert = this.handleSuccessAlert.bind(this);
+  }
+
+  componentWillMount() {
+    if (this.props && this.props.onRowClickedData) {
+      this.updateForm(this.props.onRowClickedData, true);
+    }
   }
 
   handleCancelAlert = () => this.setState({
@@ -49,7 +57,7 @@ class AddNewUser extends Component {
 
   handleSuccessAlert = async e => {
     e.preventDefault();
-    const { isDirty, userDetails } = this.state;
+    const { isDirty, userDetails, isEditPage } = this.state;
     if (isDirty) {
       this.setState({
         confAlertDetails: {
@@ -62,63 +70,109 @@ class AddNewUser extends Component {
       });
     }
 
-    let resp = await api.insertUserDetails({ ...userDetails });
-    if (resp.data.status.errors || resp.data.status.errorMsg || resp.data.status.errmsg || !resp.data.status) {
-      if (resp && resp.data && resp.data.status && resp.data.status.errmsg && resp.data.status.errmsg.indexOf('duplicate key error') >= 0) {
+    let resp = {};
+    if (isEditPage) {
+      resp = await api.updateUserDetails(userDetails);
+      if (resp.data.status) {
+        this.props.handleBlocking(false);
+        this.setState({
+          isDirty: true,
+          isTyped: false,
+          confAlertDetails: {
+            openAlert: false,
+            titleMsg: '',
+            descrMsg: '',
+            buttonTitle: '',
+          },
+          isEditPage: true,
+          validity: {},
+          isformValid: true,
+          alertDetails: {
+            openAlert: true,
+            titleMsg: 'Success !!',
+            descrMsg: 'Updated user details successfully..'
+          },
+        });
+      } else {
         this.setState({
           alertDetails: {
             openAlert: true,
             titleMsg: 'Error !!',
-            descrMsg: 'Username already exits.'
+            descrMsg: 'Failed to update user details...'
           }
         });
-        return;
       }
-      this.setState({
-        alertDetails: {
-          openAlert: true,
-          titleMsg: 'Error !!',
-          descrMsg: 'Failed to add new user...'
-        }
-      });
     } else {
-      this.setState({
-        isDirty: false,
-        confAlertDetails: {
-          openAlert: false,
-          titleMsg: '',
-          descrMsg: '',
-          buttonTitle: '',
-        },
-        userDetails: {},
-        validity: {},
-        isformValid: true,
-        alertDetails: {
-          openAlert: true,
-          titleMsg: 'Success !!',
-          descrMsg: 'Added new user successfully..'
-        },
-      });
+      resp = await api.insertUserDetails({ ...userDetails });
+      if (resp.data.status.errors || resp.data.status.errorMsg || resp.data.status.errmsg || !resp.data.status) {
+        if (resp && resp.data && resp.data.status && resp.data.status.errmsg && resp.data.status.errmsg.indexOf('duplicate key error') >= 0) {
+          this.setState({
+            alertDetails: {
+              openAlert: true,
+              titleMsg: 'Error !!',
+              descrMsg: 'Username already exits.'
+            }
+          });
+          return;
+        }
+        this.setState({
+          alertDetails: {
+            openAlert: true,
+            titleMsg: 'Error !!',
+            descrMsg: 'Failed to add new user...'
+          }
+        });
+      } else {
+        this.setState({
+          isDirty: false,
+          isTyped: false,
+          confAlertDetails: {
+            openAlert: false,
+            titleMsg: '',
+            descrMsg: '',
+            buttonTitle: '',
+          },
+          userDetails: {},
+          validity: {},
+          isformValid: true,
+          alertDetails: {
+            openAlert: true,
+            titleMsg: 'Success !!',
+            descrMsg: 'Added new user successfully..'
+          },
+        });
+      }
+      this.props.handleBlocking(false);
     }
-    this.props.handleBlocking(false);
   }
 
   handleSubmit = e => {
     e.preventDefault();
-    this.setState({
-      confAlertDetails: {
-        openAlert: true,
-        titleMsg: 'Add New User ?',
-        descrMsg: 'Do you want to submit?',
-        buttonTitle: 'Submit'
-      },
-    });
+    if (this.state.isEditPage) {
+      this.setState({
+        confAlertDetails: {
+          openAlert: true,
+          titleMsg: 'Update user Details ?',
+          descrMsg: 'Do you want to submit?',
+          buttonTitle: 'Submit'
+        },
+      });
+    } else {
+      this.setState({
+        confAlertDetails: {
+          openAlert: true,
+          titleMsg: 'Add New User ?',
+          descrMsg: 'Do you want to submit?',
+          buttonTitle: 'Submit'
+        },
+      });
+    }
   }
 
   handleChange = e => {
     e.preventDefault();
     const { id, value, name } = e.target;
-    let { userDetails, isformValid, validity } = this.state;
+    let { userDetails, isformValid, validity, isTyped } = this.state;
     if (typeof e.target.getAttribute === 'function') {
       let validationtype = e.target.getAttribute('type');
       if (validationtype) {
@@ -131,37 +185,51 @@ class AddNewUser extends Component {
         });
       }
     }
-
+    isTyped = true
     if (id) {
       Object.assign(userDetails, { [id]: value });
     } else {
       Object.assign(userDetails, { [name]: value });
     }
 
-    this.updateForm(userDetails, isformValid);
+    this.updateForm(userDetails, isformValid, isTyped);
   };
 
-  updateForm(userDetails, isformValid) {
+  updateForm(userDetails, isformValid, isTyped) {
     const { userName, companyName, displayName, password, role, managerRoles, clientDisplay, clientType } = userDetails
-    if (isformValid && userName && companyName && displayName && password && role) {
-      if (role === 'Client' && clientType && clientDisplay && clientDisplay.length) {
-        Object.assign(userDetails, { managerRoles: [] });
-        this.setState({ isDirty: true, userDetails });
-      } else if (role === 'Manager' && managerRoles && managerRoles.length) {
-        Object.assign(userDetails, { clientType: role, clientDisplay: [] });
-        this.setState({ isDirty: true, userDetails });
+    if (isformValid && userName && companyName && displayName && role) {
+      if (!this.state.isEditPage) {
+        if (role === 'Client' && password && clientType && clientDisplay && clientDisplay.length) {
+          Object.assign(userDetails, { managerRoles: [] });
+          this.setState({ isDirty: true, userDetails });
+        } else if (role === 'Manager' && password && managerRoles && managerRoles.length) {
+          Object.assign(userDetails, { clientType: role, clientDisplay: [] });
+          this.setState({ isDirty: true, userDetails, isTyped });
+        } else {
+          this.setState({ isDirty: false, userDetails, isTyped });
+        }
       } else {
-        this.setState({ isDirty: false, userDetails });
+        if (role === 'Client' && clientType && clientDisplay && clientDisplay.length) {
+          Object.assign(userDetails, { managerRoles: [] });
+          this.setState({ isDirty: true, userDetails });
+        } else if (role === 'Manager' && managerRoles && managerRoles.length) {
+          Object.assign(userDetails, { clientType: role, clientDisplay: [] });
+          this.setState({ isDirty: true, userDetails, isTyped });
+        } else {
+          this.setState({ isDirty: false, userDetails, isTyped });
+        }
       }
     } else {
-      this.setState({ isDirty: false, userDetails });
+      this.setState({ isDirty: false, userDetails, isTyped });
     }
 
-    this.props.handleBlocking(true);
+    if (isTyped) {
+      this.props.handleBlocking(true);
+    }
   }
 
   render() {
-    const { validity, isDirty, isformValid, confAlertDetails, userDetails, alertDetails } = this.state;
+    const { validity, isDirty, isformValid, confAlertDetails, userDetails, alertDetails, isEditPage } = this.state;
     let { userName, companyName, displayName, password, role } = userDetails;
     let showRoledata;
     if (role === 'Manager') {
@@ -183,6 +251,7 @@ class AddNewUser extends Component {
                 id='userName'
                 label='User Name *'
                 type='email*'
+                disabled={isEditPage}
                 onChange={this.handleChange}
                 value={userName || ''}
                 autoComplete='off'
@@ -222,6 +291,7 @@ class AddNewUser extends Component {
                 id='password'
                 label='Password *'
                 type='password'
+                disabled={isEditPage}
                 onChange={this.handleChange}
                 value={password || ''}
                 autoComplete='off'
@@ -234,6 +304,7 @@ class AddNewUser extends Component {
                 className='field-select'
                 labelId='demo-simple-select-label'
                 autoWidth
+                disabled={isEditPage}
                 id='role'
                 name='role'
                 value={role || ''}
@@ -275,7 +346,7 @@ class AddNewUser extends Component {
         renderValue={(selected) => selected.join(', ')}>
         {names.map((name) => (
           <MenuItem key={name} value={name}>
-            <Checkbox checked={managerRoles.indexOf(name) > -1} />
+            <Checkbox checked={managerRoles && managerRoles.length && managerRoles.indexOf(name) > -1} />
             <ListItemText primary={name} />
           </MenuItem>
         ))}
@@ -318,7 +389,7 @@ class AddNewUser extends Component {
           renderValue={(selected) => selected.join(', ')}>
           {names.map((name) => (
             <MenuItem key={name} value={name}>
-              <Checkbox checked={clientDisplay.indexOf(name) > -1} />
+              <Checkbox checked={clientDisplay && clientDisplay.length && clientDisplay.indexOf(name) > -1} />
               <ListItemText primary={name} />
             </MenuItem>
           ))}

@@ -30,10 +30,23 @@ class ViewVoyageDetails extends Component {
     return data;
   }
 
+  checkandRemoveObject(data) {
+    data.map((item) => {
+      let udpatedItem = '';
+      if (item.otherFields) {
+        Object.keys(item.otherFields).forEach((index, value) => {
+          udpatedItem = udpatedItem + index + ' = ' + item.otherFields[index] + ' | '
+        });
+        item.otherFields = udpatedItem.trim().substring(0, udpatedItem.trim().length - 1);
+      }
+    })
+    return data;
+  }
+
   componentDidMount = async e => {
     const res = await api.getAllVoyageDetails();
     if (res.data.status) {
-      let updatedResult = this.checkandRemoveObject(res.data.voyageList);
+      const updatedResult = this.checkandRemoveObject(res.data.voyageList);
       this.setState({ voyageList: updatedResult });
     }
   }

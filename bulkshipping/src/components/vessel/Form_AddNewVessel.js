@@ -56,7 +56,7 @@ class AddNewVessel extends Component {
 
   handleSuccessAlert = async e => {
     e.preventDefault();
-    const { isDirty, vesselDetails } = this.state;
+    const { isDirty, vesselDetails, isEditPage } = this.state;
     if (isDirty) {
       this.setState({
         confAlertDetails: {
@@ -68,54 +68,99 @@ class AddNewVessel extends Component {
       });
     }
 
-    const resp = await api.insertVesselDetails({ vesselDetails });
-    if (!resp.data.status) {
-      this.setState({
-        alertDetails: {
-          openAlert: true,
-          titleMsg: 'Error !!',
-          descrMsg: 'Failed to add new user...'
-        }
-      });
+    let resp = {};
+    if (isEditPage) {
+      resp = await api.updateVesselDetails(vesselDetails);
+      if (resp.data.status) {
+        this.props.handleBlocking(false);
+        this.setState({
+          isDirty: true,
+          isTyped: false,
+          confAlertDetails: {
+            openAlert: false,
+            titleMsg: '',
+            descrMsg: '',
+            buttonTitle: '',
+          },
+          isEditPage: true,
+          validity: {},
+          isformValid: true,
+          alertDetails: {
+            openAlert: true,
+            titleMsg: 'Success !!',
+            descrMsg: 'Updated vessel details successfully..'
+          },
+        });
+      } else {
+        this.setState({
+          alertDetails: {
+            openAlert: true,
+            titleMsg: 'Error !!',
+            descrMsg: 'Failed to update vessel details...'
+          }
+        });
+      }
     } else {
-      this.setState({
-        isDirty: false,
-        isTyped: false,
-        confAlertDetails: {
-          openAlert: false,
-          titleMsg: '',
-          descrMsg: '',
-          buttonTitle: '',
-        },
-        vesselDetails: {},
-        validity: {},
-        isformValid: true,
-        alertDetails: {
-          openAlert: true,
-          titleMsg: 'Success !!',
-          descrMsg: 'Added new vessel successfully..'
-        },
-      });
+      resp = await api.insertVesselDetails({ vesselDetails });
+      this.props.handleBlocking(false);
+      if (resp.data.status) {
+        this.setState({
+          isDirty: false,
+          isTyped: false,
+          confAlertDetails: {
+            openAlert: false,
+            titleMsg: '',
+            descrMsg: '',
+            buttonTitle: '',
+          },
+          vesselDetails: {},
+          validity: {},
+          isformValid: true,
+          alertDetails: {
+            openAlert: true,
+            titleMsg: 'Success !!',
+            descrMsg: 'Added new vessel successfully..'
+          },
+        });
+      } else {
+        this.setState({
+          alertDetails: {
+            openAlert: true,
+            titleMsg: 'Error !!',
+            descrMsg: 'Failed to add new user...'
+          }
+        });
+      }
     }
-    this.props.handleBlocking(false);
   }
 
   handleSubmit = e => {
     e.preventDefault();
-    this.setState({
-      confAlertDetails: {
-        openAlert: true,
-        titleMsg: 'Add New Vessel ?',
-        descrMsg: 'Do you want to submit?',
-        buttonTitle: 'Submit'
-      },
-    });
+    if (this.state.isEditPage) {
+      this.setState({
+        confAlertDetails: {
+          openAlert: true,
+          titleMsg: 'Update Vessel Details?',
+          descrMsg: 'Do you want to submit?',
+          buttonTitle: 'Submit'
+        },
+      });
+    } else {
+      this.setState({
+        confAlertDetails: {
+          openAlert: true,
+          titleMsg: 'Add New Vessel ?',
+          descrMsg: 'Do you want to submit?',
+          buttonTitle: 'Submit'
+        },
+      });
+    }
   }
 
   handleChange = e => {
     e.preventDefault();
     const { id, value, name } = e.target;
-    let { vesselDetails, isformValid, validity,isTyped } = this.state;
+    let { vesselDetails, isformValid, validity, isTyped } = this.state;
     if (typeof e.target.getAttribute === 'function') {
       let validationtype = e.target.getAttribute('type');
       if (validationtype) {
@@ -141,9 +186,9 @@ class AddNewVessel extends Component {
   updateForm(vesselDetails, isformValid, isTyped) {
     const { vesselName, IMO, DWT } = vesselDetails
     if (isformValid && vesselName && IMO && DWT) {
-      this.setState({ isDirty: true, vesselDetails,isTyped });
+      this.setState({ isDirty: true, vesselDetails, isTyped });
     } else {
-      this.setState({ isDirty: false, vesselDetails,isTyped });
+      this.setState({ isDirty: false, vesselDetails, isTyped });
     }
 
     if (isTyped) {
@@ -152,7 +197,7 @@ class AddNewVessel extends Component {
   }
 
   render() {
-    const { validity, isDirty, isformValid, confAlertDetails, vesselDetails, alertDetails, isEditPage} = this.state;
+    const { validity, isDirty, isformValid, confAlertDetails, vesselDetails, alertDetails, isEditPage } = this.state;
     let { vesselName, IMO, DWT, flag, vesselType, built, draft, LOA, beam, GRT, NRT, TPC, holdsHatches, grainCapacity, baleCapacity, cranes, grabs } = vesselDetails;
     return (
       <form autoComplete="off" noValidate >

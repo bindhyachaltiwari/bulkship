@@ -16,6 +16,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import api from '../../api';
 
 export default function UserTable(props) {
 
@@ -39,28 +40,16 @@ export default function UserTable(props) {
     ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
   };
 
+  let [columns, setColumns] = React.useState([]);
+  let [data, setData] = React.useState([]);
 
-  const [setState] = React.useState({
-    columns: [
-      { title: 'Name', field: 'name' },
-      { title: 'Surname', field: 'surname' },
-      { title: 'Birth Year', field: 'birthYear', type: 'numeric' },
-      {
-        title: 'Birth Place',
-        field: 'birthCity',
-        lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
-      },
-    ],
-    data: [
-      { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
-      {
-        name: 'Zerya Betül',
-        surname: 'Baran',
-        birthYear: 2017,
-        birthCity: 34,
-      },
-    ],
-  });
+  if (props.columns && props.columns.length && !columns.length) {
+    setColumns(props.columns);
+  }
+
+  if (props.data && props.data.length && !data.length) {
+    setData(props.data)
+  }
 
   return (
     <MaterialTable
@@ -68,28 +57,20 @@ export default function UserTable(props) {
       columns={props.columns}
       data={props.data}
       icons={tableIcons}
+      onRowClick={props.onRowClick}
       editable={{
-        onRowUpdate: (newData, oldData) =>
-          new Promise((resolve) => {
-            setTimeout(() => {
-              resolve();
-              if (oldData) {
-                setState((prevState) => {
-                  const data = [...prevState.data];
-                  data[data.indexOf(oldData)] = newData;
-                  return { ...prevState, data };
-                });
-              }
-            }, 600);
-          }),
         onRowDelete: (oldData) =>
-          new Promise((resolve) => {
+          new Promise(resolve => {
             setTimeout(() => {
               resolve();
-              setState((prevState) => {
-                const data = [...prevState.data];
-                data.splice(data.indexOf(oldData), 1);
-                return { ...prevState, data };
+              setData(async prevState => {
+                const data = [...prevState];
+                let resp = await api.deleteUserDetails(oldData['id']);
+                if (resp.data.status) {
+                  window.location.reload();
+                  // data.splice(data.indexOf(oldData), 1);
+                }
+                return data;
               });
             }, 600);
           }),

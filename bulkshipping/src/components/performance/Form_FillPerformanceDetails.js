@@ -121,7 +121,7 @@ class FillPerformanceDetails extends Component {
         alertDetails: {
           openAlert: true,
           titleMsg: 'Error !!',
-          descrMsg: 'Failed to fetch data...'
+          descrMsg: 'No details found...'
         }
       });
     }

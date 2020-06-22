@@ -28,13 +28,6 @@ export const setActiveTab= (data) => {
   }
 }
 
-export const setHolidays = (data) => {
-  return {
-    type: actionTypes.SET_HOLIDAYS,
-    data
-  }
-}
-
 export const setOverlay = (data) => {
   return {
     type: actionTypes.SET_OVERLAY,

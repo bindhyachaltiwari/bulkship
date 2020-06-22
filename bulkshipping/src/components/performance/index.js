@@ -91,29 +91,67 @@ class Performance extends Component {
   handleBlocking = e => this.setState({ isDirty: e });
 
   getTabData = () => {
-    const tabs = {
-      tabsLabel: [{
-        icon: <AccountCircleIcon className='labelColor' />,
-        label: <span className='labelColor'>VIEW PERFORMANCE DETAILS</span>
-      }, {
-        icon: <AccountCircleIcon className='labelColor' />,
-        label: <span className='labelColor'>FILL PERFORMANCE DETAILS</span>
-      }, {
-        icon: <AccountCircleIcon className='labelColor' />,
-        label: <span className='labelColor'>EDIT PERFORMANCE DETAILS</span>
-      },
-      ],
-      tabPanelChild:
-        [{
-          child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='viewPage'/>
-        }, {
-          child: <FillPerformanceDetails handleBlocking={this.handleBlocking} />
-        }, {
-          child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='editPage'/>
-        }]
-    }
+    if (this.props && this.props.detail && this.props.detail.role === 'Manager') {
+      const tabs = {
+        tabsLabel: [],
+        tabPanelChild: []
+      }
+      const assignedRoles = this.props.detail.managerRoles.filter(m => m.indexOf('Performance') >= 0);
+      for (let i = 0; i < assignedRoles.length; i++) {
+        const role = assignedRoles[i];
+        if (role === 'View All Performance Details') {
+          tabs.tabsLabel.push({
+            icon: <AccountCircleIcon className='labelColor' />,
+            label: <span className='labelColor'>VIEW PERFORMANCE DETAILS</span>
+          });
+          tabs.tabPanelChild.push({
+            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='viewPage' />
+          })
+        } else if (role === 'Fill Performance Details') {
+          tabs.tabsLabel.push({
+            icon: <AccountCircleIcon className='labelColor' />,
+            label: <span className='labelColor'>FILL PERFORMANCE DETAILS</span>
+          });
+          tabs.tabPanelChild.push({
+            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} />
+          })
+        } else if (role === 'Edit Performance Details') {
+          tabs.tabsLabel.push({
+            icon: <AccountCircleIcon className='labelColor' />,
+            label: <span className='labelColor'>EDIT PERFORMANCE DETAILS</span>
+          });
+          tabs.tabPanelChild.push({
+            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='editPage' />
+          })
+        }
+      }
 
-    return tabs;
+      return tabs;
+    } else {
+      const tabs = {
+        tabsLabel: [{
+          icon: <AccountCircleIcon className='labelColor' />,
+          label: <span className='labelColor'>VIEW PERFORMANCE DETAILS</span>
+        }, {
+          icon: <AccountCircleIcon className='labelColor' />,
+          label: <span className='labelColor'>FILL PERFORMANCE DETAILS</span>
+        }, {
+          icon: <AccountCircleIcon className='labelColor' />,
+          label: <span className='labelColor'>EDIT PERFORMANCE DETAILS</span>
+        },
+        ],
+        tabPanelChild:
+          [{
+            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='viewPage' />
+          }, {
+            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} />
+          }, {
+            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='editPage' />
+          }]
+      }
+
+      return tabs;
+    }
   }
 
   /* tab data end */

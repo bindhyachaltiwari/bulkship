@@ -19,8 +19,6 @@ exports.addPerformanceData = (req, res) => {
 }
 
 exports.getCompletePerformanceDetailsForView = (req, res) => {
-   console.log('==>')
-    console.log(req.params);
     PerformanceDetails.find({ $and: [{ chartererName: req.params.userName }, { vesselName: req.params.vesselName }, { cpDate: req.params.cpDate }] }, (err, v) => {
         if (!v.length || err) {
             res.json({ status: false, error: 'No details found' });
@@ -111,14 +109,12 @@ exports.fillPerformanceDetails = (req, res) => {
 }
 
 exports.getPerformanceDetails = (req,res) => {
-    console.log(req.params);
     PerformanceDetails.findOne({ $and: [{chartererName: req.params.chartererName},{vesselName:req.params.vesselName},{cpDate:req.params.cpDate}] })
     .then((performance) => {
       if (!performance) {
         res.json({ status: false, err: 'performance not found' });
                 return;
         }
-      console.log(performance);
     res.json({ status: true, 
         performanceDetails: {
             addressCommission: performance.addressCommission,

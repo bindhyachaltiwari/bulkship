@@ -7,22 +7,3 @@ const constants = {
 }
 
 export default constants;
-
-
-
-
-// 1. Help in make only some fields editable in table
-// 2. help in make editable icon visible on check 
-
-
-
-
-
-//pending
-// 1. login
-// 2. forgot password
-// 3. edit user
-// 4. role based tabs (all Components)
-// 5. dynamic fields(vessel)
-// 6. view other fields in Table(vessel and voyage)
-// 7. edit and delete action( vessel and voyage)

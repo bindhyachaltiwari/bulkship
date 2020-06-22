@@ -103,7 +103,7 @@ class FillVoyageDetails extends Component {
 
   handleSuccessAlert = async e => {
     e.preventDefault();
-    const { isDirty, voyageDetails } = this.state;
+    const { isDirty, voyageDetails, isEditPage } = this.state;
     const { chartererName, vesselName, cpDate } = voyageDetails;
     if (isDirty) {
       this.setState({
@@ -116,49 +116,95 @@ class FillVoyageDetails extends Component {
       });
     }
 
-    let resp = await api.insertPerformanceData({ cpDate, vesselName, chartererName, isDetailsFilled: false });
-    resp = await api.insertVoyageData({ voyageDetails });
-    if (!resp.data.status) {
-      this.setState({
-        alertDetails: {
-          openAlert: true,
-          titleMsg: 'Error !!',
-          descrMsg: 'Failed to add voyage details...'
-        }
-      });
+    let resp = {};
+    if (isEditPage) {
+      resp = await api.updateVoyageDetails(voyageDetails);
+      if (resp.data.status) {
+        this.props.handleBlocking(false);
+        this.setState({
+          isDirty: true,
+          isTyped: false,
+          confAlertDetails: {
+            openAlert: false,
+            titleMsg: '',
+            descrMsg: '',
+            buttonTitle: '',
+          },
+          isEditPage: true,
+          validity: {},
+          isformValid: true,
+          alertDetails: {
+            openAlert: true,
+            titleMsg: 'Success !!',
+            descrMsg: 'Updated voyage details successfully..'
+          },
+        });
+      } else {
+        this.setState({
+          alertDetails: {
+            openAlert: true,
+            titleMsg: 'Error !!',
+            descrMsg: 'Failed to update voyage details...'
+          }
+        });
+      }
     } else {
-      this.setState({
-        isDirty: false,
-        isTyped: false,
-        confAlertDetails: {
-          openAlert: false,
-          titleMsg: '',
-          descrMsg: '',
-          buttonTitle: '',
-        },
-        voyageDetails: {},
-        validity: {},
-        isformValid: true,
-        alertDetails: {
-          openAlert: true,
-          titleMsg: 'Success !!',
-          descrMsg: 'Added voyage details successfully..'
-        },
-      });
+      resp = await api.insertPerformanceData({ cpDate, vesselName, chartererName, isDetailsFilled: false });
+      resp = await api.insertVoyageData({ voyageDetails });
+      this.props.handleBlocking(false);
+      if (resp.data.status) {
+        this.setState({
+          isDirty: false,
+          isTyped: false,
+          confAlertDetails: {
+            openAlert: false,
+            titleMsg: '',
+            descrMsg: '',
+            buttonTitle: '',
+          },
+          voyageDetails: {},
+          validity: {},
+          isformValid: true,
+          alertDetails: {
+            openAlert: true,
+            titleMsg: 'Success !!',
+            descrMsg: 'Added voyage details successfully..'
+          },
+        });
+      } else {
+        this.setState({
+          alertDetails: {
+            openAlert: true,
+            titleMsg: 'Error !!',
+            descrMsg: 'Failed to add voyage details...'
+          }
+        });
+      }
     }
-    this.props.handleBlocking(false);
   }
+
 
   handleSubmit = e => {
     e.preventDefault();
-    this.setState({
-      confAlertDetails: {
-        openAlert: true,
-        titleMsg: 'Add Voyage Details ?',
-        descrMsg: 'Do you want to submit?',
-        buttonTitle: 'Submit'
-      },
-    });
+    if (this.state.isEditPage) {
+      this.setState({
+        confAlertDetails: {
+          openAlert: true,
+          titleMsg: 'Update Voyage Details ?',
+          descrMsg: 'Do you want to submit?',
+          buttonTitle: 'Submit'
+        },
+      });
+    } else {
+      this.setState({
+        confAlertDetails: {
+          openAlert: true,
+          titleMsg: 'Add Voyage Details ?',
+          descrMsg: 'Do you want to submit?',
+          buttonTitle: 'Submit'
+        },
+      });
+    }
   }
 
   handleChange = e => {
@@ -284,11 +330,11 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 10 }}
                 error={validity && validity.vesselSize && validity.vesselSize.isInvalid}
                 id='vesselSize'
                 label='Vessel Size'
-                type='aplhaNumeric'
+                type='decimal'
                 onChange={this.handleChange}
                 value={vesselSize || ''}
                 autoComplete='off'
@@ -297,7 +343,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 15 }}
                 error={validity && validity.loadPort && validity.loadPort.isInvalid}
                 id='loadPort'
                 label='Load Port *'
@@ -310,7 +356,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 15 }}
                 error={validity && validity.dischargePort && validity.dischargePort.isInvalid}
                 id='dischargePort'
                 label='Discharge Port *'
@@ -323,11 +369,11 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 15 }}
                 error={validity && validity.cargo && validity.cargo.isInvalid}
                 id='cargo'
                 label='Cargo'
-                type='aplhaNumeric'
+                type='onlyAlphabets'
                 onChange={this.handleChange}
                 value={cargo || ''}
                 autoComplete='off'
@@ -336,11 +382,11 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 10 }}
                 error={validity && validity.cargoIntake && validity.cargoIntake.isInvalid}
                 id='cargoIntake'
                 label='Cargo Intake'
-                type='aplhaNumeric'
+                type='decimal'
                 onChange={this.handleChange}
                 value={cargoIntake || ''}
                 autoComplete='off'
@@ -349,7 +395,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 15 }}
                 error={validity && validity.ownerName && validity.ownerName.isInvalid}
                 id='ownerName'
                 label='Owner Name'
@@ -362,7 +408,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 15 }}
                 error={validity && validity.shipper && validity.shipper.isInvalid}
                 id='shipper'
                 label='Shipper'
@@ -375,11 +421,11 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 15 }}
                 error={validity && validity.loadPortAgent && validity.loadPortAgent.isInvalid}
                 id='loadPortAgent'
                 label='Load Port Agent'
-                type='aplhaNumeric'
+                type='onlyAlphabets'
                 onChange={this.handleChange}
                 value={loadPortAgent || ''}
                 autoComplete='off'
@@ -388,11 +434,11 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 15 }}
                 error={validity && validity.dischargePortAgent && validity.dischargePortAgent.isInvalid}
                 id='dischargePortAgent'
                 label='Discharge Port Agent'
-                type='aplhaNumeric'
+                type='onlyAlphabets'
                 onChange={this.handleChange}
                 value={dischargePortAgent || ''}
                 autoComplete='off'
@@ -401,11 +447,11 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 15 }}
                 error={validity && validity.receiver && validity.receiver.isInvalid}
                 id='receiver'
                 label='Receiver'
-                type='aplhaNumeric'
+                type='onlyAlphabets'
                 onChange={this.handleChange}
                 value={receiver || ''}
                 autoComplete='off'
@@ -414,11 +460,11 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 15 }}
                 error={validity && validity.onHireSurveyor && validity.onHireSurveyor.isInvalid}
                 id='onHireSurveyor'
                 label='On Hire Surveyor'
-                type='aplhaNumeric'
+                type='onlyAlphabets'
                 onChange={this.handleChange}
                 value={onHireSurveyor || ''}
                 autoComplete='off'
@@ -427,11 +473,11 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 15 }}
                 error={validity && validity.offHireSurveyor && validity.offHireSurveyor.isInvalid}
                 id='offHireSurveyor'
                 label='Off Hire Surveyor'
-                type='aplhaNumeric'
+                type='onlyAlphabets'
                 onChange={this.handleChange}
                 value={offHireSurveyor || ''}
                 autoComplete='off'
@@ -440,11 +486,11 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 15 }}
                 error={validity && validity.bunkerSupplier && validity.bunkerSupplier.isInvalid}
                 id='bunkerSupplier'
                 label='Bunker Supplier'
-                type='aplhaNumeric'
+                type='onlyAlphabets'
                 onChange={this.handleChange}
                 value={bunkerSupplier || ''}
                 autoComplete='off'
@@ -453,11 +499,11 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 15 }}
                 error={validity && validity.bunkerTrader && validity.bunkerTrader.isInvalid}
                 id='bunkerTrader'
                 label='Bunker Trader'
-                type='aplhaNumeric'
+                type='onlyAlphabets'
                 onChange={this.handleChange}
                 value={bunkerTrader || ''}
                 autoComplete='off'
@@ -466,11 +512,11 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 15 }}
                 error={validity && validity.pniInsurance && validity.pniInsurance.isInvalid}
                 id='pniInsurance'
                 label='PNI Insurance'
-                type='aplhaNumeric'
+                type='onlyAlphabets'
                 onChange={this.handleChange}
                 value={pniInsurance || ''}
                 autoComplete='off'
@@ -479,11 +525,11 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
+                inputProps={{ maxLength: 15 }}
                 error={validity && validity.weatherRoutingCompany && validity.weatherRoutingCompany.isInvalid}
                 id='weatherRoutingCompany'
                 label='Weather Routing Co.'
-                type='aplhaNumeric'
+                type='onlyAlphabets'
                 onChange={this.handleChange}
                 value={weatherRoutingCompany || ''}
                 autoComplete='off'
