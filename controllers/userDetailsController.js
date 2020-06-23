@@ -14,6 +14,42 @@ exports.insertUserDetails = (req, res) => {
     });
 }
 
+exports.login = (req, res) => {
+    userDetails.findOne({ userName: req.body.data.username }, (err, user) => {
+        if (!user) {
+            res.json({ status: false, err: 'Username not found' });
+            return;
+        }
+
+        bcrypt.compare(req.body.data.password, user.password, (error, verified) => {
+            if (error) {
+                res.json({ status: false, err: 'Wrong Credentials' });
+            }
+
+            if (verified) {
+                let respObj = {
+                    status: true,
+                    role: user.role,
+                    displayName: user.displayName,
+                    companyName: user.companyName,
+                    userName: user.userName,
+                    token: tokenGenerator,
+                };
+
+                if (user.role === 'Manager') {
+                    respObj.managerRoles = user.managerRoles
+                } else if (user.role === 'Client') {
+                    respObj.clientDisplay = user.clientDisplay
+                }
+
+                res.json({ ...respObj });
+            } else {
+                res.json({ status: false, err: 'Wrong Credentials' });
+            }
+        });
+    });
+}
+
 exports.checkUsername = (req, res) => {
     userDetails.findOne({ userName: req.body.data.userName }, (err, user) => {
         if (!user) {
@@ -85,7 +121,6 @@ exports.getAllUserDetails = (req, res) => {
                         role: m.role,
                         clientType: m.clientType,
                         managerRoles: m.managerRoles,
-                        clientDisplay:m.clientDisplay,
                         id: m['_id']
                     };
                 })
@@ -94,28 +129,4 @@ exports.getAllUserDetails = (req, res) => {
             res.json({ status: false });
         }
     });
-}
-
-exports.deletePid = (req, res) => {
-    userDetails.deleteOne({ '_id': req.params.pid }).then(() => {
-        res.json({
-            status: true
-        })
-    }).catch(e => {
-        res.json({
-            status: false
-        });
-    })
-}
-
-exports.updateUserDetails = (req, res) => {
-    userDetails.findOneAndUpdate({ '_id': req.body.data.id }, req.body.data).then(() => {
-        res.json({
-            status: true
-        })
-    }).catch(e => {
-        res.json({
-            status: false
-        });
-    })
 }
