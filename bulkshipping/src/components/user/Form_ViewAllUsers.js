@@ -37,14 +37,14 @@ class ViewAllUsers extends Component {
   });
 
   render() {
-    const columns = [{ field: 'userName', title: 'User Name' },
-    { field: 'displayName', title: 'Display Name' },
-    { field: 'companyName', title: 'Company Name' },
-    { field: 'role', title: 'Role' },
-    { field: 'clientType', title: 'User Type' },
-    { field: 'clientDisplay', title: 'Client Display' },
-    { field: 'managerRoles', title: 'Roles' },
-  ];
+    const columns = [{ field: 'userName', title: 'User Name', editable: 'never' },
+    { field: 'displayName', title: 'Display Name', editable: 'never' },
+    { field: 'companyName', title: 'Company Name', editable: 'never' },
+    { field: 'role', title: 'Role', editable: 'never' },
+    { field: 'clientType', title: 'User Type', editable: 'never' },
+    { field: 'clientDisplay', title: 'Client Display', editable: 'never' },
+    { field: 'managerRoles', title: 'Roles', editable: 'never' },
+    ];
 
     const { clientList, alertDetails } = this.state;
     return (

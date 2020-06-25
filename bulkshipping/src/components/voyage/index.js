@@ -38,7 +38,7 @@ class Voyage extends Component {
   handleIconDetail = (event, value) => {
     const { detail } = this.props;
     let localValue = 2;
-    if (detail && detail.role === 'Manager' && !detail.managerRoles.some(m => m.indexOf('Fill Voyage Details') >= 0)) {
+    if (detail && detail.role === 'Manager' && !detail.managerRoles.some(m => m === 'Fill Voyage Details')) {
       localValue = 1;
     }
     if (value === localValue) {
@@ -46,7 +46,7 @@ class Voyage extends Component {
         alertDetails: {
           openAlert: true,
           titleMsg: 'Sorry !!',
-          descrMsg: 'You cannot directly click the tab. Please click record from the table to edit'
+          descrMsg: 'You cannot directly click the tab.  Please click the edit icon from the table to edit...'
         }
       });
       return;
@@ -112,11 +112,11 @@ class Voyage extends Component {
 
     let localValue = 2;
     if (detail && detail.role === 'Manager') {
-      if (!detail.managerRoles.some(m => m.indexOf('Fill Voyage Details') >= 0)) {
+      if (!detail.managerRoles.some(m => m === 'Fill Voyage Details')) {
         localValue = 1
       }
 
-      if (!detail.managerRoles.some(m => m.indexOf('Edit Voyage Details') >= 0)) {
+      if (!detail.managerRoles.some(m => m === 'Edit Voyage Details')) {
         return;
       }
     } else {

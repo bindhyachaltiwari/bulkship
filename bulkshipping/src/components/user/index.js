@@ -39,7 +39,7 @@ class Users extends Component {
   handleIconDetail = (event, value) => {
     const { detail } = this.props;
     let localValue = 2;
-    if (detail && detail.role === 'Manager' && !detail.managerRoles.some(m => m.indexOf('Add New User') >= 0)) {
+    if (detail && detail.role === 'Manager' && !detail.managerRoles.some(m => m === 'Add New User')) {
       localValue = 1;
     }
 
@@ -48,7 +48,7 @@ class Users extends Component {
         alertDetails: {
           openAlert: true,
           titleMsg: 'Sorry !!',
-          descrMsg: 'You cannot directly click the tab. Please click record from the table to edit'
+          descrMsg: 'You cannot directly click the tab.  Please click the edit icon from the table to edit...'
         }
       });
       return;
@@ -113,11 +113,11 @@ class Users extends Component {
     const { detail } = this.props;
     let localValue = 2;
     if (detail && detail.role === 'Manager') {
-      if (!detail.managerRoles.some(m => m.indexOf('Add New User') >= 0)) {
+      if (!detail.managerRoles.some(m => m === 'Add New User')) {
         localValue = 1
       }
 
-      if (!detail.managerRoles.some(m => m.indexOf('Edit User Details') >= 0)) {
+      if (!detail.managerRoles.some(m => m === 'Edit User Details')) {
         return;
       }
     } else {
@@ -128,12 +128,13 @@ class Users extends Component {
   };
 
   getTabData = () => {
-    if (this.props && this.props.detail && this.props.detail.role === 'Manager') {
+    const { detail } = this.props;
+    if (detail && detail.role === 'Manager') {
       const tabs = {
         tabsLabel: [],
         tabPanelChild: []
       }
-      const assignedRoles = this.props.detail.managerRoles.filter(m => m.indexOf('User') >= 0);
+      const assignedRoles = detail.managerRoles.filter(m => m.indexOf('User') >= 0);
       for (let i = 0; i < assignedRoles.length; i++) {
         const role = assignedRoles[i];
         if (role === 'View All Users') {

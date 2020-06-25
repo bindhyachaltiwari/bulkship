@@ -39,15 +39,15 @@ class Vessel extends Component {
   handleIconDetail = (event, value) => {
     const { detail } = this.props;
     let localValue = 2;
-    if (detail && detail.role === 'Manager' && !detail.managerRoles.some(m => m.indexOf('Add New Vessel') >= 0)) {
-     localValue = 1; 
+    if (detail && detail.role === 'Manager' && !detail.managerRoles.some(m => m === 'Add New Vessel')) {
+      localValue = 1;
     }
     if (value === localValue) {
       this.setState({
         alertDetails: {
           openAlert: true,
           titleMsg: 'Sorry !!',
-          descrMsg: 'You cannot directly click the tab. Please click record from the table to edit'
+          descrMsg: 'You cannot directly click the tab.  Please click the edit icon from the table to edit...'
         }
       });
       return;
@@ -112,11 +112,11 @@ class Vessel extends Component {
     const { detail } = this.props;
     let localValue = 2;
     if (detail && detail.role === 'Manager') {
-      if (!detail.managerRoles.some(m => m.indexOf('Add New Vessel') >= 0)) {
+      if (!detail.managerRoles.some(m => m === 'Add New Vessel')) {
         localValue = 1
       }
 
-      if (!detail.managerRoles.some(m => m.indexOf('Edit Vessel Details') >= 0)) {
+      if (!detail.managerRoles.some(s => s === 'Edit Vessel Details')) {
         return;
       }
     } else {

@@ -39,7 +39,6 @@ class NavBar extends React.Component {
         const { saveUsername } = this.props;
         auth0Client.signOut();
         saveUsername('signout');
-        // this.props.history.push('/login');
         window.location.href = '/'
     };
 
@@ -62,9 +61,7 @@ class NavBar extends React.Component {
                             {/* <span className='logo-wrapper'>logo</span> */}
                             <span className='title'>Bulkcom Shipping</span>
                             <span className='profile-wrapper' onClick={this.toggleDropdown}>
-                                {/* <span className='profile-name'> */}
-                                    <IconButton aria-label='Add' className='btn-edit'><ExitToAppIcon /></IconButton>
-                                    {/* </span> */}
+                                <IconButton aria-label='Add' className='btn-edit'><ExitToAppIcon /></IconButton>
                                 <ul className={`profile-dropdown ${dropdownActive ? 'show' : 'hide'}`}>
                                     <li><label className="mr-2 text-black">{`${displayName ? capitalize(displayName) : 'name'}`}</label></li>
                                     <li><button className="btn btn-primary" onClick={this.signOut}>Sign Out</button></li>

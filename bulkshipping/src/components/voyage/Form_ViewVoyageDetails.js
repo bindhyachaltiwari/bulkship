@@ -65,27 +65,27 @@ class ViewVoyageDetails extends Component {
 
   render() {
     const columns = [
-      { field: 'chartererName', title: 'Charterer Name' },
-      { field: 'vesselName', title: 'Vessel Name' },
-      { field: 'cpDate', title: 'CP Date' },
-      { field: 'vesselSize', title: ' Vessel Size' },
-      { field: 'loadPort', title: ' Load Port' },
-      { field: 'dischargePort', title: 'Discharge Point' },
-      { field: 'cargo', title: 'Cargo' },
-      { field: 'cargoIntake', title: ' Cargo Intake' },
-      { field: 'ownerName', title: 'Owner Name' },
-      { field: 'shipper', title: 'Shipper' },
-      { field: 'loadPortAgent', title: 'Load Port Agent' },
-      { field: 'dischargePortAgent', title: 'Discharge Port Agent' },
-      { field: 'receiver', title: 'Receiver' },
-      { field: 'onHireSurveyor', title: 'On Hire Surveyor' },
-      { field: 'offHireSurveyor', title: 'Off Hire Surveyor' },
-      { field: 'bunkerSupplier', title: 'Bunker Supplier' },
-      { field: 'bunkerTrader', title: 'Bunker Trader' },
-      { field: 'pniInsurance', title: 'PNI Insurance' },
-      { field: 'weatherRoutingCompany', title: ' Weather Routing Company' },
-      { field: 'otherFields', title: 'Other Details' },
-      { field: 'fieldVisibility', title: 'Visible' }
+      { field: 'chartererName', title: 'Charterer Name', editable: 'never' },
+      { field: 'vesselName', title: 'Vessel Name', editable: 'never' },
+      { field: 'cpDate', title: 'CP Date', editable: 'never' },
+      { field: 'vesselSize', title: ' Vessel Size', editable: 'never' },
+      { field: 'loadPort', title: ' Load Port', editable: 'never' },
+      { field: 'dischargePort', title: 'Discharge Point', editable: 'never' },
+      { field: 'cargo', title: 'Cargo', editable: 'never' },
+      { field: 'cargoIntake', title: ' Cargo Intake', editable: 'never' },
+      { field: 'ownerName', title: 'Owner Name', editable: 'never' },
+      { field: 'shipper', title: 'Shipper', editable: 'never' },
+      { field: 'loadPortAgent', title: 'Load Port Agent', editable: 'never' },
+      { field: 'dischargePortAgent', title: 'Discharge Port Agent', editable: 'never' },
+      { field: 'receiver', title: 'Receiver', editable: 'never' },
+      { field: 'onHireSurveyor', title: 'On Hire Surveyor', editable: 'never' },
+      { field: 'offHireSurveyor', title: 'Off Hire Surveyor', editable: 'never' },
+      { field: 'bunkerSupplier', title: 'Bunker Supplier', editable: 'never' },
+      { field: 'bunkerTrader', title: 'Bunker Trader', editable: 'never' },
+      { field: 'pniInsurance', title: 'PNI Insurance', editable: 'never' },
+      { field: 'weatherRoutingCompany', title: ' Weather Routing Company', editable: 'never' },
+      { field: 'otherFields', title: 'Other Details', editable: 'never' },
+      { field: 'fieldVisibility', title: 'Visible', editable: 'never' }
     ];
 
     const { voyageList, alertDetails } = this.state;
