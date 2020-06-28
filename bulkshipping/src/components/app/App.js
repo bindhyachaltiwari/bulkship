@@ -14,6 +14,7 @@ import { Grid } from '@material-ui/core';
 import vessel from '../vessel';
 import voyage from '../voyage';
 import performance from '../performance';
+import Client from '../client';
 
 class App extends React.Component {
   constructor() {
@@ -50,6 +51,9 @@ class App extends React.Component {
         }
       }
     }
+	if (detail.role === 'Client') {
+      initialComponent = 'client';
+    }
 
     return (
       <div className={`main ${activeOverlay ? 'active-overlay' : ''}`}>
@@ -67,6 +71,7 @@ class App extends React.Component {
                       initialComponent === 'vessel' ? <Route exact path='/' component={vessel} /> :
                         initialComponent === 'voyage' ? <Route exact path='/' component={voyage} /> :
                           initialComponent === 'performance' ? <Route exact path='/' component={performance} /> :
+						  initialComponent === 'client' ? <Route exact path='/' component={Client} /> :
                             <Route exact path='/' component={Users} />}
                     <Route exact path='/' component={initialComponent} />
                     <Route exact path='/callback' component={Callback} />
