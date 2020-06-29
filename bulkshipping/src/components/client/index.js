@@ -49,8 +49,25 @@ class Client extends Component {
 
   getAllVoyage = async () => {
     const { detail } = this.props;
+    let voyage,performance,documents = false;
     await api.getAllVoyage({ 'companyName': detail.companyName }).then(res => {
       if (res.data.status) {
+        if (detail.clientDisplay.length) {
+          detail.clientDisplay.indexOf('View Documents') >= 0 ? documents = true : documents = false;
+          detail.clientDisplay.indexOf('View Performance') >= 0 ? performance = true : performance = false;
+          detail.clientDisplay.indexOf('View Voyage Details') >= 0 ? voyage = true : voyage = false;
+          for (var i =0 ;i<res.data.vesselList.length;i++) {
+            if (documents) {
+              res.data.vesselList[i].viewDocuments = <button style={{ color: 'blue', textAlign: 'center' }}  type='button' onClick={this.handleViewDocuments}>View</button>;
+            }
+            if (performance) {
+              res.data.vesselList[i].vesselPerformance = <button style={{ color: 'blue', textAlign: 'center' }} type='button' onClick={this.handleVesselPerformance}>View</button>;
+            }
+            if (voyage) {
+              res.data.vesselList[i].voyageDetails = <button style={{ color: 'blue', textAlign: 'center' }}  type='button' onClick={this.handleVoyageDetails}>View</button>;;
+            }
+          }
+        }
         this.setState({
           vesselList: res.data.vesselList,
           companyName: detail.companyName,
@@ -128,11 +145,20 @@ class Client extends Component {
 
   render() {
     const columns = [{ field: 'vesselName', title: 'Vessel Name', editable: 'never' },
-    { field: 'cpDate', title: 'CP Date', editable: 'never' },
-    { field: 'voyageDetails', title: 'Voyage Details', editable: 'never' },
-    { field: 'vesselPerformance', title: 'Vessel Performance', editable: 'never' },
-    { field: 'viewDocuments', title: 'View Documents', editable: 'never' }
+    { field: 'cpDate', title: 'CP Date',editable: 'never' },
+    { field: 'voyageDetails', title: 'Voyage Details',check:'View Voyage Details', editable: 'never' },
+    { field: 'vesselPerformance', title: 'Vessel Performance', check: 'View Performance' ,editable: 'never' },
+    { field: 'viewDocuments', title: 'View Documents',check:'View Documents', editable: 'never' }
     ];
+    const { detail } = this.props;
+    var index = columns.length;
+    while (index--) {
+      if (columns[index].check && !detail.clientDisplay.includes(columns[index].check)) { 
+        columns.splice(index, 1);
+      } 
+  }
+
+
 
     const { clientList, alertDetails,vesselList } = this.state;
     return (
