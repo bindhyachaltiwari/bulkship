@@ -127,7 +127,7 @@ class Voyage extends Component {
   };
 
   getTabData = () => {
-    const clientData = this.props.history? this.props.history.location.state.detail: '';
+    const clientData = this.props.history && this.props.history.location.state? this.props.history.location.state.detail: '';
     if (this.props && this.props.detail && this.props.detail.role === 'Manager') {
       const tabs = {
         tabsLabel: [],
