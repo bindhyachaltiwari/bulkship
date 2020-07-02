@@ -6,6 +6,7 @@ import ConfirmationAlert from '../../utils/confirmationAlert';
 import Alert from '../../utils/alert';
 import './style.scss';
 import UserTable from './userTable';
+import PieCharts from './PieCharts';
 import api from '../../api';
 
 class Client extends Component {
@@ -14,8 +15,10 @@ class Client extends Component {
     super(props);
     this.getAllVoyage();
     this.clientDisplay = props.detail.clientDisplay;
+    this.toSendVesselList = [];
     this.state = {
       vesselList: [],
+      
       vesselDetails: {
         vesselName: '',
         vesselSize: '',
@@ -52,19 +55,20 @@ class Client extends Component {
     let voyage,performance,documents = false;
     await api.getAllVoyage({ 'companyName': detail.companyName }).then(res => {
       if (res.data.status) {
+        this.toSendVesselList = res.data.vesselList;
         if (detail.clientDisplay.length) {
           detail.clientDisplay.indexOf('View Documents') >= 0 ? documents = true : documents = false;
           detail.clientDisplay.indexOf('View Performance') >= 0 ? performance = true : performance = false;
           detail.clientDisplay.indexOf('View Voyage Details') >= 0 ? voyage = true : voyage = false;
           for (var i =0 ;i<res.data.vesselList.length;i++) {
             if (documents) {
-              res.data.vesselList[i].viewDocuments = <button style={{ color: 'blue', textAlign: 'center' }}  type='button' onClick={this.handleViewDocuments}>View</button>;
+              res.data.vesselList[i].viewDocuments = <button style={{ color: 'blue', textAlign: 'center' }}  type='button' id={res.data.vesselList[i]._id} onClick={this.handleViewDocuments}>View</button>;
             }
             if (performance) {
-              res.data.vesselList[i].vesselPerformance = <button style={{ color: 'blue', textAlign: 'center' }} type='button' onClick={this.handleVesselPerformance}>View</button>;
+              res.data.vesselList[i].vesselPerformance = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={res.data.vesselList[i]._id} onClick={this.handleVesselPerformance}>View</button>;
             }
             if (voyage) {
-              res.data.vesselList[i].voyageDetails = <button style={{ color: 'blue', textAlign: 'center' }}  type='button' onClick={this.handleVoyageDetails}>View</button>;;
+              res.data.vesselList[i].voyageDetails = <button style={{ color: 'blue', textAlign: 'center' }}  type='button' id={res.data.vesselList[i]._id} onClick={this.handleVoyageDetails}>View</button>;;
             }
           }
         }
@@ -96,8 +100,27 @@ class Client extends Component {
     const { vesselList } = this.state;
     const c = vesselList.find(m => m['_id'] === e.target.id);
     this.props.history.push({
-      pathname: '/viewVoyageDetails',
-      state: { detail: c }
+      pathname: '/voyage',
+      state: { detail: {'Shipper': c.Shipper,
+      'bunkerSupplier': c.bunkerSupplier,
+      'bunkerTrader': c.bunkerTrader,
+      'cargo': c.cargo,
+      'cargoIntake':c.cargoIntake,
+      'chartererName':c.chartererName,
+      'cpDate':c.cpDate,
+      'dischargePoint':c.dischargePoint,
+      'loadPort':c.loadPort,
+      'loadPortAgent':c.loadPortAgent,
+      'offHireSurveyor':c.offHireSurveyor,
+      'offHireSurveyor':c.offHireSurveyor,
+      'receiver':c.receiver,
+      'onwerName':c.onwerName,
+      'onHireSurveyor':c.onHireSurveyor,
+      'vesselSize':c.vesselSize,
+      'weatherRoutingCompany':c.weatherRoutingCompany,
+      'tableData': {id: 0},
+      'vId': c.vId,
+      'vesselName': c.vesselName} }
     });
   }
 
@@ -105,8 +128,8 @@ class Client extends Component {
     const { vesselList } = this.state;
     const c = vesselList.find(m => m['_id'] === e.target.id);
     this.props.history.push({
-      pathname: '/viewPerformanceDetails',
-      state: { detail: c }
+      pathname: '/performance',
+      state: { detail: c.chartererName }
     });
   }
 
@@ -115,33 +138,6 @@ class Client extends Component {
       pathname: '/viewDocuments'
     });
   }
-
-
-
-  // buildCustomTableBodyCell = ({ cellVal, column, rowId }) => {
-  //   let val;
-  //   switch (column.id) {
-  //     case 'checkPerformance':
-  //       val = <button style={{ color: 'blue', textAlign: 'center' }} id={rowId} type='button' onClick={this.handlePerformanceClick}>Check Performance</button>;
-  //       break;
-  //     case 'vesselName':
-  //       val = this.getPopupContent(cellVal, rowId);
-  //       break;
-  //     case 'VoyageDetails':
-  //       val = <button style={{ color: 'blue', textAlign: 'center' }} id={rowId} type='button' onClick={this.handleVoyageDetails}>View</button>;
-  //       break;
-  //     case 'VesselPerformance':
-  //       val = <button style={{ color: 'blue', textAlign: 'center' }} id={rowId} type='button' onClick={this.handleVesselPerformance}>View</button>;
-  //       break;
-  //     case 'ViewDocuments':
-  //       val = <button style={{ color: 'blue', textAlign: 'center' }} id={rowId} type='button' onClick={this.handleViewDocuments}>View</button>;
-  //       break;
-  //     default:
-  //       val = <div style={{ color: 'blue' }}>{cellVal}</div>;
-  //       break;
-  //   }
-  //   return val;
-  // };
 
   render() {
     const columns = [{ field: 'vesselName', title: 'Vessel Name', editable: 'never' },
@@ -161,10 +157,23 @@ class Client extends Component {
 
 
     const { clientList, alertDetails,vesselList } = this.state;
+    const ourCount = {};
+            let previousYearDate = new Date();
+            const pastYear = previousYearDate.getFullYear() - 1;
+            previousYearDate.setFullYear(pastYear);
+    vesselList.forEach(v => {
+        if (!ourCount[v.cargo]) {
+            ourCount[v.cargo] = 0;
+        }
+        if (new Date(v.cpDate).getTime() <= new Date().getTime() && new Date(v.cpDate).getTime() > previousYearDate.getTime()) {
+            ourCount[v.cargo] += parseInt(v.cargoIntake);
+        }
+    });
     return (
       <form>
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
         <UserTable title={'Fixture List'} data={vesselList} columns={columns} onRowClick={this.onRowClick} />
+        <PieCharts vesselDetails={ourCount} />
       </form>
     );
   }

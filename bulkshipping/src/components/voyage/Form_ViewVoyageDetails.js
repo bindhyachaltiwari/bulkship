@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Alert from '../../utils/alert';
 import UserTable from './userTable';
 import api from '../../api';
+import { array } from 'prop-types';
 
 class ViewVoyageDetails extends Component {
 
@@ -44,11 +45,20 @@ class ViewVoyageDetails extends Component {
   }
 
   componentDidMount = async e => {
-    const res = await api.getAllVoyageDetails();
-    if (res.data.status) {
-      const updatedResult = this.checkandRemoveObject(res.data.voyageList);
+    if (this.props.clientData) {
+      let arrayItem = [];
+      arrayItem.push(this.props.clientData);
+      const updatedResult = this.checkandRemoveObject(arrayItem);
       this.setState({ voyageList: updatedResult });
     }
+    else {
+      const res = await api.getAllVoyageDetails();
+      if (res.data.status) {
+        const updatedResult = this.checkandRemoveObject(res.data.voyageList);
+        this.setState({ voyageList: updatedResult });
+      }
+    }
+    
   }
 
   handleCancelAlert = () => this.setState({

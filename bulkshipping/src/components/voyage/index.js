@@ -127,6 +127,7 @@ class Voyage extends Component {
   };
 
   getTabData = () => {
+    const clientData = this.props.history? this.props.history.location.state.detail: '';
     if (this.props && this.props.detail && this.props.detail.role === 'Manager') {
       const tabs = {
         tabsLabel: [],
@@ -141,7 +142,7 @@ class Voyage extends Component {
             label: <span className='labelColor'>VIEW VOYAGE DETAILS</span>
           });
           tabs.tabPanelChild.push({
-            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} />
+            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked}/>
           })
         } else if (role === 'Fill Voyage Details') {
           tabs.tabsLabel.push({
@@ -170,7 +171,7 @@ class Voyage extends Component {
       }
 
       return tabs;
-    } else {
+    } else if (this.props && this.props.detail && this.props.detail.role === 'Admin'){
       const tabs = {
         tabsLabel: [{
           icon: <AccountCircleIcon className='labelColor' />,
@@ -191,6 +192,21 @@ class Voyage extends Component {
             child: <FillVoyageDetails handleBlocking={this.handleBlocking} />
           }, {
             child: <FillVoyageDetails handleBlocking={this.handleBlocking} onRowClickedData={this.state.onRowClickedData} />
+          }]
+      }
+
+      return tabs;
+    }
+    else if(this.props && this.props.detail && this.props.detail.role === 'Client') {
+      const tabs = {
+        tabsLabel: [{
+          icon: <AccountCircleIcon className='labelColor' />,
+          label: <span className='labelColor'>VIEW VOYAGE DETAILS</span>
+        }
+        ],
+        tabPanelChild:
+          [{
+            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} clientData = {clientData}/>
           }]
       }
 

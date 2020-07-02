@@ -51,7 +51,7 @@ class App extends React.Component {
         }
       }
     }
-	if (detail.role === 'Client') {
+    if (detail.role === 'Client') {
       initialComponent = 'client';
     }
 
@@ -71,7 +71,7 @@ class App extends React.Component {
                       initialComponent === 'vessel' ? <Route exact path='/' component={vessel} /> :
                         initialComponent === 'voyage' ? <Route exact path='/' component={voyage} /> :
                           initialComponent === 'performance' ? <Route exact path='/' component={performance} /> :
-						  initialComponent === 'client' ? <Route exact path='/' component={Client} /> :
+                          initialComponent === 'client' ? <Route exact path='/' component={Client} /> :
                             <Route exact path='/' component={Users} />}
                     <Route exact path='/' component={initialComponent} />
                     <Route exact path='/callback' component={Callback} />

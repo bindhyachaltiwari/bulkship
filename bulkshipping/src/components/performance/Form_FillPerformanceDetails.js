@@ -86,7 +86,10 @@ class FillPerformanceDetails extends Component {
         isEditPage = true
       }
 
-      const allClients = [...new Set(res.data.vesselList.map(m => m.chartererName))];
+      let  allClients = [...new Set(res.data.vesselList.map(m => m.chartererName))];
+      if (this.props.clientPerformance) {
+        allClients = [this.props.clientPerformance]
+      }
       this.setState({
         vesselList: res.data.vesselList,
         allClients,
