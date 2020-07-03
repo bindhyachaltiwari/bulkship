@@ -343,7 +343,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 25 }}
                 error={validity && validity.loadPort && validity.loadPort.isInvalid}
                 id='loadPort'
                 label='Load Port *'
@@ -356,7 +356,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 25 }}
                 error={validity && validity.dischargePort && validity.dischargePort.isInvalid}
                 id='dischargePort'
                 label='Discharge Port *'
@@ -395,7 +395,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 30 }}
                 error={validity && validity.ownerName && validity.ownerName.isInvalid}
                 id='ownerName'
                 label='Owner Name'
@@ -408,7 +408,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 30 }}
                 error={validity && validity.shipper && validity.shipper.isInvalid}
                 id='shipper'
                 label='Shipper'
@@ -421,7 +421,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 30 }}
                 error={validity && validity.loadPortAgent && validity.loadPortAgent.isInvalid}
                 id='loadPortAgent'
                 label='Load Port Agent'
@@ -434,7 +434,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 30 }}
                 error={validity && validity.dischargePortAgent && validity.dischargePortAgent.isInvalid}
                 id='dischargePortAgent'
                 label='Discharge Port Agent'
@@ -447,7 +447,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 30 }}
                 error={validity && validity.receiver && validity.receiver.isInvalid}
                 id='receiver'
                 label='Receiver'
@@ -460,7 +460,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 30 }}
                 error={validity && validity.onHireSurveyor && validity.onHireSurveyor.isInvalid}
                 id='onHireSurveyor'
                 label='On Hire Surveyor'
@@ -473,7 +473,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 30 }}
                 error={validity && validity.offHireSurveyor && validity.offHireSurveyor.isInvalid}
                 id='offHireSurveyor'
                 label='Off Hire Surveyor'
@@ -486,7 +486,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 30 }}
                 error={validity && validity.bunkerSupplier && validity.bunkerSupplier.isInvalid}
                 id='bunkerSupplier'
                 label='Bunker Supplier'
@@ -499,7 +499,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 30 }}
                 error={validity && validity.bunkerTrader && validity.bunkerTrader.isInvalid}
                 id='bunkerTrader'
                 label='Bunker Trader'
@@ -512,7 +512,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 30 }}
                 error={validity && validity.pniInsurance && validity.pniInsurance.isInvalid}
                 id='pniInsurance'
                 label='PNI Insurance'
@@ -525,7 +525,7 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 30 }}
                 error={validity && validity.weatherRoutingCompany && validity.weatherRoutingCompany.isInvalid}
                 id='weatherRoutingCompany'
                 label='Weather Routing Co.'

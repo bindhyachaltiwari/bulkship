@@ -39,7 +39,7 @@ class Vessel extends Component {
   handleIconDetail = (event, value) => {
     const { detail } = this.props;
     let localValue = 2;
-    if (detail && detail.role === 'Manager' && !detail.managerRoles.some(m => m === 'Add New Vessel')) {
+    if (detail && detail.role === 'Manager' && detail.managerRoles.some(m => m === 'Edit Vessel Details')) {
       localValue = 1;
     }
     if (value === localValue) {
@@ -112,12 +112,11 @@ class Vessel extends Component {
     const { detail } = this.props;
     let localValue = 2;
     if (detail && detail.role === 'Manager') {
-      if (!detail.managerRoles.some(m => m === 'Add New Vessel')) {
-        localValue = 1
-      }
-
-      if (!detail.managerRoles.some(s => s === 'Edit Vessel Details')) {
+      const isPresent = detail.managerRoles.some(m => m === 'Edit Vessel Details');
+      if (!isPresent) {
         return;
+      } else if (isPresent) {
+        localValue = 1
       }
     } else {
       localValue = 2
@@ -132,7 +131,11 @@ class Vessel extends Component {
         tabsLabel: [],
         tabPanelChild: []
       }
-      const assignedRoles = this.props.detail.managerRoles.filter(m => m.indexOf('Vessel') >= 0);
+      let assignedRoles = this.props.detail.managerRoles.filter(m => m.indexOf('Vessel') >= 0);
+      if (assignedRoles.some(s => s === 'Edit Vessel Details') && !assignedRoles.some(s => s === 'View All Vessels')) {
+        assignedRoles.push('View All Vessels');
+      }
+      assignedRoles = assignedRoles.sort().reverse();
       for (let i = 0; i < assignedRoles.length; i++) {
         const role = assignedRoles[i];
         if (role === 'View All Vessels') {
@@ -152,13 +155,6 @@ class Vessel extends Component {
             child: <AddNewVessel handleBlocking={this.handleBlocking} />
           })
         } else if (role === 'Edit Vessel Details') {
-          tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
-            label: <span className='labelColor'>VIEW ALL VESSELS</span>
-          });
-          tabs.tabPanelChild.push({
-            child: <ViewAllVessels handleRowClicked={this.handleRowClicked} />
-          })
           tabs.tabsLabel.push({
             icon: <AccountCircleIcon className='labelColor' />,
             label: <span className='labelColor'>EDIT VESSEL DETAILS</span>

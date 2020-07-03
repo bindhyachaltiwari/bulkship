@@ -21,9 +21,9 @@ class ViewVoyageDetails extends Component {
     let updatedArray = [];
     updatedArray = data.map((item) => {
       let udpatedItem = '';
-      if(item.otherFields) {
-        Object.keys(item.otherFields).forEach(function(index,value){
-          udpatedItem = udpatedItem + index+":"+item.otherFields[index]+'|'
+      if (item.otherFields) {
+        Object.keys(item.otherFields).forEach(function (index, value) {
+          udpatedItem = udpatedItem + index + ":" + item.otherFields[index] + '|'
         });
         item.otherFields = udpatedItem;
       }
@@ -47,7 +47,7 @@ class ViewVoyageDetails extends Component {
   componentDidMount = async e => {
     if (this.props.clientData) {
       let arrayItem = [];
-      arrayItem.push(this.props.clientData);
+      arrayItem.push(this.props.clientData.detail);
       const updatedResult = this.checkandRemoveObject(arrayItem);
       this.setState({ voyageList: updatedResult });
     }
@@ -58,7 +58,7 @@ class ViewVoyageDetails extends Component {
         this.setState({ voyageList: updatedResult });
       }
     }
-    
+
   }
 
   handleCancelAlert = () => this.setState({
@@ -74,15 +74,15 @@ class ViewVoyageDetails extends Component {
   }
 
   render() {
-    const columns = [
+    let columns = [
       { field: 'chartererName', title: 'Charterer Name', editable: 'never' },
       { field: 'vesselName', title: 'Vessel Name', editable: 'never' },
       { field: 'cpDate', title: 'CP Date', editable: 'never' },
-      { field: 'vesselSize', title: ' Vessel Size', editable: 'never' },
-      { field: 'loadPort', title: ' Load Port', editable: 'never' },
-      { field: 'dischargePort', title: 'Discharge Point', editable: 'never' },
+      { field: 'vesselSize', title: 'Vessel Size', editable: 'never' },
+      { field: 'loadPort', title: 'Load Port', editable: 'never' },
+      { field: 'dischargePort', title: 'Discharge Port', editable: 'never' },
       { field: 'cargo', title: 'Cargo', editable: 'never' },
-      { field: 'cargoIntake', title: ' Cargo Intake', editable: 'never' },
+      { field: 'cargoIntake', title: 'Cargo Intake', editable: 'never' },
       { field: 'ownerName', title: 'Owner Name', editable: 'never' },
       { field: 'shipper', title: 'Shipper', editable: 'never' },
       { field: 'loadPortAgent', title: 'Load Port Agent', editable: 'never' },
@@ -93,10 +93,23 @@ class ViewVoyageDetails extends Component {
       { field: 'bunkerSupplier', title: 'Bunker Supplier', editable: 'never' },
       { field: 'bunkerTrader', title: 'Bunker Trader', editable: 'never' },
       { field: 'pniInsurance', title: 'PNI Insurance', editable: 'never' },
-      { field: 'weatherRoutingCompany', title: ' Weather Routing Company', editable: 'never' },
+      { field: 'weatherRoutingCompany', title: 'Weather Routing Company', editable: 'never' },
       { field: 'otherFields', title: 'Other Details', editable: 'never' },
       { field: 'fieldVisibility', title: 'Visible', editable: 'never' }
     ];
+
+    if (this.props && this.props.clientData && this.props.clientData.detail) {
+      let localColumns = [];
+      localColumns.push({ field: "chartererName", title: "Charterer Name", editable: "never" },
+        { field: "vesselName", title: "Vessel Name", editable: "never" },
+        { field: "cpDate", title: "CP Date", editable: "never" });
+      for (let i = 0; i < this.props.clientData.fieldVisibility.length; i++) {
+        let label = this.props.clientData.fieldVisibility[i];
+        localColumns.push(columns.find(f => f.title === label));
+      }
+
+      columns = localColumns;
+    }
 
     const { voyageList, alertDetails } = this.state;
     return (

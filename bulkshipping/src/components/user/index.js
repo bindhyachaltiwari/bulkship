@@ -39,7 +39,7 @@ class Users extends Component {
   handleIconDetail = (event, value) => {
     const { detail } = this.props;
     let localValue = 2;
-    if (detail && detail.role === 'Manager' && !detail.managerRoles.some(m => m === 'Add New User')) {
+    if (detail && detail.role === 'Manager' && detail.managerRoles.some(m => m === 'Edit User Details')) {
       localValue = 1;
     }
 
@@ -113,12 +113,11 @@ class Users extends Component {
     const { detail } = this.props;
     let localValue = 2;
     if (detail && detail.role === 'Manager') {
-      if (!detail.managerRoles.some(m => m === 'Add New User')) {
-        localValue = 1
-      }
-
-      if (!detail.managerRoles.some(m => m === 'Edit User Details')) {
+      const isPresent = detail.managerRoles.some(m => m === 'Edit User Details');
+      if (!isPresent) {
         return;
+      } else if (isPresent) {
+        localValue = 1
       }
     } else {
       localValue = 2
@@ -134,7 +133,11 @@ class Users extends Component {
         tabsLabel: [],
         tabPanelChild: []
       }
-      const assignedRoles = detail.managerRoles.filter(m => m.indexOf('User') >= 0);
+      let assignedRoles = detail.managerRoles.filter(m => m.indexOf('User') >= 0);
+      if (assignedRoles.some(s => s === 'Edit User Details') && !assignedRoles.some(s => s === 'View All Users')) {
+        assignedRoles.push('View All Users');
+      }
+      assignedRoles = assignedRoles.sort().reverse();
       for (let i = 0; i < assignedRoles.length; i++) {
         const role = assignedRoles[i];
         if (role === 'View All Users') {
@@ -154,13 +157,6 @@ class Users extends Component {
             child: <AddNewUser handleBlocking={this.handleBlocking} />
           })
         } else if (role === 'Edit User Details') {
-          tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
-            label: <span disabled className='labelColor'>VIEW ALL USERS</span>
-          });
-          tabs.tabPanelChild.push({
-            child: <ViewAllUsers handleRowClicked={this.handleRowClicked} />
-          })
           tabs.tabsLabel.push({
             icon: <AccountCircleIcon className='labelColor' />,
             label: <span className='labelColor'>EDIT USER DETAILS</span>

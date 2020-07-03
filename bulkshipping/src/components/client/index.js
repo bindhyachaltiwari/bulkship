@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import ScrollableTabsButtonAuto from '../sub-component/ScrollableTabsButtonAuto';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { connect } from 'react-redux';
-import ConfirmationAlert from '../../utils/confirmationAlert';
 import Alert from '../../utils/alert';
 import './style.scss';
 import UserTable from './userTable';
@@ -18,7 +15,6 @@ class Client extends Component {
     this.toSendVesselList = [];
     this.state = {
       vesselList: [],
-      
       vesselDetails: {
         vesselName: '',
         vesselSize: '',
@@ -31,28 +27,12 @@ class Client extends Component {
       },
       tableData: [],
       performanceDetails: {},
-      isPeformancePage: false,
-      error: false,
-      userName: '',
-      alertDetails: {
-        openAlert: false,
-        titleMsg: '',
-        descrMsg: ''
-      },
     }
-    this.handleCancelAlert = this.handleCancelAlert.bind(this);
   }
-  handleCancelAlert = () => this.setState({
-    alertDetails: {
-      openAlert: false,
-      titleMsg: '',
-      descrMsg: ''
-    },
-  });
 
   getAllVoyage = async () => {
     const { detail } = this.props;
-    let voyage,performance,documents = false;
+    let voyage, performance, documents = false;
     await api.getAllVoyage({ 'companyName': detail.companyName }).then(res => {
       if (res.data.status) {
         this.toSendVesselList = res.data.vesselList;
@@ -60,15 +40,15 @@ class Client extends Component {
           detail.clientDisplay.indexOf('View Documents') >= 0 ? documents = true : documents = false;
           detail.clientDisplay.indexOf('View Performance') >= 0 ? performance = true : performance = false;
           detail.clientDisplay.indexOf('View Voyage Details') >= 0 ? voyage = true : voyage = false;
-          for (var i =0 ;i<res.data.vesselList.length;i++) {
+          for (var i = 0; i < res.data.vesselList.length; i++) {
             if (documents) {
-              res.data.vesselList[i].viewDocuments = <button style={{ color: 'blue', textAlign: 'center' }}  type='button' id={res.data.vesselList[i]._id} onClick={this.handleViewDocuments}>View</button>;
+              res.data.vesselList[i].viewDocuments = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={res.data.vesselList[i]._id} onClick={this.handleViewDocuments}>View</button>;
             }
             if (performance) {
               res.data.vesselList[i].vesselPerformance = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={res.data.vesselList[i]._id} onClick={this.handleVesselPerformance}>View</button>;
             }
             if (voyage) {
-              res.data.vesselList[i].voyageDetails = <button style={{ color: 'blue', textAlign: 'center' }}  type='button' id={res.data.vesselList[i]._id} onClick={this.handleVoyageDetails}>View</button>;;
+              res.data.vesselList[i].voyageDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={res.data.vesselList[i]._id} onClick={this.handleVoyageDetails}>View</button>;;
             }
           }
         }
@@ -101,26 +81,31 @@ class Client extends Component {
     const c = vesselList.find(m => m['_id'] === e.target.id);
     this.props.history.push({
       pathname: '/voyage',
-      state: { detail: {'Shipper': c.Shipper,
-      'bunkerSupplier': c.bunkerSupplier,
-      'bunkerTrader': c.bunkerTrader,
-      'cargo': c.cargo,
-      'cargoIntake':c.cargoIntake,
-      'chartererName':c.chartererName,
-      'cpDate':c.cpDate,
-      'dischargePoint':c.dischargePoint,
-      'loadPort':c.loadPort,
-      'loadPortAgent':c.loadPortAgent,
-      'offHireSurveyor':c.offHireSurveyor,
-      'offHireSurveyor':c.offHireSurveyor,
-      'receiver':c.receiver,
-      'onwerName':c.onwerName,
-      'onHireSurveyor':c.onHireSurveyor,
-      'vesselSize':c.vesselSize,
-      'weatherRoutingCompany':c.weatherRoutingCompany,
-      'tableData': {id: 0},
-      'vId': c.vId,
-      'vesselName': c.vesselName} }
+      state: {
+        detail: {
+          'Shipper': c.Shipper,
+          'bunkerSupplier': c.bunkerSupplier,
+          'bunkerTrader': c.bunkerTrader,
+          'cargo': c.cargo,
+          'cargoIntake': c.cargoIntake,
+          'chartererName': c.chartererName,
+          'cpDate': c.cpDate,
+          'dischargePort': c.dischargePort,
+          'loadPort': c.loadPort,
+          'loadPortAgent': c.loadPortAgent,
+          'offHireSurveyor': c.offHireSurveyor,
+          'offHireSurveyor': c.offHireSurveyor,
+          'receiver': c.receiver,
+          'onwerName': c.onwerName,
+          'onHireSurveyor': c.onHireSurveyor,
+          'vesselSize': c.vesselSize,
+          'weatherRoutingCompany': c.weatherRoutingCompany,
+          'tableData': { id: 0 },
+          'vId': c.vId,
+          'vesselName': c.vesselName
+        },
+        fieldVisibility: c.fieldVisibility
+      }
     });
   }
 
@@ -129,7 +114,13 @@ class Client extends Component {
     const c = vesselList.find(m => m['_id'] === e.target.id);
     this.props.history.push({
       pathname: '/performance',
-      state: { detail: c.chartererName }
+      state: {
+        detail: c.chartererName,
+        loadPort: c.loadPort,
+        cpDate: c.cpDate,
+        dischargePort: c.dischargePort,
+        vesselName: c.vesselName
+      }
     });
   }
 
@@ -141,38 +132,35 @@ class Client extends Component {
 
   render() {
     const columns = [{ field: 'vesselName', title: 'Vessel Name', editable: 'never' },
-    { field: 'cpDate', title: 'CP Date',editable: 'never' },
-    { field: 'voyageDetails', title: 'Voyage Details',check:'View Voyage Details', editable: 'never' },
-    { field: 'vesselPerformance', title: 'Vessel Performance', check: 'View Performance' ,editable: 'never' },
-    { field: 'viewDocuments', title: 'View Documents',check:'View Documents', editable: 'never' }
+    { field: 'cpDate', title: 'CP Date', editable: 'never' },
+    { field: 'voyageDetails', title: 'View Voyage', check: 'View Voyage Details', editable: 'never' },
+    { field: 'vesselPerformance', title: 'View Performance', check: 'View Performance', editable: 'never' },
+    { field: 'viewDocuments', title: 'View Documents', check: 'View Documents', editable: 'never' }
     ];
     const { detail } = this.props;
     var index = columns.length;
     while (index--) {
-      if (columns[index].check && !detail.clientDisplay.includes(columns[index].check)) { 
+      if (columns[index].check && !detail.clientDisplay.includes(columns[index].check)) {
         columns.splice(index, 1);
-      } 
-  }
+      }
+    }
 
-
-
-    const { clientList, alertDetails,vesselList } = this.state;
+    const { vesselList } = this.state;
     const ourCount = {};
-            let previousYearDate = new Date();
-            const pastYear = previousYearDate.getFullYear() - 1;
-            previousYearDate.setFullYear(pastYear);
+    let previousYearDate = new Date();
+    const pastYear = previousYearDate.getFullYear() - 1;
+    previousYearDate.setFullYear(pastYear);
     vesselList.forEach(v => {
-        if (!ourCount[v.cargo]) {
-            ourCount[v.cargo] = 0;
-        }
-        if (new Date(v.cpDate).getTime() <= new Date().getTime() && new Date(v.cpDate).getTime() > previousYearDate.getTime()) {
-            ourCount[v.cargo] += parseInt(v.cargoIntake);
-        }
+      if (!ourCount[v.cargo]) {
+        ourCount[v.cargo] = 0;
+      }
+      if (new Date(v.cpDate).getTime() <= new Date().getTime() && new Date(v.cpDate).getTime() > previousYearDate.getTime()) {
+        ourCount[v.cargo] += parseInt(v.cargoIntake);
+      }
     });
     return (
       <form>
-        <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
-        <UserTable title={'Fixture List'} data={vesselList} columns={columns} onRowClick={this.onRowClick} />
+        <UserTable title={'Fixture List'} data={vesselList} columns={columns} />
         <PieCharts vesselDetails={ourCount} />
       </form>
     );

@@ -16,7 +16,6 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import api from '../../api';
 import { connect } from 'react-redux';
 
 function UserTable(props) {
@@ -52,47 +51,12 @@ function UserTable(props) {
     setData(props.data)
   }
 
-  const showDelete = () => {
-    const { detail } = props;
-    const { managerRoles } = detail;
-    if (detail && detail.role === 'Admin') {
-      return true;
-    } else if (detail && detail.role === 'Manager') {
-      if (managerRoles && managerRoles.length) {
-        return managerRoles.some(s => s === 'Edit Vessel Details');
-      }
-    }
-  }
-
   return (
     <MaterialTable
       title={props.title}
       columns={props.columns}
       data={props.data}
       icons={tableIcons}
-      editable=
-      {showDelete() ?
-        {
-          onRowUpdate: (newData, oldData) => new Promise(resolve => {
-            resolve();
-            props.onRowClick(newData, oldData);
-          }),
-          onRowDelete: (oldData) =>
-            new Promise(resolve => {
-              setTimeout(() => {
-                resolve();
-                setData(async prevState => {
-                  const data = [...prevState];
-                  let resp = await api.deleteVesselDetails(oldData['_id']);
-                  if (resp.data.status) {
-                    window.location.reload();
-                    // data.splice(data.indexOf(oldData), 1);
-                  }
-                  return data;
-                });
-              }, 600);
-            }),
-        } : null}
     />
   );
 }

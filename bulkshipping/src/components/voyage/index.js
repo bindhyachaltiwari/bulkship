@@ -38,7 +38,7 @@ class Voyage extends Component {
   handleIconDetail = (event, value) => {
     const { detail } = this.props;
     let localValue = 2;
-    if (detail && detail.role === 'Manager' && !detail.managerRoles.some(m => m === 'Fill Voyage Details')) {
+    if (detail && detail.role === 'Manager' && detail.managerRoles.some(m => m === 'Edit Voyage Details')) {
       localValue = 1;
     }
     if (value === localValue) {
@@ -109,15 +109,13 @@ class Voyage extends Component {
   handleBlocking = e => this.setState({ isDirty: e });
   handleRowClicked = e => {
     const { detail } = this.props;
-
     let localValue = 2;
     if (detail && detail.role === 'Manager') {
-      if (!detail.managerRoles.some(m => m === 'Fill Voyage Details')) {
-        localValue = 1
-      }
-
-      if (!detail.managerRoles.some(m => m === 'Edit Voyage Details')) {
+      const isPresent = detail.managerRoles.some(m => m === 'Edit Voyage Details');
+      if (!isPresent) {
         return;
+      } else if (isPresent) {
+        localValue = 1
       }
     } else {
       localValue = 2
@@ -127,13 +125,17 @@ class Voyage extends Component {
   };
 
   getTabData = () => {
-    const clientData = this.props.history && this.props.history.location.state? this.props.history.location.state.detail: '';
+    const clientData = this.props.history && this.props.history.location.state ? this.props.history.location.state : '';
     if (this.props && this.props.detail && this.props.detail.role === 'Manager') {
       const tabs = {
         tabsLabel: [],
         tabPanelChild: []
       }
-      const assignedRoles = this.props.detail.managerRoles.filter(m => m.indexOf('Voyage') >= 0);
+      let assignedRoles = this.props.detail.managerRoles.filter(m => m.indexOf('Voyage') >= 0);
+      if (assignedRoles.some(s => s === 'Edit Voyage Details') && !assignedRoles.some(s => s === 'View All Voyage Details')) {
+        assignedRoles.push('View All Voyage Details');
+      }
+      assignedRoles = assignedRoles.sort().reverse();
       for (let i = 0; i < assignedRoles.length; i++) {
         const role = assignedRoles[i];
         if (role === 'View All Voyage Details') {
@@ -142,7 +144,7 @@ class Voyage extends Component {
             label: <span className='labelColor'>VIEW VOYAGE DETAILS</span>
           });
           tabs.tabPanelChild.push({
-            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked}/>
+            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} />
           })
         } else if (role === 'Fill Voyage Details') {
           tabs.tabsLabel.push({
@@ -155,13 +157,6 @@ class Voyage extends Component {
         } else if (role === 'Edit Voyage Details') {
           tabs.tabsLabel.push({
             icon: <AccountCircleIcon className='labelColor' />,
-            label: <span className='labelColor'>VIEW VOYAGE DETAILS</span>
-          });
-          tabs.tabPanelChild.push({
-            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} />
-          })
-          tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
             label: <span className='labelColor'>EDIT VOYAGE DETAILS</span>
           });
           tabs.tabPanelChild.push({
@@ -171,7 +166,7 @@ class Voyage extends Component {
       }
 
       return tabs;
-    } else if (this.props && this.props.detail && this.props.detail.role === 'Admin'){
+    } else if (this.props && this.props.detail && this.props.detail.role === 'Admin') {
       const tabs = {
         tabsLabel: [{
           icon: <AccountCircleIcon className='labelColor' />,
@@ -196,8 +191,7 @@ class Voyage extends Component {
       }
 
       return tabs;
-    }
-    else if(this.props && this.props.detail && this.props.detail.role === 'Client') {
+    } else if (this.props && this.props.detail && this.props.detail.role === 'Client') {
       const tabs = {
         tabsLabel: [{
           icon: <AccountCircleIcon className='labelColor' />,
@@ -206,7 +200,7 @@ class Voyage extends Component {
         ],
         tabPanelChild:
           [{
-            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} clientData = {clientData}/>
+            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} clientData={clientData} />
           }]
       }
 

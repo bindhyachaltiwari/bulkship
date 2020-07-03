@@ -58,10 +58,10 @@ class App extends React.Component {
     return (
       <div className={`main ${activeOverlay ? 'active-overlay' : ''}`}>
         {loggedIn ? <Grid container direction='row' className='main-container'>
-          <Grid item md={3} lg={3} className='left left-section'>
+          {detail.role !== 'Client' ? <Grid item md={3} lg={3} className='left left-section'>
             <LeftMenu />
-          </Grid>
-          <Grid item xs={12} md={9} lg={9}>
+          </Grid> : ""}
+          <Grid item xs={12} md={detail.role !== 'Client' ? 9 : false} lg={detail.role !== 'Client' ? 9 : false}>
             <section className='right right-section'>
               <NavBar history={this.props.history} />
               <div className='right-container'>
@@ -71,10 +71,9 @@ class App extends React.Component {
                       initialComponent === 'vessel' ? <Route exact path='/' component={vessel} /> :
                         initialComponent === 'voyage' ? <Route exact path='/' component={voyage} /> :
                           initialComponent === 'performance' ? <Route exact path='/' component={performance} /> :
-                          initialComponent === 'client' ? <Route exact path='/' component={Client} /> :
-                            <Route exact path='/' component={Users} />}
+                            initialComponent === 'client' ? <Route exact path='/' component={Client} /> :
+                              <Route exact path='/' component={Users} />}
                     <Route exact path='/' component={initialComponent} />
-                    <Route exact path='/callback' component={Callback} />
                     <Route exact path='/user' component={Users} />
                     <Route exact path='/vessel' component={vessel} />
                     <Route exact path='/voyage' component={voyage} />

@@ -127,7 +127,7 @@ class Performance extends Component {
       }
 
       return tabs;
-    } else if(this.props && this.props.detail && this.props.detail.role === 'Admin') {
+    } else if (this.props && this.props.detail && this.props.detail.role === 'Admin') {
       const tabs = {
         tabsLabel: [{
           icon: <AccountCircleIcon className='labelColor' />,
@@ -142,7 +142,7 @@ class Performance extends Component {
         ],
         tabPanelChild:
           [{
-            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='viewPage'/>
+            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='viewPage' />
           }, {
             child: <FillPerformanceDetails handleBlocking={this.handleBlocking} />
           }, {
@@ -152,7 +152,7 @@ class Performance extends Component {
 
       return tabs;
     }
-    else if(this.props && this.props.detail && this.props.detail.role === 'Client') {
+    else if (this.props && this.props.detail && this.props.detail.role === 'Client') {
       const tabs = {
         tabsLabel: [{
           icon: <AccountCircleIcon className='labelColor' />,
@@ -161,7 +161,7 @@ class Performance extends Component {
         ],
         tabPanelChild:
           [{
-            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='viewPage' clientPerformance = {this.props.history.location.state.detail}/>
+            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='viewPage' clientPerformance={this.props.history.location.state} />
           }]
       }
 

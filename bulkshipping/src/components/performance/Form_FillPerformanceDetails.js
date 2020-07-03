@@ -13,9 +13,13 @@ class FillPerformanceDetails extends Component {
     super(props);
     this.state = {
       vesselList: [],
-      selectedClient: '',
-      selectedVessel: '',
-      selectedCpDate: '',
+      selectedClient: props && props.clientPerformance ? props.clientPerformance.detail : '',
+      selectedVessel: props && props.clientPerformance ? props.clientPerformance.vesselName : '',
+      selectedCpDate: props && props.clientPerformance ? props.clientPerformance.cpDate : '',
+      portDetails: {
+        loadPort: props && props.clientPerformance ? props.clientPerformance.loadPort : '',
+        dischargePort: props && props.clientPerformance ? props.clientPerformance.dischargePort : ''
+      },
       allClients: [],
       allVslForSelectedClient: [],
       allCpDatesForSelectedClient: [],
@@ -37,7 +41,8 @@ class FillPerformanceDetails extends Component {
       },
       readOnly: false,
       isEditPage: props && props.activeTabIndex && props.activeTabIndex === 'editPage' ? true : false,
-      isViewPage: props && props.activeTabIndex && props.activeTabIndex === 'viewPage' ? true : false
+      isViewPage: props && props.activeTabIndex && props.activeTabIndex === 'viewPage' ? true : false,
+      isClientPage: props && props.clientPerformance && props.clientPerformance.detail ? true : false,
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancelAlert = this.handleCancelAlert.bind(this);
@@ -71,25 +76,26 @@ class FillPerformanceDetails extends Component {
 
   async componentDidMount() {
     let res = {};
-    let { isEditPage, isViewPage, readOnly } = this.state;
+    let { isEditPage, isViewPage, readOnly, isClientPage } = this.state;
     if (isEditPage || isViewPage) {
       res = await api.getAllVesselsPerformance({ isDetailsFilled: true });
-    }
-    else {
+    } else {
       res = await api.getAllVesselsPerformance({ isDetailsFilled: false });
     }
     if (res.data.status) {
       if (isEditPage) {
         readOnly = false;
-      } else if (isViewPage) {
+      } else if (isViewPage && !isClientPage) {
         readOnly = true;
         isEditPage = true
+      } else if (isClientPage) {
+        readOnly = true;
+        const performanceDetails = res.data.vesselList.find(m => m.chartererName === this.state.selectedClient);
+        this.setState({ performanceDetails, readOnly, isEditPage });
+        return
       }
 
-      let  allClients = [...new Set(res.data.vesselList.map(m => m.chartererName))];
-      if (this.props.clientPerformance) {
-        allClients = [this.props.clientPerformance]
-      }
+      let allClients = [...new Set(res.data.vesselList.map(m => m.chartererName))];
       this.setState({
         vesselList: res.data.vesselList,
         allClients,
@@ -572,7 +578,7 @@ class FillPerformanceDetails extends Component {
   }
 
   render() {
-    const { isDirty, readOnly, isViewPage, confAlertDetails, alertDetails, selectedClient, selectedVessel, selectedCpDate, allClients, allVslForSelectedClient, allCpDatesForSelectedClient, portDetails, performanceDetails } = this.state;
+    const { isDirty, readOnly, isClientPage, isViewPage, confAlertDetails, alertDetails, selectedClient, selectedVessel, selectedCpDate, allClients, allVslForSelectedClient, allCpDatesForSelectedClient, portDetails, performanceDetails } = this.state;
     const { tcHire, addressCommission, bunkerMDOAct, bunkerIFOOrg, bunkerIFOAct, bunkerMDOOrg, totalAct, totalOrg, freightOrg, freightAct, voyageDays, loadPortDelay,
       dischargePortDelay, intermediatePortDelay, loadPortDAAct$, loadPortDAOrg$, dischargePortDAOrg$, dischargePortDAAct$, bunkerSurveyCostBendsOrg$, bunkerSurveyCostBendsAct$, ILOHCandCVEAct$,
       ILOHCandCVEOrg$, wXRoutingExpenseOrg$, wXRoutingExpenseAct$, despatchPaidAct$, despatchPaidOrg$, PNIInsuranceAct$, PNIInsuranceOrg$, demmurrageReceivedAct$, demmurrageReceivedOrg$,
@@ -582,7 +588,7 @@ class FillPerformanceDetails extends Component {
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
         <ConfirmationAlert confAlertDetails={confAlertDetails} handleCancelAlert={this.handleCancelAlert} handleSuccessAlert={this.handleSuccessAlert} />
         <Paper style={{ marginTop: '2%' }}>
-          <Grid container>
+          {!isClientPage ? <Grid container>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <InputLabel id='demo-simple-select-label' className='inputLabels'>Select Client *</InputLabel>
               <Select
@@ -625,7 +631,7 @@ class FillPerformanceDetails extends Component {
                 {allCpDatesForSelectedClient && allCpDatesForSelectedClient.length ? miscUtils.getOptions(allCpDatesForSelectedClient) : []}
               </Select>
             </Grid>
-          </Grid>
+          </Grid> : ''}
           {selectedCpDate ?
             <>
               <form id='portDetailsForm' onSubmit={this.handlePerformanceDetailSubmit}>

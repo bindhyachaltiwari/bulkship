@@ -207,7 +207,7 @@ class AddNewVessel extends Component {
           <Grid container>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 20 }}
                 disabled={isEditPage}
                 error={validity && validity.vesselName && validity.vesselName.isInvalid}
                 id='vesselName'
@@ -225,7 +225,7 @@ class AddNewVessel extends Component {
                 disabled={isEditPage}
                 error={validity && validity.IMO && validity.IMO.isInvalid}
                 id='IMO'
-                label=' IMO *'
+                label='IMO *'
                 type='numeric*'
                 onChange={this.handleChange}
                 value={IMO || ''}
@@ -235,7 +235,7 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 8 }}
+                inputProps={{ maxLength: 10 }}
                 disabled={isEditPage}
                 error={validity && validity.DWT && validity.DWT.isInvalid}
                 id='DWT'
@@ -249,7 +249,7 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 20 }}
                 error={validity && validity.flag && validity.flag.isInvalid}
                 id='flag'
                 label='Flag'
@@ -263,7 +263,7 @@ class AddNewVessel extends Component {
 
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 10 }}
+                inputProps={{ maxLength: 25 }}
                 error={validity && validity.vesselType && validity.vesselType.isInvalid}
                 id='vesselType'
                 label='Vessel Type'
@@ -292,7 +292,7 @@ class AddNewVessel extends Component {
                 inputProps={{ maxLength: 8 }}
                 error={validity && validity.draft && validity.draft.isInvalid}
                 id='draft'
-                label=' Draft (M)'
+                label='Draft (M)'
                 type='decimal'
                 onChange={this.handleChange}
                 value={draft || ''}
@@ -302,7 +302,7 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 8 }}
+                inputProps={{ maxLength: 10 }}
                 error={validity && validity.LOA && validity.LOA.isInvalid}
                 id='LOA'
                 label='LOA (M)'
@@ -315,7 +315,7 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 8 }}
+                inputProps={{ maxLength: 10 }}
                 error={validity && validity.beam && validity.beam.isInvalid}
                 id='beam'
                 label='Beam (M)'
@@ -328,7 +328,7 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 8 }}
+                inputProps={{ maxLength: 10 }}
                 error={validity && validity.GRT && validity.GRT.isInvalid}
                 id='GRT'
                 label='GRT (MT)'
@@ -341,7 +341,7 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 8 }}
+                inputProps={{ maxLength: 10 }}
                 error={validity && validity.NRT && validity.NRT.isInvalid}
                 id='NRT'
                 label='NRT (MT)'
@@ -354,7 +354,7 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 8 }}
+                inputProps={{ maxLength: 10 }}
                 error={validity && validity.TPC && validity.TPC.isInvalid}
                 id='TPC'
                 label='TPC (MT/CBM)'
@@ -367,7 +367,7 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 8 }}
+                inputProps={{ maxLength: 10 }}
                 error={validity && validity.holdsHatches && validity.holdsHatches.isInvalid}
                 id='holdsHatches'
                 label='Holds/Hatches'
@@ -380,7 +380,7 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 12 }}
+                inputProps={{ maxLength: 10 }}
                 error={validity && validity.grainCapacity && validity.grainCapacity.isInvalid}
                 id='grainCapacity'
                 label='Grain Capacity (CBM)'
@@ -393,7 +393,7 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 12 }}
+                inputProps={{ maxLength: 10 }}
                 error={validity && validity.baleCapacity && validity.baleCapacity.isInvalid}
                 id='baleCapacity'
                 label='Bale Capacity (CBM)'
@@ -406,7 +406,7 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 8 }}
+                inputProps={{ maxLength: 10 }}
                 error={validity && validity.cranes && validity.cranes.isInvalid}
                 id='cranes'
                 label='Cranes (MT)'
@@ -419,7 +419,7 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 8 }}
+                inputProps={{ maxLength: 10 }}
                 error={validity && validity.grabs && validity.grabs.isInvalid}
                 id='grabs'
                 label='Grabs (CBM)'
