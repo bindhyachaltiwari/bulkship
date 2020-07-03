@@ -105,7 +105,7 @@ class ViewVoyageDetails extends Component {
         { field: "cpDate", title: "CP Date", editable: "never" });
       for (let i = 0; i < this.props.clientData.fieldVisibility.length; i++) {
         let label = this.props.clientData.fieldVisibility[i];
-        localColumns.push(columns.find(f => f.title === label));
+        localColumns.push(columns.find(f => f.title.trim() === label.trim()));
       }
 
       columns = localColumns;
