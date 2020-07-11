@@ -232,7 +232,7 @@ class AddNewUser extends Component {
     const { validity, isDirty, isformValid, confAlertDetails, userDetails, alertDetails, isEditPage } = this.state;
     let { userName, companyName, displayName, password, role } = userDetails;
     let showRoledata;
-    if (role === 'Manager' && !this.props.onRowClickedData) {
+    if (role === 'Manager') {
       showRoledata = this.getManagerRoleData();
     } else if (role === 'Client') {
       showRoledata = this.getClientRoleData();

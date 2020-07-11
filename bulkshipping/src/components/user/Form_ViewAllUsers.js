@@ -40,9 +40,9 @@ class ViewAllUsers extends Component {
 
 
   onRowClick = (event, rowData) => {
-    if(!event.target.tagName === 'SELECT') {
+    //if(!event.target.tagName === 'SELECT') {
       this.props.handleRowClicked(rowData);
-    }
+    //}
   }
 
   handleCancelAlert = () => this.setState({

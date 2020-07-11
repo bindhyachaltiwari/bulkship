@@ -35,7 +35,7 @@ function UserTable(props) {
     Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref}/>),
     DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
     Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} onClick = {()=> {
-      //propsInside.handleEditClick('edit');
+      
       for (let i=0;i< data.length;i++) {
         let singleClientId = data[i]
         if (singleClientId.role ==='Manager' && singleClientId.managerRoles) {
@@ -85,7 +85,6 @@ function UserTable(props) {
       columns={props.columns}
       data={props.data}
       icons={tableIcons}
-      onRowClick={props.onRowClick}
       editable=
       {showDelete() ?
         {
