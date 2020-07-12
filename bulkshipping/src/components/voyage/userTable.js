@@ -20,14 +20,28 @@ import api from '../../api';
 import { connect } from 'react-redux';
 
 function UserTable(props) {
-
+  let propsInside = props;
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} onClick={() => {
+      for (let i = 0; i < data.length; i++) {
+        let singleClientId = data[i]
+        if (singleClientId.fieldVisibility && singleClientId.fieldVisibility.length) {
+          singleClientId.fieldVisibility = <select>{singleClientId.fieldVisibility.map((e) => <option>{e}</option>)}</select>
+        }
+      }
+    }} />),
     Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
     DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} onClick={() => {
+      for (let i = 0; i < data.length; i++) {
+        let singleClientId = data[i]
+        if (singleClientId.fieldVisibility) {
+          singleClientId.fieldVisibility = propsInside.originalArray[i].fieldVisibility;
+        }
+      }
+    }} />),
     Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
     Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
     FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),

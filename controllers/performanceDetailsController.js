@@ -69,6 +69,8 @@ exports.fillPerformanceDetails = (req, res) => {
                     bunkerMDOOrg: data.bunkerMDOOrg,
                     dischargePortDAAct$: data.dischargePortDAAct$,
                     dischargePortDAOrg$: data.dischargePortDAOrg$,
+                    intermediatePortDAOrg$: data.intermediatePortDAOrg$,
+                    intermediatePortDAAct$: data.intermediatePortDAAct$,
                     dischargePortDelay: data.dischargePortDelay,
                     intermediatePortDelay: data.intermediatePortDelay,
                     loadPortDAAct$: data.loadPortDAAct$,
@@ -108,56 +110,59 @@ exports.fillPerformanceDetails = (req, res) => {
     });
 }
 
-exports.getPerformanceDetails = (req,res) => {
-    PerformanceDetails.findOne({ $and: [{chartererName: req.params.chartererName},{vesselName:req.params.vesselName},{cpDate:req.params.cpDate}] })
-    .then((performance) => {
-      if (!performance) {
-        res.json({ status: false, err: 'performance not found' });
+exports.getPerformanceDetails = (req, res) => {
+    PerformanceDetails.findOne({ $and: [{ chartererName: req.params.chartererName }, { vesselName: req.params.vesselName }, { cpDate: req.params.cpDate }] })
+        .then((performance) => {
+            if (!performance) {
+                res.json({ status: false, err: 'performance not found' });
                 return;
-        }
-    res.json({ status: true, 
-        performanceDetails: {
-            addressCommission: performance.addressCommission,
-            bunkerIFOAct: performance.bunkerIFOAct,
-            bunkerIFOOrg: performance.bunkerIFOOrg,
-            bunkerMDOAct: performance.bunkerMDOAct,
-            bunkerMDOOrg: performance.bunkerMDOOrg,
-            dischargePortDAAct$: performance.dischargePortDAAct$,
-            dischargePortDAOrg$: performance.dischargePortDAOrg$,
-            dischargePortDelay: performance.dischargePortDelay,
-            intermediatePortDelay: performance.intermediatePortDelay,
-            loadPortDAAct$: performance.loadPortDAAct$,
-            loadPortDAOrg$: performance.loadPortDAOrg$,
-            loadPortDelay: performance.loadPortDelay,
-            tcHire: performance.tcHire,
-            freightAct: performance.freightAct,
-            freightOrg: performance.freightOrg,
-            totalAct: performance.totalAct,
-            totalOrg: performance.totalOrg,
-            voyageDays: performance.voyageDays,
-            CargoQuantityAct: performance.CargoQuantityAct,
-            CargoQuantityOrg: performance.CargoQuantityOrg,
-            ILOHCandCVEAct$: performance.ILOHCandCVEAct$,
-            ILOHCandCVEOrg$: performance.ILOHCandCVEOrg$,
-            PNIInsuranceAct$: performance.PNIInsuranceAct$,
-            PNIInsuranceOrg$: performance.PNIInsuranceOrg$,
-            bunkerSurveyCostBendsAct$: performance.bunkerSurveyCostBendsAct$,
-            bunkerSurveyCostBendsOrg$: performance.bunkerSurveyCostBendsOrg$,
-            despatchPaidAct$: performance.despatchPaidAct$,
-            despatchPaidOrg$: performance.despatchPaidOrg$,
-            otherExpenseOrg$: performance.otherExpenseOrg$,
-            otherExpenseAct$: performance.otherExpenseAct$,
-            wXRoutingExpenseAct$: performance.wXRoutingExpenseAct$,
-            wXRoutingExpenseOrg$: performance.wXRoutingExpenseOrg$,
-            demmurrageReceivedOrg$: performance.demmurrageReceivedOrg$,
-            demmurrageReceivedAct$: performance.demmurrageReceivedAct$,
-            HraWarRiskOrg$: performance.HraWarRiskOrg$,
-            HraWarRiskAct$: performance.HraWarRiskAct$,
-            remarks: performance.remarks
-        }
-    });
-    })
-    .catch((e) => {
-        res.json({ status: false });
-    });
+            }
+            res.json({
+                status: true,
+                performanceDetails: {
+                    addressCommission: performance.addressCommission,
+                    bunkerIFOAct: performance.bunkerIFOAct,
+                    bunkerIFOOrg: performance.bunkerIFOOrg,
+                    bunkerMDOAct: performance.bunkerMDOAct,
+                    bunkerMDOOrg: performance.bunkerMDOOrg,
+                    dischargePortDAAct$: performance.dischargePortDAAct$,
+                    dischargePortDAOrg$: performance.dischargePortDAOrg$,
+                    dischargePortDelay: performance.dischargePortDelay,
+                    intermediatePortDelay: performance.intermediatePortDelay,
+                    loadPortDAAct$: performance.loadPortDAAct$,
+                    loadPortDAOrg$: performance.loadPortDAOrg$,
+                    intermediatePortDAOrg$: performance.intermediatePortDAOrg$,
+                    intermediatePortDAAct$: performance.intermediatePortDAAct$,
+                    loadPortDelay: performance.loadPortDelay,
+                    tcHire: performance.tcHire,
+                    freightAct: performance.freightAct,
+                    freightOrg: performance.freightOrg,
+                    totalAct: performance.totalAct,
+                    totalOrg: performance.totalOrg,
+                    voyageDays: performance.voyageDays,
+                    CargoQuantityAct: performance.CargoQuantityAct,
+                    CargoQuantityOrg: performance.CargoQuantityOrg,
+                    ILOHCandCVEAct$: performance.ILOHCandCVEAct$,
+                    ILOHCandCVEOrg$: performance.ILOHCandCVEOrg$,
+                    PNIInsuranceAct$: performance.PNIInsuranceAct$,
+                    PNIInsuranceOrg$: performance.PNIInsuranceOrg$,
+                    bunkerSurveyCostBendsAct$: performance.bunkerSurveyCostBendsAct$,
+                    bunkerSurveyCostBendsOrg$: performance.bunkerSurveyCostBendsOrg$,
+                    despatchPaidAct$: performance.despatchPaidAct$,
+                    despatchPaidOrg$: performance.despatchPaidOrg$,
+                    otherExpenseOrg$: performance.otherExpenseOrg$,
+                    otherExpenseAct$: performance.otherExpenseAct$,
+                    wXRoutingExpenseAct$: performance.wXRoutingExpenseAct$,
+                    wXRoutingExpenseOrg$: performance.wXRoutingExpenseOrg$,
+                    demmurrageReceivedOrg$: performance.demmurrageReceivedOrg$,
+                    demmurrageReceivedAct$: performance.demmurrageReceivedAct$,
+                    HraWarRiskOrg$: performance.HraWarRiskOrg$,
+                    HraWarRiskAct$: performance.HraWarRiskAct$,
+                    remarks: performance.remarks
+                }
+            });
+        })
+        .catch((e) => {
+            res.json({ status: false });
+        });
 }

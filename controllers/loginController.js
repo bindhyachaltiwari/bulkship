@@ -8,7 +8,6 @@ exports.login = (req, res, next) => {
   };
   const form = new formidable.IncomingForm();
   form.on('field', function (name, value) {
-    // sconsole.log('form addevent field-----------------------',  name, '  ', value);
   });
 
   form.parse(req, function (err, fields, files) {

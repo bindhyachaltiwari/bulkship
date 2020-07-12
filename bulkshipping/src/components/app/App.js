@@ -1,20 +1,19 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Callback from '../../Callback';
+import { Grid } from '@material-ui/core';
+import { connect } from 'react-redux';
 import Login from '../login';
 import NavBar from '../navBar';
 import LeftMenu from '../sub-component/left-menu';
 import Users from '../user';
-import { connect } from 'react-redux';
-import './../../style/reset.css';
-import './../../style/common.scss';
-import './App.scss';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Grid } from '@material-ui/core';
 import vessel from '../vessel';
 import voyage from '../voyage';
 import performance from '../performance';
 import Client from '../client';
+import './../../style/reset.css';
+import './../../style/common.scss';
+import './App.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends React.Component {
   constructor() {
@@ -58,10 +57,10 @@ class App extends React.Component {
     return (
       <div className={`main ${activeOverlay ? 'active-overlay' : ''}`}>
         {loggedIn ? <Grid container direction='row' className='main-container'>
-          {detail.role !== 'Client' ? <Grid item md={3} lg={3} className='left left-section'>
+          {detail.role !== 'Client' ? <Grid item md={2} lg={2} className='left left-section'>
             <LeftMenu />
           </Grid> : ""}
-          <Grid item xs={12} md={detail.role !== 'Client' ? 9 : false} lg={detail.role !== 'Client' ? 9 : false}>
+          <Grid item xs={12} md={detail.role !== 'Client' ? 10 : false} lg={detail.role !== 'Client' ? 10 : false}>
             <section className='right right-section'>
               <NavBar history={this.props.history} />
               <div className='right-container'>

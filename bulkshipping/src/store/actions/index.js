@@ -1,5 +1,5 @@
 import actionTypes from './constants';
-  
+
 export const setLoginDetails = (data) => {
   return {
     type: actionTypes.LOGIN_ASYNC,
@@ -21,7 +21,7 @@ export const setUserDetails = (data) => {
   }
 }
 
-export const setActiveTab= (data) => {
+export const setActiveTab = (data) => {
   return {
     type: actionTypes.SET_ACTIVE_TAB,
     data

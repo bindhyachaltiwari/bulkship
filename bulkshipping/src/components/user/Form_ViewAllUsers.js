@@ -14,7 +14,7 @@ class ViewAllUsers extends Component {
         titleMsg: '',
         descrMsg: ''
       },
-      originalColumns : [],
+      originalColumns: [],
     }
     this.handleCancelAlert = this.handleCancelAlert.bind(this);
   }
@@ -25,24 +25,25 @@ class ViewAllUsers extends Component {
       const onceArray = Array.from(res.data.clientList);
       this.originalObjectArray = JSON.parse(JSON.stringify(res.data.clientList))
       this.setState({
-        originalColumns : onceArray
+        originalColumns: onceArray
       })
       for (var i = 0; i < res.data.clientList.length; i++) {
         let singleClientId = res.data.clientList[i]
-        if (singleClientId.role ==='Manager' && singleClientId.managerRoles && singleClientId.managerRoles.length) {
+        if (singleClientId.role === 'Manager' && singleClientId.managerRoles && singleClientId.managerRoles.length) {
           singleClientId.managerRoles = <select>{singleClientId.managerRoles.map((e) => <option>{e}</option>)}</select>
         }
+        if (singleClientId.role ==='Client' && singleClientId.clientDisplay && singleClientId.clientDisplay.length) {
+          singleClientId.clientDisplay = <select>{singleClientId.clientDisplay.map((e) => <option>{e}</option>)}</select>
+        }
       }
-      
+
       this.setState({ clientList: res.data.clientList });
     }
   }
 
 
   onRowClick = (event, rowData) => {
-    //if(!event.target.tagName === 'SELECT') {
-      this.props.handleRowClicked(rowData);
-    //}
+    this.props.handleRowClicked(rowData);
   }
 
   handleCancelAlert = () => this.setState({
@@ -67,7 +68,7 @@ class ViewAllUsers extends Component {
     return (
       <form>
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
-        <UserTable title={'View All Users'} data={clientList} columns={columns} onRowClick={this.onRowClick} originalColumns = {this.state.originalColumns} originalArray = {this.originalObjectArray}/>
+        <UserTable title={'View All Users'} data={clientList} columns={columns} onRowClick={this.onRowClick} originalColumns={this.state.originalColumns} originalArray={this.originalObjectArray} />
       </form>
     );
   }

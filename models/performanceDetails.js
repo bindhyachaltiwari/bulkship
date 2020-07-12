@@ -103,7 +103,11 @@ var performanceDetails = new Schema({
         type: Number
     }, HraWarRiskAct$: {
         type: Number
-    }
+    }, intermediatePortDAOrg$: {
+        type: Number
+    }, intermediatePortDAAct$: {
+        type: Number
+    },
 }, {
     collection: 'performanceDetails'
 });

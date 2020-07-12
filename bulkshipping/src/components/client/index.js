@@ -83,7 +83,7 @@ class Client extends Component {
       pathname: '/voyage',
       state: {
         detail: {
-          'Shipper': c.Shipper,
+          'shipper': c.shipper,
           'bunkerSupplier': c.bunkerSupplier,
           'bunkerTrader': c.bunkerTrader,
           'cargo': c.cargo,
@@ -93,16 +93,17 @@ class Client extends Component {
           'dischargePort': c.dischargePort,
           'loadPort': c.loadPort,
           'loadPortAgent': c.loadPortAgent,
-          'offHireSurveyor': c.offHireSurveyor,
+          'dischargePortAgent': c.dischargePortAgent,
           'offHireSurveyor': c.offHireSurveyor,
           'receiver': c.receiver,
-          'onwerName': c.onwerName,
+          'ownerName': c.ownerName,
           'onHireSurveyor': c.onHireSurveyor,
           'vesselSize': c.vesselSize,
           'weatherRoutingCompany': c.weatherRoutingCompany,
           'tableData': { id: 0 },
           'vId': c.vId,
-          'vesselName': c.vesselName
+          'vesselName': c.vesselName,
+          'pniInsurance': c.pniInsurance
         },
         fieldVisibility: c.fieldVisibility
       }

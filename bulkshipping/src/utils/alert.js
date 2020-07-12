@@ -19,7 +19,7 @@ export default function Alert(props) {
         <DialogTitle id="alert-dialog-title">{props.alertDetails.titleMsg}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-           {props.alertDetails.descrMsg}
+            {props.alertDetails.descrMsg}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

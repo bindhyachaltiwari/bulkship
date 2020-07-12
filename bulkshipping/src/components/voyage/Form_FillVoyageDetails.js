@@ -32,6 +32,7 @@ class FillVoyageDetails extends Component {
       isEditPage: props && props.onRowClickedData && Object.keys(props.onRowClickedData).length ? true : false,
       validity: {},
       isformValid: true,
+      checkedAll: false
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancelAlert = this.handleCancelAlert.bind(this);
@@ -57,6 +58,10 @@ class FillVoyageDetails extends Component {
     this.getAllVesselsList();
     if (this.props && this.props.onRowClickedData) {
       this.updateForm(this.props.onRowClickedData, true);
+    }
+    const { isEditPage, checkedAll, voyageDetails } = this.state;
+    if (isEditPage && !checkedAll && voyageDetails.fieldVisibility && voyageDetails.fieldVisibility.length === 16) {
+      this.setState({ checkedAll: true })
     }
   }
 
@@ -233,6 +238,27 @@ class FillVoyageDetails extends Component {
     this.updateForm(voyageDetails, isformValid, isTyped);
   };
 
+  multipleSelect = e => {
+    const { value } = e.target;
+    let v = value[value.length - 1];
+    let { voyageDetails, checkedAll } = this.state;
+
+    if (!checkedAll && v === 'Select All') {
+      Object.assign(voyageDetails, { fieldVisibility: constants.voyageFieldList })
+    } else if (checkedAll && v === 'Select All') {
+      Object.assign(voyageDetails, { fieldVisibility: [] })
+    } else {
+      Object.assign(voyageDetails, { fieldVisibility: value })
+    }
+
+    if ((v === 'Select All' && !checkedAll) || value.length === 16) {
+      checkedAll = true;
+    } else {
+      checkedAll = false;
+    }
+    this.setState({ voyageDetails, checkedAll });
+  }
+
   submitNewFieldDetails = e => {
     e.preventDefault();
     console.log(e)
@@ -347,7 +373,7 @@ class FillVoyageDetails extends Component {
                 error={validity && validity.loadPort && validity.loadPort.isInvalid}
                 id='loadPort'
                 label='Load Port *'
-                type='aplhaNumeric*'
+                type='allCharacters*'
                 onChange={this.handleChange}
                 value={loadPort || ''}
                 autoComplete='off'
@@ -360,7 +386,7 @@ class FillVoyageDetails extends Component {
                 error={validity && validity.dischargePort && validity.dischargePort.isInvalid}
                 id='dischargePort'
                 label='Discharge Port *'
-                type='aplhaNumeric*'
+                type='allCharacters*'
                 onChange={this.handleChange}
                 value={dischargePort || ''}
                 autoComplete='off'
@@ -373,7 +399,7 @@ class FillVoyageDetails extends Component {
                 error={validity && validity.cargo && validity.cargo.isInvalid}
                 id='cargo'
                 label='Cargo'
-                type='onlyAlphabets'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={cargo || ''}
                 autoComplete='off'
@@ -399,7 +425,7 @@ class FillVoyageDetails extends Component {
                 error={validity && validity.ownerName && validity.ownerName.isInvalid}
                 id='ownerName'
                 label='Owner Name'
-                type='aplhaNumeric'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={ownerName || ''}
                 autoComplete='off'
@@ -412,7 +438,7 @@ class FillVoyageDetails extends Component {
                 error={validity && validity.shipper && validity.shipper.isInvalid}
                 id='shipper'
                 label='Shipper'
-                type='aplhaNumeric'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={shipper || ''}
                 autoComplete='off'
@@ -425,7 +451,7 @@ class FillVoyageDetails extends Component {
                 error={validity && validity.loadPortAgent && validity.loadPortAgent.isInvalid}
                 id='loadPortAgent'
                 label='Load Port Agent'
-                type='onlyAlphabets'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={loadPortAgent || ''}
                 autoComplete='off'
@@ -438,7 +464,7 @@ class FillVoyageDetails extends Component {
                 error={validity && validity.dischargePortAgent && validity.dischargePortAgent.isInvalid}
                 id='dischargePortAgent'
                 label='Discharge Port Agent'
-                type='onlyAlphabets'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={dischargePortAgent || ''}
                 autoComplete='off'
@@ -451,7 +477,7 @@ class FillVoyageDetails extends Component {
                 error={validity && validity.receiver && validity.receiver.isInvalid}
                 id='receiver'
                 label='Receiver'
-                type='onlyAlphabets'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={receiver || ''}
                 autoComplete='off'
@@ -464,7 +490,7 @@ class FillVoyageDetails extends Component {
                 error={validity && validity.onHireSurveyor && validity.onHireSurveyor.isInvalid}
                 id='onHireSurveyor'
                 label='On Hire Surveyor'
-                type='onlyAlphabets'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={onHireSurveyor || ''}
                 autoComplete='off'
@@ -477,7 +503,7 @@ class FillVoyageDetails extends Component {
                 error={validity && validity.offHireSurveyor && validity.offHireSurveyor.isInvalid}
                 id='offHireSurveyor'
                 label='Off Hire Surveyor'
-                type='onlyAlphabets'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={offHireSurveyor || ''}
                 autoComplete='off'
@@ -490,7 +516,7 @@ class FillVoyageDetails extends Component {
                 error={validity && validity.bunkerSupplier && validity.bunkerSupplier.isInvalid}
                 id='bunkerSupplier'
                 label='Bunker Supplier'
-                type='onlyAlphabets'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={bunkerSupplier || ''}
                 autoComplete='off'
@@ -503,7 +529,7 @@ class FillVoyageDetails extends Component {
                 error={validity && validity.bunkerTrader && validity.bunkerTrader.isInvalid}
                 id='bunkerTrader'
                 label='Bunker Trader'
-                type='onlyAlphabets'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={bunkerTrader || ''}
                 autoComplete='off'
@@ -516,7 +542,7 @@ class FillVoyageDetails extends Component {
                 error={validity && validity.pniInsurance && validity.pniInsurance.isInvalid}
                 id='pniInsurance'
                 label='PNI Insurance'
-                type='onlyAlphabets'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={pniInsurance || ''}
                 autoComplete='off'
@@ -529,7 +555,7 @@ class FillVoyageDetails extends Component {
                 error={validity && validity.weatherRoutingCompany && validity.weatherRoutingCompany.isInvalid}
                 id='weatherRoutingCompany'
                 label='Weather Routing Co.'
-                type='onlyAlphabets'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={weatherRoutingCompany || ''}
                 autoComplete='off'
@@ -545,9 +571,13 @@ class FillVoyageDetails extends Component {
                 multiple
                 value={fieldVisibility}
                 name='fieldVisibility'
-                onChange={this.handleChange}
+                onChange={this.multipleSelect}
                 input={<Input id="select-multiple-chip" />}
                 renderValue={(selected) => selected.join(', ')}>
+                <MenuItem key={'Select All'} value={'Select All'}>
+                  <Checkbox checked={Boolean(this.state.checkedAll)} />
+                  <ListItemText primary={this.state.checkedAll ? "Select None" : "Select All"} />
+                </MenuItem>
                 {constants.voyageFieldList.map((name) => (
                   <MenuItem key={name} value={name}>
                     <Checkbox checked={fieldVisibility.indexOf(name) > -1} />

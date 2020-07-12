@@ -491,6 +491,17 @@ class FillPerformanceDetails extends Component {
     const totalOrg = this.getTotalOrg(performanceDetails);
     const totalAct = this.getTotalAct(performanceDetails);
     Object.assign(performanceDetails, { totalAct, totalOrg });
+    if (totalOrg >= 0 && parseFloat(performanceDetails.CargoQuantityOrg) > 0) {
+      let freightOrg = parseFloat(totalOrg / parseFloat(performanceDetails.CargoQuantityOrg));
+      freightOrg = freightOrg ? parseFloat(freightOrg.toFixed(2)) : 0;
+      Object.assign(performanceDetails, { freightOrg });
+    }
+
+    if (totalAct >= 0 && parseFloat(performanceDetails.CargoQuantityAct) > 0) {
+      let freightAct = parseFloat(totalAct / parseFloat(performanceDetails.CargoQuantityAct));
+      freightAct = freightAct ? parseFloat(freightAct.toFixed(2)) : 0;
+      Object.assign(performanceDetails, { freightAct });
+    }
     this.setState({ performanceDetails });
   }
 
@@ -581,7 +592,7 @@ class FillPerformanceDetails extends Component {
     const { isDirty, readOnly, isClientPage, isViewPage, confAlertDetails, alertDetails, selectedClient, selectedVessel, selectedCpDate, allClients, allVslForSelectedClient, allCpDatesForSelectedClient, portDetails, performanceDetails } = this.state;
     const { tcHire, addressCommission, bunkerMDOAct, bunkerIFOOrg, bunkerIFOAct, bunkerMDOOrg, totalAct, totalOrg, freightOrg, freightAct, voyageDays, loadPortDelay,
       dischargePortDelay, intermediatePortDelay, loadPortDAAct$, loadPortDAOrg$, dischargePortDAOrg$, dischargePortDAAct$, bunkerSurveyCostBendsOrg$, bunkerSurveyCostBendsAct$, ILOHCandCVEAct$,
-      ILOHCandCVEOrg$, wXRoutingExpenseOrg$, wXRoutingExpenseAct$, despatchPaidAct$, despatchPaidOrg$, PNIInsuranceAct$, PNIInsuranceOrg$, demmurrageReceivedAct$, demmurrageReceivedOrg$,
+      ILOHCandCVEOrg$, wXRoutingExpenseOrg$, wXRoutingExpenseAct$, despatchPaidAct$, despatchPaidOrg$, PNIInsuranceAct$, PNIInsuranceOrg$, demmurrageReceivedAct$, demmurrageReceivedOrg$, intermediatePortDAAct$, intermediatePortDAOrg$,
       otherExpenseAct$, otherExpenseOrg$, HraWarRiskAct$, HraWarRiskOrg$, remarks, CargoQuantityAct, CargoQuantityOrg } = performanceDetails;
     return (
       <>
@@ -830,6 +841,21 @@ class FillPerformanceDetails extends Component {
                       </td>
                       <td className='table-performance-td-th'>
                         <input disabled={readOnly} maxLength='10' className='table-performance-input' type='text' name='dischargePortDAAct$' required onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={dischargePortDAAct$ || 0} />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className='table-performance-td-th'>
+                        <label>Intermediate Port DA *</label>
+                      </td>
+                      <td className='table-performance-td-th'>
+                      </td>
+                      <td className='table-performance-td-th'>
+                      </td>
+                      <td className='table-performance-td-th'>
+                        <input disabled={readOnly} maxLength='10' className='table-performance-input' type='text' name='intermediatePortDAOrg$' required onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={intermediatePortDAOrg$ || 0} />
+                      </td>
+                      <td className='table-performance-td-th'>
+                        <input disabled={readOnly} maxLength='10' className='table-performance-input' type='text' name='intermediatePortDAAct$' required onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={intermediatePortDAAct$ || 0} />
                       </td>
                     </tr>
                     <tr>

@@ -10,6 +10,6 @@ router.get('/getAllVessels/:isDetailsFilled', performanceDetailsController.getAl
 
 router.post('/fillPerformanceDetails', performanceDetailsController.fillPerformanceDetails);
 
-router.get('/getPerformanceDetails/:chartererName/:vesselName/:cpDate',performanceDetailsController.getPerformanceDetails);
+router.get('/getPerformanceDetails/:chartererName/:vesselName/:cpDate', performanceDetailsController.getPerformanceDetails);
 
 module.exports = router;

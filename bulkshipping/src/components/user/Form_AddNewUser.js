@@ -28,8 +28,10 @@ class AddNewUser extends Component {
       userDetails: props && props.onRowClickedData ? { ...props.onRowClickedData } : {},
       isEditPage: props && props.onRowClickedData && Object.keys(props.onRowClickedData).length ? true : false,
       validity: {},
-      isformValid: true
+      isformValid: true,
+      checkedAll: false,
     }
+
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancelAlert = this.handleCancelAlert.bind(this);
     this.handleSuccessAlert = this.handleSuccessAlert.bind(this);
@@ -38,6 +40,11 @@ class AddNewUser extends Component {
   componentWillMount() {
     if (this.props && this.props.onRowClickedData) {
       this.updateForm(this.props.onRowClickedData, true);
+    }
+
+    const { isEditPage, checkedAll, userDetails } = this.state;
+    if (isEditPage && !checkedAll && userDetails.managerRoles && userDetails.managerRoles.length === 12) {
+      this.setState({ checkedAll: true })
     }
   }
 
@@ -195,6 +202,27 @@ class AddNewUser extends Component {
     this.updateForm(userDetails, isformValid, isTyped);
   };
 
+  multipleSelect = e => {
+    const { value } = e.target;
+    let v = value[value.length - 1];
+    let { userDetails, checkedAll } = this.state;
+
+    if (!checkedAll && v === 'Select All') {
+      Object.assign(userDetails, { managerRoles: constants.managerRolesList })
+    } else if (checkedAll && v === 'Select All') {
+      Object.assign(userDetails, { managerRoles: [] })
+    } else {
+      Object.assign(userDetails, { managerRoles: value })
+    }
+
+    if ((v === 'Select All' && !checkedAll) || value.length === 12) {
+      checkedAll = true;
+    } else {
+      checkedAll = false;
+    }
+    this.setState({ userDetails, checkedAll });
+  }
+
   updateForm(userDetails, isformValid, isTyped) {
     const { userName, companyName, displayName, password, role, managerRoles, clientDisplay, clientType } = userDetails
     if (isformValid && userName && companyName && displayName && role) {
@@ -229,15 +257,14 @@ class AddNewUser extends Component {
   }
 
   render() {
-    const { validity, isDirty, isformValid, confAlertDetails, userDetails, alertDetails, isEditPage } = this.state;
-    let { userName, companyName, displayName, password, role } = userDetails;
+    const { validity, isDirty, isformValid, confAlertDetails, userDetails, alertDetails, isEditPage, checkedAll } = this.state;
+    let { userName, companyName, displayName, password, role, managerRoles } = userDetails;
     let showRoledata;
     if (role === 'Manager') {
       showRoledata = this.getManagerRoleData();
     } else if (role === 'Client') {
       showRoledata = this.getClientRoleData();
     }
-
     return (
       <form autoComplete="off" noValidate >
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
@@ -341,12 +368,16 @@ class AddNewUser extends Component {
         multiple
         value={managerRoles}
         name='managerRoles'
-        onChange={this.handleChange}
+        onChange={this.multipleSelect}
         input={<Input id="select-multiple-chip" />}
         renderValue={(selected) => selected.join(', ')}>
+        <MenuItem key={'Select All'} value={'Select All'}>
+          <Checkbox checked={Boolean(this.state.checkedAll)} />
+          <ListItemText primary={this.state.checkedAll ? "Select None" : "Select All"} />
+        </MenuItem>
         {names.map((name) => (
           <MenuItem key={name} value={name}>
-            <Checkbox checked={managerRoles && managerRoles.length && managerRoles.indexOf(name) > -1} />
+            <Checkbox checked={Boolean(managerRoles && managerRoles.length && managerRoles.indexOf(name) > -1)} />
             <ListItemText primary={name} />
           </MenuItem>
         ))}

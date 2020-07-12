@@ -86,8 +86,8 @@ var voyageDetails = new Schema({
         unique: false,
     },
     fieldVisibility: {
-		type: Object,
-		required: false
+        type: Object,
+        required: false
     },
     otherFields: {
         type: JSON,

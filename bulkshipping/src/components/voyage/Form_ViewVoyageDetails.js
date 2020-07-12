@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import Alert from '../../utils/alert';
 import UserTable from './userTable';
 import api from '../../api';
-import { array } from 'prop-types';
 
 class ViewVoyageDetails extends Component {
 
   constructor(props) {
     super(props);
+    this.originalObjectArray = [];
     this.state = {
       alertDetails: {
         openAlert: false,
@@ -48,13 +48,27 @@ class ViewVoyageDetails extends Component {
     if (this.props.clientData) {
       let arrayItem = [];
       arrayItem.push(this.props.clientData.detail);
-      const updatedResult = this.checkandRemoveObject(arrayItem);
+      let updatedResult = this.checkandRemoveObject(arrayItem);
+      this.originalObjectArray = JSON.parse(JSON.stringify(updatedResult))
+      for (var i = 0; i < updatedResult.length; i++) {
+        let singleClientId = updatedResult[i]
+        if (singleClientId.fieldVisibility && singleClientId.fieldVisibility.length) {
+          singleClientId.fieldVisibility = <select>{singleClientId.fieldVisibility.map((e) => <option>{e}</option>)}</select>
+        }
+      }
       this.setState({ voyageList: updatedResult });
     }
     else {
       const res = await api.getAllVoyageDetails();
       if (res.data.status) {
-        const updatedResult = this.checkandRemoveObject(res.data.voyageList);
+        let updatedResult = this.checkandRemoveObject(res.data.voyageList);
+        this.originalObjectArray = JSON.parse(JSON.stringify(updatedResult))
+        for (var i = 0; i < updatedResult.length; i++) {
+          let singleClientId = updatedResult[i]
+          if (singleClientId.fieldVisibility && singleClientId.fieldVisibility.length) {
+            singleClientId.fieldVisibility = <select>{singleClientId.fieldVisibility.map((e) => <option>{e}</option>)}</select>
+          }
+        }
         this.setState({ voyageList: updatedResult });
       }
     }
@@ -99,23 +113,20 @@ class ViewVoyageDetails extends Component {
     ];
 
     if (this.props && this.props.clientData && this.props.clientData.detail) {
-      let localColumns = [];
-      localColumns.push({ field: "chartererName", title: "Charterer Name", editable: "never" },
-        { field: "vesselName", title: "Vessel Name", editable: "never" },
-        { field: "cpDate", title: "CP Date", editable: "never" });
-      for (let i = 0; i < this.props.clientData.fieldVisibility.length; i++) {
-        let label = this.props.clientData.fieldVisibility[i];
-        localColumns.push(columns.find(f => f.title.trim() === label.trim()));
+      var index = columns.length;
+      this.props.clientData.fieldVisibility.unshift('Charterer Name', 'Vessel Name', 'CP Date');
+      while (index--) {
+        if (columns[index].title && !this.props.clientData.fieldVisibility.includes(columns[index].title.trim())) {
+          columns.splice(index, 1);
+        }
       }
-
-      columns = localColumns;
     }
 
     const { voyageList, alertDetails } = this.state;
     return (
       <form>
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
-        <UserTable title={'View Voyage Details'} data={voyageList} columns={columns} onRowClick={this.onRowClick} />
+        <UserTable title={'View Voyage Details'} data={voyageList} columns={columns} onRowClick={this.onRowClick} originalArray={this.originalObjectArray}/>
       </form>
     );
   }

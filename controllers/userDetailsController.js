@@ -85,7 +85,7 @@ exports.getAllUserDetails = (req, res) => {
                         role: m.role,
                         clientType: m.clientType,
                         managerRoles: m.managerRoles,
-                        clientDisplay:m.clientDisplay,
+                        clientDisplay: m.clientDisplay,
                         id: m['_id']
                     };
                 })

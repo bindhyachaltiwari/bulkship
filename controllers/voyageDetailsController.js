@@ -47,7 +47,7 @@ exports.getVoyageDetails = (req, res) => {
                     dischargePort: v.dischargePort,
                     cargo: v.cargo,
                     cargoIntake: v.cargoIntake,
-                    onwerName: v.onwerName
+                    ownerName: v.ownerName
                 }
             });
         } else {

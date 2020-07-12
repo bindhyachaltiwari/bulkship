@@ -8,12 +8,12 @@ var userDetails = new Schema({
         required: true,
         trim: true
     },
-    displayName:{
+    displayName: {
         type: String,
         required: true,
         trim: true
     },
-    companyName:{
+    companyName: {
         type: String,
         required: true,
         trim: true
@@ -31,14 +31,14 @@ var userDetails = new Schema({
         type: String,
         required: true
     },
-	managerRoles: {
-		type: Object,
-		required: false
+    managerRoles: {
+        type: Object,
+        required: false
     },
     clientDisplay: {
-		type: Object,
-		required: false
-	}
+        type: Object,
+        required: false
+    }
 }, {
     collection: 'userDetails'
 });
