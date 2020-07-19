@@ -290,18 +290,3 @@ html {
     width: 50%;
     line-height: 24px;
 }
-.fa.fa-facebook:before {
-    content: "\f39e";
-}
-.fa.fa-facebook, .fa.fa-twitter {
-    font-family: "Font Awesome 5 Brands";
-    font-weight: 400;
-}
-.fa {
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
