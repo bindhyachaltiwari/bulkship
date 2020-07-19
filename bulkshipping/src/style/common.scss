@@ -262,9 +262,12 @@ html {
         font-family: "Times New Roman", Times, serif;
         margin-top: 0;
         margin-bottom: 1rem;
+        line-height: 24px;
     }
     strong {
         font-family: "Times New Roman", Times, serif;
+        font-weight: bolder;
+        line-height: 24px;
     }
 }
 .italic-font {
@@ -284,6 +287,7 @@ html {
 .contact-form-section {
     display: inline-block;
     width: 50%;
+    line-height: 24px;
 }
 .contact-us,.about-us {
     padding: 10px;
