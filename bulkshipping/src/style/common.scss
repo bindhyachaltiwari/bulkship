@@ -204,3 +204,81 @@ html {
         height: 100%;
     }
 }
+
+
+.nav-navbar {
+    margin-bottom: 0;
+    font: 400 0.8em/normal "Montserrat",sans-serif !important;
+    line-height: 1.42857143 !important;
+    letter-spacing: .2em;
+    border-radius: 0;
+    font-family: Montserrat,sans-serif;
+    height: 50px;
+    box-shadow: 0 10px 20px rgba(26,26,26,.19),0 6px 6px rgba(26,26,26,.23);
+}
+
+.nav-navbar li a,.nav-navbar .navbar-brand {
+    color: #697E85 !important;
+}
+
+.ulnavbar-nav li a:hover,.ulnavbar-nav li.active a {
+    color: #fff !important;
+    border-bottom: 2px solid #fff;
+    text-decoration: none!important;
+}
+@media (min-width: 768px) {
+    .ulnavbar-nav>li>a {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+}
+.ulnavbar-nav li {
+    position: relative;
+    display: block;
+}
+
+.ulnavbar>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+.banner-image img {
+    width: 100%;
+    height: auto;
+}
+.inner-section {
+    margin-bottom: 20px;
+    
+    h2 {
+        text-transform: uppercase;
+        font-family: "Times New Roman", Times, serif;
+        margin-bottom: 15px;
+    }
+    p {
+        font-family: "Times New Roman", Times, serif;
+    }
+    strong {
+        font-family: "Times New Roman", Times, serif;
+    }
+}
+.italic-font {
+    font-style: italic;
+}
+.careerForm {
+    label {
+        text-align: left;
+    }
+}
+.addressSection {
+    display: inline-block;
+    width: 50%;
+    float: left;
+}
+
+.contact-form-section {
+    display: inline-block;
+    width: 50%;
+}
+.contact-us,.about-us {
+    padding: 10px;
+}

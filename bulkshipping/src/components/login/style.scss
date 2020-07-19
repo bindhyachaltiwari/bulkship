@@ -22,13 +22,13 @@
     }
 
     label[for='email'],
-    label[for='password'] {
+    label[for='password'],label[for='name'],label[for='upload'],label[for='myfile'] ,label[for='subject'],label[for='message']{
         display: block;
         margin-bottom: 16px;
     }
 
     input[name='email'],
-    input[name='password'] {
+    input[name='password'],input[name='name'],input[name='upload'],input[name='myfile'],input[name='subject'],textarea[name='message'] {
         display: block;
         width: 100%;
         font-size: 18px;
@@ -130,7 +130,7 @@
         }
 
         input[name='email'],
-        input[name='password'],
+        input[name='password'],input[name='name'],input[name='upload'],input[name='myfile'],input[name='subject'],textarea[name='message']
         .submit-btn {
             width: 90%;
         }
@@ -141,4 +141,35 @@
     }
 
 
+}
+
+
+.header {
+    width: 50%;
+    margin: auto;
+    margin-bottom: 20px;
+    ul {
+        li {
+            float: left;
+            margin-right: 30px;
+            &:first-child {
+                margin-left: 15px;
+            }
+        }
+    }
+}
+
+.login input.uploadFile {
+    display: inline-block;
+    width: 50%;
+}
+.login .contactForm textarea {
+    padding: 12px;
+}
+.contact-us-section,.about-us-section {
+    width: 100%;
+    width: 100%;
+    background-color: rgba(235, 242, 241, 0.5);
+    border: 1px solid white;
+    border-radius: 6px;
 }

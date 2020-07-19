@@ -4,6 +4,10 @@ import { connect } from 'react-redux';
 import actionTypes from './../../store/actions/constants';
 import dummy from './../../assets/images/dummy.webp';
 import ship from './../../assets/images/ship.jpg';
+import AboutUs from './aboutus';
+import Career from './career';
+import ContactUs from './contactus';
+import Services from './services';
 
 class Login extends React.Component {
     constructor() {
@@ -107,6 +111,7 @@ class Login extends React.Component {
                 formDataToBeSend.append('password', password);
                 formDataToBeSend.append('rememberMe', rememberMeChecked);
                 const { saveUsername } = this.props;
+                window.location.hash = '';
                 saveUsername(formDataToBeSend);
             }
         } else {
@@ -135,29 +140,36 @@ class Login extends React.Component {
         return (
             <div className='wrapper login'>
                  <div className="header">
-                    <nav>
-                        <ul>
-                            <li><a href='#homeSection' onClick={this.anchorClickHandler}>Home</a></li>
-                            <li><a  href='#aboutSection' onClick={this.anchorClickHandler}>About Us</a></li>
-                            <li><a href ='#servicesSection' onClick={this.anchorClickHandler}>Services</a></li>
-                            <li><a href ="#loginSection" onClick={this.anchorClickHandler}>Login</a></li>
+                    <nav class='nav-navbar navbar-default navbar-fixed-top'>
+                        <ul className= 'ulnavbar ulnavbar-nav'>
+                            <li><a className='navhome' href='#homeSection' onClick={this.anchorClickHandler}>Home</a></li>
+                            <li><a className='navhome' href='#aboutSection' onClick={this.anchorClickHandler}>About Us</a></li>
+                            <li><a className='navhome' href ='#servicesSection' onClick={this.anchorClickHandler}>Services</a></li>
+                            <li><a className='navhome' href ="#loginSection" onClick={this.anchorClickHandler}>Login</a></li>
+                            <li><a className='navhome' href ="#careerSection" onClick={this.anchorClickHandler}>Career</a></li>
+                            <li><a className='navhome' href ="#contactUsSection" onClick={this.anchorClickHandler}>Contact Us</a></li>
                         </ul>
                     </nav>
                 </div>
                 <div className='container'>
-                <div className='home-section' id='homeSection'> 
-                    <h2>Bulk shipping</h2>
+                <div className='home-section inner-section' id='homeSection'>
+                    <div>
+                    <h2>YOUR TRUE COMPANION FOR DRY BULK COMMODITY SHIPMENTS</h2>
+                    <p>by relying on u you can save both time and money on shipments allowing you to focus on your core business</p>
+                    <div className = 'banner-image'>
                     <img src={ship}/>
                     </div>
-                    <div className='about-us-section' id='aboutSection'> 
-                    <h2>about us </h2>
-                    <img src={ship}/>
                     </div>
-                    <div className='services-section' id="servicesSection"> 
-                    <h2>Services we offer </h2>
-                    <img src={ship}/>
                     </div>
-                    <div className='login-wrapper' id='loginSection'>
+                    <div className='about-us-section inner-section' id='aboutSection'> 
+                    <AboutUs/>
+                    
+                    </div>
+                    <div className='services-section inner-section' id="servicesSection"> 
+                    <Services/>
+                    
+                    </div>
+                    <div className='login-wrapper inner-section' id='loginSection'>
                         <div className='video-section desktop-only'>
                             <div className='video'>
                                 <img src={dummy} alt='dummy image' />
@@ -211,6 +223,15 @@ class Login extends React.Component {
                                 </div>}
                         </div>
 
+                    </div>
+                    <div className='career-section inner-section' id='careerSection'> 
+                    <Career/>
+                    
+                    </div>
+                    <div className='contact-us-section inner-section' id='contactUsSection'> 
+                    <ContactUs
+                    />
+                    
                     </div>
                 </div>
             </div>
