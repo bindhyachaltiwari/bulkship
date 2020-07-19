@@ -22,6 +22,7 @@ html {
     margin-left: 0;
 }
 
+
 .show {
     display: block;
 }
@@ -253,9 +254,14 @@ html {
         text-transform: uppercase;
         font-family: "Times New Roman", Times, serif;
         margin-bottom: 15px;
+        font-size: 2rem;
+        font-weight: 500;
+        line-height: 1.2;
     }
     p {
         font-family: "Times New Roman", Times, serif;
+        margin-top: 0;
+        margin-bottom: 1rem;
     }
     strong {
         font-family: "Times New Roman", Times, serif;
