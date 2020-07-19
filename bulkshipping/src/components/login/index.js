@@ -233,6 +233,16 @@ class Login extends React.Component {
                     />
                     
                     </div>
+                    <div className='inner-section footer-section'>
+                    <div className="social-list-section">    
+                        <ul className="social-list">                                 
+                                <li><a target="_blank" href="https://www.facebook.com/"><i className="fa fa-facebook"></i></a></li>                                                                  
+                                <li><a target="_blank" href="https://twitter.com/"><i className="fa fa-twitter"></i></a></li>    
+                                <li><a target="_blank" href="https://www.linkedin.com/"><i className="fa fa-linkedin"></i></a></li>                               
+                        </ul>
+                    </div>
+
+                    </div>
                 </div>
             </div>
         )
