@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Alert from '../../utils/alert';
 import './style.scss';
 import UserTable from './userTable';
 import PieCharts from './PieCharts';
@@ -156,14 +155,18 @@ class Client extends Component {
         ourCount[v.cargo] = 0;
       }
       if (new Date(v.cpDate).getTime() <= new Date().getTime() && new Date(v.cpDate).getTime() > previousYearDate.getTime()) {
-        ourCount[v.cargo] += parseInt(v.cargoIntake);
+        ourCount[v.cargo] += parseFloat(v.cargoIntake);
       }
     });
     return (
-      <form>
-        <UserTable title={'Fixture List'} data={vesselList} columns={columns} />
-        <PieCharts vesselDetails={ourCount} />
-      </form>
+      <div className="float-container">
+        <div className="float-child1">
+          <UserTable title={'Fixture List'} data={vesselList} columns={columns} />
+        </div>
+        <div className="float-child2">
+          {ourCount && Object.keys(ourCount).length ? <PieCharts vesselDetails={ourCount} /> : ''}
+        </div>
+      </div>
     );
   }
 
@@ -171,25 +174,6 @@ class Client extends Component {
     if (typeof s !== 'string') return ''
     return s.charAt(0).toUpperCase() + s.slice(1)
   }
-
-
-  // getPopupContent = (cellVal, rowId) => {
-  //   const { vesselList } = this.state;
-  //   let vesselDetails = vesselList.find(m => m['_id'] === rowId);
-  //   vesselDetails = (({ vesselName, vesselSize, cpDate, loadPort, cargo, cargoIntake, ownerName }) => (
-  //     { vesselName, vesselSize, cpDate, loadPort, cargo, cargoIntake, ownerName }))(vesselDetails);
-
-  //   const content = <div>
-  //     <Popup trigger={<a id={rowId} style={{ color: 'blue', textAlign: 'center', textDecoration: 'underline', cursor: 'pointer' }}> {cellVal} </a>}
-  //       modal closeOnDocumentClick >
-  //       <div className='content'>
-  //         <DisplaySelectedVesselDetails vesselDetails={vesselDetails} />
-  //       </div>
-  //     </Popup>
-  //   </div>
-
-  //   return content;
-  // }
 }
 
 const mapStateToProps = (state, ownProps) => {

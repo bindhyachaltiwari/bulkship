@@ -108,6 +108,21 @@ button.MuiButtonBase-root:focus {
     width: -webkit-fill-available
 }
 
+.float-container {
+    padding: 20px;
+}
+
+.float-child1 {
+    width: 65%;
+    float: left;
+}  
+
+.float-child2 {
+    width: 33%;
+    float: right;
+}  
+
+
 @media (max-width: 767px) {
     .my-profile {
         .MuiFormControl-root {
