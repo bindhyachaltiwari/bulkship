@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ScrollableTabsButtonAuto from '../sub-component/ScrollableTabsButtonAuto';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import BackspaceIcon from '@material-ui/icons/Backspace';
 import { connect } from 'react-redux';
 import ConfirmationAlert from '../../utils/confirmationAlert';
 import Alert from '../../utils/alert';
@@ -37,6 +38,11 @@ class Voyage extends Component {
 
   handleIconDetail = (event, value) => {
     const { detail } = this.props;
+    if (detail && detail.role === 'Client' && value === 1) {
+      this.props.history.goBack();
+      return;
+    }
+
     let localValue = 2;
     if (detail && detail.role === 'Manager' && detail.managerRoles.some(m => m === 'Edit Voyage Details')) {
       localValue = 1;
@@ -196,12 +202,14 @@ class Voyage extends Component {
         tabsLabel: [{
           icon: <AccountCircleIcon className='labelColor' />,
           label: <span className='labelColor'>VIEW VOYAGE DETAILS</span>
-        }
-        ],
+        }, {
+          icon: <BackspaceIcon className='labelColor' />,
+          label: <span className='labelColor'>BACk</span>
+        }],
         tabPanelChild:
           [{
             child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} clientData={clientData} />
-          }]
+          }, {}]
       }
 
       return tabs;

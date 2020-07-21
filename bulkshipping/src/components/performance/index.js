@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ScrollableTabsButtonAuto from '../sub-component/ScrollableTabsButtonAuto';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import BackspaceIcon from '@material-ui/icons/Backspace';
 import { connect } from 'react-redux';
 import ConfirmationAlert from '../../utils/confirmationAlert';
 import Alert from '../../utils/alert';
@@ -34,6 +35,11 @@ class Performance extends Component {
   }
 
   handleIconDetail = (event, value) => {
+    const { detail } = this.props;
+    if (detail && detail.role === 'Client' && value === 1) {
+      this.props.history.goBack();
+      return;
+    }
     if (value !== this.state.activeTabIndex) {
       const { isDirty } = this.state;
       if (isDirty) {
@@ -157,12 +163,14 @@ class Performance extends Component {
         tabsLabel: [{
           icon: <AccountCircleIcon className='labelColor' />,
           label: <span className='labelColor'>VIEW PERFORMANCE DETAILS</span>
-        }
-        ],
+        }, {
+          icon: <BackspaceIcon className='labelColor' />,
+          label: <span className='labelColor'>BACk</span>
+        }],
         tabPanelChild:
           [{
             child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='viewPage' clientPerformance={this.props.history.location.state} />
-          }]
+          }, {}]
       }
 
       return tabs;
