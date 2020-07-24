@@ -88,7 +88,7 @@ function UserTable(props) {
     <MaterialTable
       title={props.title}
       columns={props.columns}
-      data={props.data}
+      data={data}
       icons={tableIcons}
       editable=
       {showDelete() ?
@@ -99,17 +99,16 @@ function UserTable(props) {
           }),
           onRowDelete: (oldData) =>
             new Promise(resolve => {
-              setTimeout(() => {
-                resolve();
-                setData(async prevState => {
-                  const data = [...prevState];
-                  let resp = await api.deleteUserDetails(oldData['_id']);
+              setTimeout( async () => {
+                const dataDelete = [...data];
+                let resp = await api.deleteUserDetails(oldData['id']);
                   if (resp.data.status) {
-                    window.location.reload();
-                    // data.splice(data.indexOf(oldData), 1);
-                  }
-                  return data;
-                });
+                    let index = dataDelete.indexOf(oldData);
+                    dataDelete.splice(index, 1);
+                }
+                setData([...dataDelete]);
+
+                resolve();
               }, 600);
             }),
         } : null}

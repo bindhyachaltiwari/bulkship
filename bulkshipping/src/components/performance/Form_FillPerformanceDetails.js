@@ -513,7 +513,11 @@ class FillPerformanceDetails extends Component {
     if (keys && keys.length) {
       keys.forEach(e => {
         if (parseFloat(performanceDetails[e])) {
-          total += parseFloat(performanceDetails[e]);
+          if (e === 'demmurrageReceivedOrg$') {
+            total -= parseFloat(performanceDetails[e])
+          } else {
+            total += parseFloat(performanceDetails[e]);
+          }
         }
       });
     }
@@ -548,7 +552,11 @@ class FillPerformanceDetails extends Component {
     if (keys && keys.length) {
       keys.forEach(e => {
         if (parseFloat(performanceDetails[e]) >= 0) {
-          total += parseFloat(performanceDetails[e]);
+          if (e === 'demmurrageReceivedAct$') {
+            total -= parseFloat(performanceDetails[e])
+          } else {
+            total += parseFloat(performanceDetails[e]);
+          }
         }
       });
     }
@@ -576,6 +584,7 @@ class FillPerformanceDetails extends Component {
   getValue(value) {
     if (!value) return 0;
     if (value[value.length - 1] === '.') return value;
+    if (value.slice(-2) === '.0') return value;
     let v = parseFloat(value);
     return v ? v : 0;
   }

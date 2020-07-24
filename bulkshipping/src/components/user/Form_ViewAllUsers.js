@@ -30,10 +30,10 @@ class ViewAllUsers extends Component {
       for (var i = 0; i < res.data.clientList.length; i++) {
         let singleClientId = res.data.clientList[i]
         if (singleClientId.role === 'Manager' && singleClientId.managerRoles && singleClientId.managerRoles.length) {
-          singleClientId.managerRoles = <select>{singleClientId.managerRoles.map((e) => <option>{e}</option>)}</select>
+          singleClientId.managerRoles = <select>{singleClientId.managerRoles.map((e) => <option key={e}>{e}</option>)}</select>
         }
-        if (singleClientId.role ==='Client' && singleClientId.clientDisplay && singleClientId.clientDisplay.length) {
-          singleClientId.clientDisplay = <select>{singleClientId.clientDisplay.map((e) => <option>{e}</option>)}</select>
+        if (singleClientId.role === 'Client' && singleClientId.clientDisplay && singleClientId.clientDisplay.length) {
+          singleClientId.clientDisplay = <select>{singleClientId.clientDisplay.map((e) => <option key={e}>{e}</option>)}</select>
         }
       }
 

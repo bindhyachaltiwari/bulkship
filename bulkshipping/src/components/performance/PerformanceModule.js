@@ -82,6 +82,7 @@ export default class PerformanceModule extends Component {
     getValue(value) {
         if (!value) return 0;
         if (value[value.length - 1] === '.') return value;
+        if (value.slice(-2) === '.0') return value;
         let v = parseFloat(value);
         return v ? v : 0;
     }

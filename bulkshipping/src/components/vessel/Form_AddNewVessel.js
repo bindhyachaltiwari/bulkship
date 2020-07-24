@@ -410,7 +410,7 @@ class AddNewVessel extends Component {
                 error={validity && validity.cranes && validity.cranes.isInvalid}
                 id='cranes'
                 label='Cranes (MT)'
-                type='aplhaNumeric'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={cranes || ''}
                 autoComplete='off'
@@ -423,7 +423,7 @@ class AddNewVessel extends Component {
                 error={validity && validity.grabs && validity.grabs.isInvalid}
                 id='grabs'
                 label='Grabs (CBM)'
-                type='aplhaNumeric'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={grabs || ''}
                 autoComplete='off'

@@ -221,6 +221,7 @@ class AddNewUser extends Component {
       checkedAll = false;
     }
     this.setState({ userDetails, checkedAll });
+    this.updateForm(userDetails, true, true)
   }
 
   updateForm(userDetails, isformValid, isTyped) {
@@ -291,7 +292,7 @@ class AddNewUser extends Component {
                 error={validity && validity.companyName && validity.companyName.isInvalid}
                 id='companyName'
                 label='Company Name *'
-                type='onlyAlphabets'
+                type='allCharacters'
                 onChange={this.handleChange}
                 value={companyName || ''}
                 autoComplete='off'

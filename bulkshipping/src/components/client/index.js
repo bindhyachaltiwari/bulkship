@@ -151,11 +151,13 @@ class Client extends Component {
     const pastYear = previousYearDate.getFullYear() - 1;
     previousYearDate.setFullYear(pastYear);
     vesselList.forEach(v => {
-      if (!ourCount[v.cargo]) {
-        ourCount[v.cargo] = 0;
-      }
-      if (new Date(v.cpDate).getTime() <= new Date().getTime() && new Date(v.cpDate).getTime() > previousYearDate.getTime()) {
-        ourCount[v.cargo] += parseFloat(v.cargoIntake);
+      if (v.cargo) {
+        if (!ourCount[v.cargo]) {
+          ourCount[v.cargo] = 0;
+        }
+        if (new Date(v.cpDate).getTime() <= new Date().getTime() && new Date(v.cpDate).getTime() > previousYearDate.getTime()) {
+          ourCount[v.cargo] += parseFloat(v.cargoIntake);
+        }
       }
     });
     return (
