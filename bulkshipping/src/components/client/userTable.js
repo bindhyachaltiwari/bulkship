@@ -57,6 +57,7 @@ function UserTable(props) {
       columns={props.columns}
       data={props.data}
       icons={tableIcons}
+      style={{ zIndex: '0' }}
     />
   );
 }

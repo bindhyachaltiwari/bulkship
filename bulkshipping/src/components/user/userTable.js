@@ -90,6 +90,7 @@ function UserTable(props) {
       columns={props.columns}
       data={data}
       icons={tableIcons}
+      style={{ zIndex: '0' }}
       editable=
       {showDelete() ?
         {

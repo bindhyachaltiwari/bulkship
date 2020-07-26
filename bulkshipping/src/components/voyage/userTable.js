@@ -84,6 +84,7 @@ function UserTable(props) {
       columns={props.columns}
       data={data}
       icons={tableIcons}
+      style={{ zIndex: '0' }}
       editable=
       {showDelete() ?
         {
@@ -96,9 +97,9 @@ function UserTable(props) {
               setTimeout(async () => {
                 const dataDelete = [...data];
                 let resp = await api.deleteVoyageDetails(oldData['_id']);
-                  if (resp.data.status) {
-                    let index = dataDelete.indexOf(oldData);
-                    dataDelete.splice(index, 1);
+                if (resp.data.status) {
+                  let index = dataDelete.indexOf(oldData);
+                  dataDelete.splice(index, 1);
                 }
                 setData([...dataDelete]);
                 resolve();
