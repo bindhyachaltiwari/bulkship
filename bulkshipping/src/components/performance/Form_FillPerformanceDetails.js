@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Paper, Grid, Button, InputLabel, Select } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
+import IconButton from '@material-ui/core/IconButton';
+import InsertChartTwoToneIcon from '@material-ui/icons/InsertChartTwoTone';
 import miscUtils from '../../utils/miscUtils';
 import ConfirmationAlert from '../../utils/confirmationAlert';
 import Alert from '../../utils/alert';
@@ -11,14 +13,18 @@ class FillPerformanceDetails extends Component {
 
   constructor(props) {
     super(props);
+    let isGraphPage = false;
+    if (props && props.history && props.history.location && props.history.location.state && Object.keys(props.history.location.state).length) {
+      isGraphPage = true
+    }
     this.state = {
       vesselList: [],
-      selectedClient: props && props.clientPerformance ? props.clientPerformance.detail : '',
-      selectedVessel: props && props.clientPerformance ? props.clientPerformance.vesselName : '',
-      selectedCpDate: props && props.clientPerformance ? props.clientPerformance.cpDate : '',
+      selectedClient: props && props.clientPerformance ? props.clientPerformance.detail : isGraphPage ? props.history.location.state.detail : '',
+      selectedVessel: props && props.clientPerformance ? props.clientPerformance.vesselName : isGraphPage ? props.history.location.state.vesselName : '',
+      selectedCpDate: props && props.clientPerformance ? props.clientPerformance.cpDate : isGraphPage ? props.history.location.state.cpDate : '',
       portDetails: {
-        loadPort: props && props.clientPerformance ? props.clientPerformance.loadPort : '',
-        dischargePort: props && props.clientPerformance ? props.clientPerformance.dischargePort : ''
+        loadPort: props && props.clientPerformance ? props.clientPerformance.loadPort : isGraphPage ? props.history.location.state.loadPort : '',
+        dischargePort: props && props.clientPerformance ? props.clientPerformance.dischargePort : isGraphPage ? props.history.location.state.dischargePort : '',
       },
       allClients: [],
       allVslForSelectedClient: [],
@@ -43,6 +49,7 @@ class FillPerformanceDetails extends Component {
       isEditPage: props && props.activeTabIndex && props.activeTabIndex === 'editPage' ? true : false,
       isViewPage: props && props.activeTabIndex && props.activeTabIndex === 'viewPage' ? true : false,
       isClientPage: props && props.clientPerformance && props.clientPerformance.detail ? true : false,
+      isGraphPage
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancelAlert = this.handleCancelAlert.bind(this);
@@ -76,7 +83,7 @@ class FillPerformanceDetails extends Component {
 
   async componentDidMount() {
     let res = {};
-    let { isEditPage, isViewPage, readOnly, isClientPage } = this.state;
+    let { isEditPage, isViewPage, readOnly, isClientPage, isGraphPage } = this.state;
     if (isEditPage || isViewPage) {
       res = await api.getAllVesselsPerformance({ isDetailsFilled: true });
     } else {
@@ -111,18 +118,72 @@ class FillPerformanceDetails extends Component {
         }
       });
     }
+
+    if (isGraphPage) {
+      this.handleClientListChange();
+      this.handleVesselListChange();
+      this.handleCpDateChange();
+      this.setState({ isGraphPage: false })
+    }
+  }
+
+
+  handlePerformanceGraph = e => {
+    const { selectedClient, selectedCpDate, selectedVessel, portDetails, performanceDetails } = this.state;
+    const { loadPortDelay, dischargePortDelay, intermediatePortDelay, bunkerIFOAct, bunkerIFOOrg,
+      bunkerMDOAct, bunkerMDOOrg, loadPortDAAct$, loadPortDAOrg$, dischargePortDAAct$, dischargePortDAOrg$, intermediatePortDAAct$, intermediatePortDAOrg$ } = performanceDetails
+    const actualData = [
+      loadPortDelay ? parseFloat(loadPortDelay.actual$) : 0,
+      dischargePortDelay ? parseFloat(dischargePortDelay.actual$) : 0,
+      intermediatePortDelay ? parseFloat(intermediatePortDelay.actual$) : 0,
+      bunkerIFOAct ? parseFloat(bunkerIFOAct.bunkerIFOAct$) : 0,
+      bunkerMDOAct ? parseFloat(bunkerMDOAct.bunkerMDOAct$) : 0,
+      loadPortDAAct$ ? parseFloat(loadPortDAAct$) : 0,
+      dischargePortDAAct$ ? parseFloat(dischargePortDAAct$) : 0,
+      intermediatePortDAAct$ ? parseFloat(intermediatePortDAAct$) : 0
+    ]
+
+    const originalData = [
+      loadPortDelay ? parseFloat(loadPortDelay.original$) : 0,
+      dischargePortDelay ? parseFloat(dischargePortDelay.original$) : 0,
+      intermediatePortDelay ? parseFloat(intermediatePortDelay.original$) : 0,
+      bunkerIFOOrg ? parseFloat(bunkerIFOOrg.bunkerIFOOrg$) : 0,
+      bunkerMDOOrg ? parseFloat(bunkerMDOOrg.bunkerMDOOrg$) : 0,
+      loadPortDAOrg$ ? parseFloat(loadPortDAOrg$) : 0,
+      dischargePortDAOrg$ ? parseFloat(dischargePortDAOrg$) : 0,
+      intermediatePortDAOrg$ ? parseFloat(intermediatePortDAOrg$) : 0
+    ]
+
+    this.props.history.push({
+      pathname: '/performanceGraph',
+      state: {
+        detail: selectedClient,
+        loadPort: portDetails.loadPort,
+        cpDate: selectedCpDate,
+        dischargePort: portDetails.dischargePort,
+        vesselName: selectedVessel,
+        actualData,
+        originalData
+      }
+    });
   }
 
   handleCpDateChange = async e => {
-    const { vesselList, selectedVessel, selectedClient, isEditPage } = this.state;
+    const { vesselList, selectedVessel, selectedClient, isEditPage, isGraphPage, selectedCpDate } = this.state;
     this.resetForm();
-    let vesselDetails = vesselList.find(m => m.vesselName === selectedVessel && m.cpDate === e.target.value);
-    const res = await api.getPortDetails({ userName: selectedClient, vesselName: selectedVessel, cpDate: e.target.value });
+    let value = '';
+    if (e) {
+      value = e.target.value;
+    } else if (isGraphPage && selectedCpDate) {
+      value = selectedCpDate
+    }
+    let vesselDetails = vesselList.find(m => m.vesselName === selectedVessel && m.cpDate === value);
+    const res = await api.getPortDetails({ userName: selectedClient, vesselName: selectedVessel, cpDate: value });
     if (res && res.data && res.data.status) {
       this.setState({
         portDetails: res.data.portDetails,
         vesselDetails,
-        selectedCpDate: e.target.value,
+        selectedCpDate: value,
         performanceDetails: {}
       });
     } else {
@@ -135,19 +196,25 @@ class FillPerformanceDetails extends Component {
       });
     }
 
-    if (isEditPage && selectedClient && selectedVessel && e.target.value) {
+    if (isEditPage && selectedClient && selectedVessel && value) {
       this.setState({ performanceDetails: vesselDetails });
     }
   };
 
   handleVesselListChange = async e => {
-    const { vesselList, selectedClient } = this.state;
+    const { vesselList, selectedClient, isGraphPage, selectedVessel, selectedCpDate } = this.state;
     this.resetForm();
-    const allCpDates = vesselList.filter(f => f.vesselName === e.target.value && f.chartererName === selectedClient).map(m => m.cpDate);
+    let value = '';
+    if (e) {
+      value = e.target.value;
+    } else if (isGraphPage && selectedVessel) {
+      value = selectedVessel
+    }
+    const allCpDates = vesselList.filter(f => f.vesselName === value && f.chartererName === selectedClient).map(m => m.cpDate);
     if (!allCpDates.length || (allCpDates.length === 1 && allCpDates[0] === '')) {
       this.setState({
         allCpDatesForSelectedClient: [],
-        selectedVessel: e.target.value,
+        selectedVessel: value,
         selectedCpDate: '',
         alertDetails: {
           openAlert: true,
@@ -159,20 +226,27 @@ class FillPerformanceDetails extends Component {
     }
     this.setState({
       allCpDatesForSelectedClient: allCpDates,
-      selectedVessel: e.target.value,
-      selectedCpDate: '',
+      selectedVessel: value,
+      selectedCpDate: isGraphPage ? selectedCpDate : '',
       performanceDetails: {}
     });
   }
 
   handleClientListChange = e => {
-    const { vesselList } = this.state;
+    const { vesselList, selectedClient, isGraphPage, selectedVessel, selectedCpDate } = this.state;
+    let value = ''
+    if (e) {
+      value = e.target.value;
+    } else if (isGraphPage && selectedClient) {
+      value = selectedClient
+    }
+
     this.resetForm();
-    const allVessels = [...new Set(vesselList.filter(m => m.chartererName === e.target.value).map(m => m.vesselName))];
+    const allVessels = [...new Set(vesselList.filter(m => m.chartererName === value).map(m => m.vesselName))];
     if (!allVessels.length || (allVessels.length === 1 && allVessels[0] === '')) {
       this.setState({
         allVslForSelectedClient: [],
-        selectedClient: e.target.value,
+        selectedClient: value,
         selectedVessel: '',
         selectedCpDate: '',
         alertDetails: {
@@ -184,9 +258,9 @@ class FillPerformanceDetails extends Component {
     } else {
       this.setState({
         allVslForSelectedClient: allVessels,
-        selectedClient: e.target.value,
-        selectedVessel: '',
-        selectedCpDate: '',
+        selectedClient: value,
+        selectedVessel: isGraphPage ? selectedVessel : '',
+        selectedCpDate: isGraphPage ? selectedCpDate : '',
         performanceDetails: {}
       });
     }
@@ -692,6 +766,7 @@ class FillPerformanceDetails extends Component {
                   </tbody>
                 </table>
               </form>
+              {isViewPage ? <IconButton onClick={this.handlePerformanceGraph} aria-label='View Graph' className='btn-edit'><InsertChartTwoToneIcon /></IconButton> : <></>}
               <br />
               <form id='performanceDetailsForm' onSubmit={this.handlePerformanceDetailSubmit} style={{ margin: '1%' }}>
                 <table className='table-performance'>

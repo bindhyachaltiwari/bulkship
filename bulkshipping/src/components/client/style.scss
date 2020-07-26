@@ -115,6 +115,7 @@ button.MuiButtonBase-root:focus {
 .float-child1 {
     width: 65%;
     float: left;
+    position: relative;
 }  
 
 .float-child2 {
@@ -157,4 +158,12 @@ button.MuiButtonBase-root:focus {
         }
     }
 
+}
+
+.absolute-position {
+    position: absolute;
+    top: 30%;
+    left: 13%;
+    z-index: 99;
+    border: 2px solid black;
 }

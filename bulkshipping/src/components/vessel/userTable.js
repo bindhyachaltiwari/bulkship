@@ -49,7 +49,7 @@ function UserTable(props) {
   }
 
   if (props.data && props.data.length && !data.length) {
-    setData(props.data)
+    setData(props.data);
   }
 
   const showDelete = () => {
@@ -68,7 +68,7 @@ function UserTable(props) {
     <MaterialTable
       title={props.title}
       columns={props.columns}
-      data={props.data}
+      data={data}
       icons={tableIcons}
       editable=
       {showDelete() ?
@@ -82,9 +82,9 @@ function UserTable(props) {
               setTimeout(async () => {
                 const dataDelete = [...data];
                 let resp = await api.deleteVesselDetails(oldData['_id']);
-                  if (resp.data.status) {
-                    let index = dataDelete.indexOf(oldData);
-                    dataDelete.splice(index, 1);
+                if (resp.data.status) {
+                  let index = dataDelete.indexOf(oldData);
+                  dataDelete.splice(index, 1);
                 }
                 setData([...dataDelete]);
                 resolve();

@@ -257,6 +257,7 @@ class FillVoyageDetails extends Component {
       checkedAll = false;
     }
     this.setState({ voyageDetails, checkedAll });
+    this.updateForm(voyageDetails, true, true);
   }
 
   submitNewFieldDetails = e => {

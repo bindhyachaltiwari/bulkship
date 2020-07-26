@@ -35,10 +35,16 @@ class Performance extends Component {
   }
 
   handleIconDetail = (event, value) => {
-    const { detail } = this.props;
+    const { detail, history } = this.props;
     if (detail && detail.role === 'Client' && value === 1) {
-      this.props.history.goBack();
+      this.props.history.push({
+        pathname: '/'
+      })
       return;
+    }
+
+    if (history && history.location) {
+      this.props.history.location.state = [];
     }
     if (value !== this.state.activeTabIndex) {
       const { isDirty } = this.state;
@@ -111,7 +117,7 @@ class Performance extends Component {
             label: <span className='labelColor'>VIEW PERFORMANCE DETAILS</span>
           });
           tabs.tabPanelChild.push({
-            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='viewPage' />
+            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='viewPage' history={this.props.history} />
           })
         } else if (role === 'Fill Performance Details') {
           tabs.tabsLabel.push({
@@ -148,7 +154,7 @@ class Performance extends Component {
         ],
         tabPanelChild:
           [{
-            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='viewPage' />
+            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='viewPage' history={this.props.history} />
           }, {
             child: <FillPerformanceDetails handleBlocking={this.handleBlocking} />
           }, {
@@ -165,11 +171,11 @@ class Performance extends Component {
           label: <span className='labelColor'>VIEW PERFORMANCE DETAILS</span>
         }, {
           icon: <BackspaceIcon className='labelColor' />,
-          label: <span className='labelColor'>BACk</span>
+          label: <span className='labelColor'>BACK</span>
         }],
         tabPanelChild:
           [{
-            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='viewPage' clientPerformance={this.props.history.location.state} />
+            child: <FillPerformanceDetails handleBlocking={this.handleBlocking} activeTabIndex='viewPage' clientPerformance={this.props.history.location.state} history={this.props.history} />
           }, {}]
       }
 

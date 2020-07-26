@@ -6,6 +6,7 @@ import Login from '../login';
 import NavBar from '../navBar';
 import LeftMenu from '../sub-component/left-menu';
 import Users from '../user';
+import PerformanceGraph from '../performance/PerformanceGraph';
 import vessel from '../vessel';
 import voyage from '../voyage';
 import performance from '../performance';
@@ -77,6 +78,7 @@ class App extends React.Component {
                     <Route exact path='/vessel' component={vessel} />
                     <Route exact path='/voyage' component={voyage} />
                     <Route exact path='/performance' component={performance} />
+                    <Route exact path='/performanceGraph' component={PerformanceGraph} />
                   </Switch>
                 </section>
               </div>

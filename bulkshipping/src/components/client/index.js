@@ -12,6 +12,7 @@ class Client extends Component {
     this.getAllVoyage();
     this.clientDisplay = props.detail.clientDisplay;
     this.toSendVesselList = [];
+    this.leftValue = 0;
     this.state = {
       vesselList: [],
       vesselDetails: {
@@ -26,6 +27,8 @@ class Client extends Component {
       },
       tableData: [],
       performanceDetails: {},
+      showDetails:false,
+      vesselDetails: []
     }
   }
 
@@ -40,6 +43,7 @@ class Client extends Component {
           detail.clientDisplay.indexOf('View Performance') >= 0 ? performance = true : performance = false;
           detail.clientDisplay.indexOf('View Voyage Details') >= 0 ? voyage = true : voyage = false;
           for (var i = 0; i < res.data.vesselList.length; i++) {
+            res.data.vesselList[i].vesselNameEdited = <span style={{ color: 'blue', textAlign: 'center' }} onMouseEnter = {this.handleHoverState} onMouseLeave = {this.handleHoverStateLeave} id={i}>{res.data.vesselList[i].vesselName}</span>
             if (documents) {
               res.data.vesselList[i].viewDocuments = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={res.data.vesselList[i]._id} onClick={this.handleViewDocuments}>View</button>;
             }
@@ -54,13 +58,9 @@ class Client extends Component {
         this.setState({
           vesselList: res.data.vesselList,
           companyName: detail.companyName,
-          error: false,
         });
       } else {
-        this.setState({
-          error: true,
-          companyName: detail.companyName,
-        });
+        this.setState({ companyName: detail.companyName });
         return;
       }
     });
@@ -130,8 +130,28 @@ class Client extends Component {
     });
   }
 
+  handleHoverState = async e => {
+    const targetValue = e.target.textContent;
+    const index = parseInt(e.target.id + '0')  + 30;
+    this.leftValue = index + '%';
+    await api.getAllVesselsList().then(res => {
+      if (res.data.status) {
+        const result = res.data.vesselList.filter(item => item.vesselName === targetValue);
+        this.setState({
+          showDetails: true,
+          vesselDetails : result
+        })
+      }
+    });
+  }
+  handleHoverStateLeave = e => {
+    this.setState({
+      showDetails: false
+    })
+  }
+
   render() {
-    const columns = [{ field: 'vesselName', title: 'Vessel Name', editable: 'never' },
+    const columns = [{ field: 'vesselNameEdited', title: 'Vessel Name', editable: 'never' },
     { field: 'cpDate', title: 'CP Date', editable: 'never' },
     { field: 'voyageDetails', title: 'View Voyage', check: 'View Voyage Details', editable: 'never' },
     { field: 'vesselPerformance', title: 'View Performance', check: 'View Performance', editable: 'never' },
@@ -145,7 +165,7 @@ class Client extends Component {
       }
     }
 
-    const { vesselList } = this.state;
+    const { vesselList,showDetails , vesselDetails } = this.state;
     const ourCount = {};
     let previousYearDate = new Date();
     const pastYear = previousYearDate.getFullYear() - 1;
@@ -164,6 +184,12 @@ class Client extends Component {
       <div className="float-container">
         <div className="float-child1">
           <UserTable title={'Fixture List'} data={vesselList} columns={columns} />
+          {showDetails ? 
+          (<div className = 'absolute-position' style={{ top: this.leftValue  }}> <ul>
+            {vesselDetails.map((item,i) => <li key={i}>{item.DWT}</li>)}
+
+                  </ul></div>):''
+          }
         </div>
         <div className="float-child2">
           {ourCount && Object.keys(ourCount).length ? <PieCharts vesselDetails={ourCount} /> : ''}

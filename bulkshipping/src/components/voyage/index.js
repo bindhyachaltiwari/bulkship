@@ -204,7 +204,7 @@ class Voyage extends Component {
           label: <span className='labelColor'>VIEW VOYAGE DETAILS</span>
         }, {
           icon: <BackspaceIcon className='labelColor' />,
-          label: <span className='labelColor'>BACk</span>
+          label: <span className='labelColor'>BACK</span>
         }],
         tabPanelChild:
           [{

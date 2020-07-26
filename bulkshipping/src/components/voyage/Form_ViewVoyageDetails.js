@@ -53,7 +53,7 @@ class ViewVoyageDetails extends Component {
       for (var i = 0; i < updatedResult.length; i++) {
         let singleClientId = updatedResult[i]
         if (singleClientId.fieldVisibility && singleClientId.fieldVisibility.length) {
-          singleClientId.fieldVisibility = <select>{singleClientId.fieldVisibility.map((e) => <option>{e}</option>)}</select>
+          singleClientId.fieldVisibility = <select>{singleClientId.fieldVisibility.map((e) => <option key={e}>{e}</option>)}</select>
         }
       }
       this.setState({ voyageList: updatedResult });
@@ -66,7 +66,7 @@ class ViewVoyageDetails extends Component {
         for (var i = 0; i < updatedResult.length; i++) {
           let singleClientId = updatedResult[i]
           if (singleClientId.fieldVisibility && singleClientId.fieldVisibility.length) {
-            singleClientId.fieldVisibility = <select>{singleClientId.fieldVisibility.map((e) => <option>{e}</option>)}</select>
+            singleClientId.fieldVisibility = <select>{singleClientId.fieldVisibility.map((e) => <option key={e}>{e}</option>)}</select>
           }
         }
         this.setState({ voyageList: updatedResult });
@@ -126,7 +126,7 @@ class ViewVoyageDetails extends Component {
     return (
       <form>
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
-        <UserTable title={'View Voyage Details'} data={voyageList} columns={columns} onRowClick={this.onRowClick} originalArray={this.originalObjectArray}/>
+        <UserTable title={'View Voyage Details'} data={voyageList} columns={columns} onRowClick={this.onRowClick} originalArray={this.originalObjectArray} />
       </form>
     );
   }

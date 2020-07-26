@@ -30,7 +30,7 @@ function UserTable(props) {
         if (singleClientId.role === 'Manager' && singleClientId.managerRoles && singleClientId.managerRoles.length) {
           singleClientId.managerRoles = <select>{singleClientId.managerRoles.map((e) => <option>{e}</option>)}</select>
         }
-        if (singleClientId.role ==='Client' && singleClientId.clientDisplay && singleClientId.clientDisplay.length) {
+        if (singleClientId.role === 'Client' && singleClientId.clientDisplay && singleClientId.clientDisplay.length) {
           singleClientId.clientDisplay = <select>{singleClientId.clientDisplay.map((e) => <option>{e}</option>)}</select>
         }
       }
@@ -43,7 +43,7 @@ function UserTable(props) {
         if (singleClientId.role === 'Manager' && singleClientId.managerRoles) {
           singleClientId.managerRoles = propsInside.originalArray[i].managerRoles;
         }
-        if (singleClientId.role ==='Client' && singleClientId.clientDisplay) {
+        if (singleClientId.role === 'Client' && singleClientId.clientDisplay) {
           singleClientId.clientDisplay = propsInside.originalArray[i].clientDisplay;
         }
       }
@@ -99,15 +99,14 @@ function UserTable(props) {
           }),
           onRowDelete: (oldData) =>
             new Promise(resolve => {
-              setTimeout( async () => {
+              setTimeout(async () => {
                 const dataDelete = [...data];
                 let resp = await api.deleteUserDetails(oldData['id']);
-                  if (resp.data.status) {
-                    let index = dataDelete.indexOf(oldData);
-                    dataDelete.splice(index, 1);
+                if (resp.data.status) {
+                  let index = dataDelete.indexOf(oldData);
+                  dataDelete.splice(index, 1);
                 }
                 setData([...dataDelete]);
-
                 resolve();
               }, 600);
             }),
