@@ -109,8 +109,7 @@ class FillVoyageDetails extends Component {
   handleSuccessAlert = async e => {
     e.preventDefault();
     const { isDirty, voyageDetails, isEditPage } = this.state;
-    let { chartererName, vesselName, cpDate } = voyageDetails;
-    cpDate = cpDate.getDate() + '/' + (cpDate.getMonth() + 1) + '/' + cpDate.getFullYear();
+    const { chartererName, vesselName, cpDate } = voyageDetails;
     if (isDirty) {
       this.setState({
         confAlertDetails: {

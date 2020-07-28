@@ -8,6 +8,7 @@ import LeftMenu from '../sub-component/left-menu';
 import Users from '../user';
 import PerformanceGraph from '../performance/PerformanceGraph';
 import vessel from '../vessel';
+import vesselList from '../vesselList';
 import voyage from '../voyage';
 import performance from '../performance';
 import Client from '../client';
@@ -79,6 +80,7 @@ class App extends React.Component {
                     <Route exact path='/voyage' component={voyage} />
                     <Route exact path='/performance' component={performance} />
                     <Route exact path='/performanceGraph' component={PerformanceGraph} />
+                    <Route exact path='/vesselList' component={vesselList} />
                   </Switch>
                 </section>
               </div>

@@ -43,7 +43,7 @@ class Client extends Component {
           detail.clientDisplay.indexOf('View Performance') >= 0 ? performance = true : performance = false;
           detail.clientDisplay.indexOf('View Voyage Details') >= 0 ? voyage = true : voyage = false;
           for (var i = 0; i < res.data.vesselList.length; i++) {
-            res.data.vesselList[i].vesselNameEdited = <span style={{ color: 'blue', textAlign: 'center' }} onMouseEnter = {this.handleHoverState} onMouseLeave = {this.handleHoverStateLeave} id={i}>{res.data.vesselList[i].vesselName}</span>
+            res.data.vesselList[i].vesselNameEdited = <span style={{ color: 'blue', textAlign: 'center' }} onClick = {this.handleClickState} onMouseEnter = {this.handleHoverState} onMouseLeave = {this.handleHoverStateLeave} id={i}>{res.data.vesselList[i].vesselName}</span>
             if (documents) {
               res.data.vesselList[i].viewDocuments = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={res.data.vesselList[i]._id} onClick={this.handleViewDocuments}>View</button>;
             }
@@ -134,7 +134,7 @@ class Client extends Component {
     const targetValue = e.target.textContent;
     const index = parseInt(e.target.id + '0')  + 30;
     this.leftValue = index + '%';
-    await api.getAllVesselsList().then(res => {
+    await api.getAllVesselsDetails().then(res => {
       if (res.data.status) {
         const result = res.data.vesselList.filter(item => item.vesselName === targetValue);
         this.setState({
@@ -148,6 +148,18 @@ class Client extends Component {
     this.setState({
       showDetails: false
     })
+  }
+
+  handleClickState = async e => {
+    const targetValue = e.target.textContent;
+    const { vesselDetails } = this.state;
+    const result = vesselDetails.filter(item => item.vesselName === targetValue);
+    this.props.history.push({
+      pathname: '/vesselList',
+      state: {
+        result:result
+      }
+    });
   }
 
   render() {
@@ -185,10 +197,21 @@ class Client extends Component {
         <div className="float-child1">
           <UserTable title={'Fixture List'} data={vesselList} columns={columns} />
           {showDetails ? 
-          (<div className = 'absolute-position' style={{ top: this.leftValue  }}> <ul>
-            {vesselDetails.map((item,i) => <li key={i}>{item.DWT}</li>)}
+          (<div className = 'absolute-position' style={{ top: this.leftValue  }}> 
+            {vesselDetails.map((item,i) => 
+            <ul>
+            <li key={i}>DWT : {item.DWT}</li>
+          <li key={i}>VesselName :{item.vesselName}</li>
+          <li key={i}>Built Year :{item.built}</li>
+          <li key={i}>Draft :{item.draft}</li>
+          <li key={i}>GRT :{item.GRT}</li>
+          <li key={i}>NRT :{item.NRT}</li>
+          <li key={i}>Cranes :{item.cranes}</li>
+          <li key={i}>Grabs :{item.grabs}</li>
+          </ul>
+          )}
 
-                  </ul></div>):''
+                  </div>):''
           }
         </div>
         <div className="float-child2">
