@@ -131,7 +131,7 @@ class Client extends Component {
   }
 
   handleHoverState = async e => {
-    const targetValue = e.target.textContent;
+    const targetValue = e.target.textContent.split('_')[0];
     const index = parseInt(e.target.id + '0')  + 30;
     this.leftValue = index + '%';
     await api.getAllVesselsDetails().then(res => {
@@ -151,7 +151,7 @@ class Client extends Component {
   }
 
   handleClickState = async e => {
-    const targetValue = e.target.textContent;
+    const targetValue = e.target.textContent.split('_')[0];
     const { vesselDetails } = this.state;
     const result = vesselDetails.filter(item => item.vesselName === targetValue);
     this.props.history.push({
