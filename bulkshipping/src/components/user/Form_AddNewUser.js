@@ -258,8 +258,8 @@ class AddNewUser extends Component {
   }
 
   render() {
-    const { validity, isDirty, isformValid, confAlertDetails, userDetails, alertDetails, isEditPage, checkedAll } = this.state;
-    let { userName, companyName, displayName, password, role, managerRoles } = userDetails;
+    const { validity, isDirty, isformValid, confAlertDetails, userDetails, alertDetails, isEditPage } = this.state;
+    let { userName, companyName, displayName, password, role } = userDetails;
     let showRoledata;
     if (role === 'Manager') {
       showRoledata = this.getManagerRoleData();

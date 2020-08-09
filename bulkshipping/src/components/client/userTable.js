@@ -16,6 +16,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import ListAltIcon from '@material-ui/icons/ListAlt';
 import { connect } from 'react-redux';
 
 function UserTable(props) {
@@ -37,7 +38,8 @@ function UserTable(props) {
     Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
     SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
     ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
+    ListAltIcon: forwardRef((props, ref) => <ListAltIcon {...props} ref={ref} />)
   };
 
   let [columns, setColumns] = React.useState([]);
@@ -58,6 +60,24 @@ function UserTable(props) {
       data={props.data}
       icons={tableIcons}
       style={{ zIndex: '0' }}
+      options={{
+        headerStyle: {
+          backgroundColor: '#555555',
+          color: '#FFF',
+        }
+      }}
+      actions={[
+        {
+          icon: tableIcons.ListAltIcon,
+          tooltip: 'Fixture List',
+          isFreeAction: true,
+          onClick: (event) => {
+            props.history.push({
+              pathname: '/clientFixtures',
+            });
+          }
+        }
+      ]}
     />
   );
 }

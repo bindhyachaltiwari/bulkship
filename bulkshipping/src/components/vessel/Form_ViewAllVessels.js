@@ -20,8 +20,22 @@ class ViewAllVessels extends Component {
   componentDidMount = async e => {
     const res = await api.getAllVesselsDetails();
     if (res.data.status) {
-      this.setState({ vesselList: res.data.vesselList });
+      for (var i = 0; i < res.data.vesselList.length; i++) {
+        res.data.vesselList[i].viewDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={res.data.vesselList[i]._id} onClick={this.handleClickState}>View</button>;
+      }
     }
+    this.setState({ vesselList: res.data.vesselList })
+  }
+
+  handleClickState = async e => {
+    const id = e.target.id;
+    const { vesselList } = this.state;
+    const result = vesselList.filter(item => item['_id'] === id);
+    delete result[0].viewDetails;
+    this.props.history.push({
+      pathname: '/vesselDetails',
+      state: { result: result }
+    });
   }
 
   handleCancelAlert = () => this.setState({
@@ -41,27 +55,13 @@ class ViewAllVessels extends Component {
       { field: 'vesselName', title: 'Vessel Name', editable: 'never' },
       { field: 'IMO', title: 'IMO', editable: 'never' },
       { field: 'DWT', title: ' DWT (MT)', editable: 'never' },
-      { field: 'flag', title: 'Flag', editable: 'never' },
-      { field: 'vesselType', title: 'Vessel Type', editable: 'never' },
-      { field: 'built', title: 'Built Year', editable: 'never' },
-      { field: 'draft', title: 'Draft', editable: 'never' },
-      { field: 'LOA', title: 'LOA (M)', editable: 'never' },
-      { field: 'beam', title: 'Beam (M)', editable: 'never' },
-      { field: 'GRT', title: 'GRT (MT)', editable: 'never' },
-      { field: 'NRT', title: 'NRT (MT)', editable: 'never' },
-      { field: 'TPC', title: 'TPC (MT/CBM)', editable: 'never' },
-      { field: 'holdsHatches', title: 'Holds/Hatches', editable: 'never' },
-      { field: 'grainCapacity', title: 'Grain Capacity (CBM)', editable: 'never' },
-      { field: 'baleCapacity', title: 'Bale Capacity (CBM)', editable: 'never' },
-      { field: 'cranes', title: 'Cranes (MT)', editable: 'never' },
-      { field: 'grabs', title: 'Grabs (CBM)', editable: 'never' },
-      // { field: 'otherFields', title: 'Other Details' }
+      { field: 'viewDetails', title: 'View Details', editable: 'never', export: false },
     ];
     const { vesselList, alertDetails } = this.state;
     return (
       <form>
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
-        <UserTable title={'View All Vessels'} data={vesselList} columns={columns} onRowClick={this.onRowClick} />
+        <UserTable title={'View All Vessels'} data={vesselList} columns={columns} onRowClick={this.onRowClick} handleClickState={this.handleClickState} />
       </form>
     );
   }

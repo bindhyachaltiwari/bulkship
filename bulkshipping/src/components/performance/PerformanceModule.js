@@ -13,7 +13,7 @@ export default class PerformanceModule extends Component {
     }
 
     updateAndNotify() {
-        const { original, actual } = this.props && this.props.voyageDays && Object.keys(this.props.voyageDays) .length ? this.props.voyageDays : this.state;
+        const { original, actual } = this.props && this.props.voyageDays && Object.keys(this.props.voyageDays).length ? this.props.voyageDays : this.state;
         const updateOriginal$ = this.commonFunction(original);
         const updateActual$ = this.commonFunction(actual);
         const localObj = {

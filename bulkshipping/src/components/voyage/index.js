@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import ScrollableTabsButtonAuto from '../sub-component/ScrollableTabsButtonAuto';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import BackspaceIcon from '@material-ui/icons/Backspace';
 import { connect } from 'react-redux';
 import ConfirmationAlert from '../../utils/confirmationAlert';
 import Alert from '../../utils/alert';
@@ -40,21 +38,6 @@ class Voyage extends Component {
     const { detail } = this.props;
     if (detail && detail.role === 'Client' && value === 1) {
       this.props.history.goBack();
-      return;
-    }
-
-    let localValue = 2;
-    if (detail && detail.role === 'Manager' && detail.managerRoles.some(m => m === 'Edit Voyage Details')) {
-      localValue = 1;
-    }
-    if (value === localValue) {
-      this.setState({
-        alertDetails: {
-          openAlert: true,
-          titleMsg: 'Sorry !!',
-          descrMsg: 'You cannot directly click the tab.  Please click the edit icon from the table to edit...'
-        }
-      });
       return;
     }
     this.setState({ onRowClickedData: {} });
@@ -146,25 +129,19 @@ class Voyage extends Component {
         const role = assignedRoles[i];
         if (role === 'View All Voyage Details') {
           tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
             label: <span className='labelColor'>VIEW VOYAGE DETAILS</span>
           });
           tabs.tabPanelChild.push({
-            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} />
+            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} history={this.props.history} />
           })
         } else if (role === 'Fill Voyage Details') {
           tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
             label: <span className='labelColor'>FILL VOYAGE DETAILS</span>
           });
           tabs.tabPanelChild.push({
             child: <FillVoyageDetails handleBlocking={this.handleBlocking} />
           })
         } else if (role === 'Edit Voyage Details') {
-          tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
-            label: <span className='labelColor'>EDIT VOYAGE DETAILS</span>
-          });
           tabs.tabPanelChild.push({
             child: <FillVoyageDetails handleBlocking={this.handleBlocking} onRowClickedData={this.state.onRowClickedData} />
           })
@@ -175,19 +152,13 @@ class Voyage extends Component {
     } else if (this.props && this.props.detail && this.props.detail.role === 'Admin') {
       const tabs = {
         tabsLabel: [{
-          icon: <AccountCircleIcon className='labelColor' />,
           label: <span className='labelColor'>VIEW VOYAGE DETAILS</span>
         }, {
-          icon: <AccountCircleIcon className='labelColor' />,
           label: <span className='labelColor'>FILL VOYAGE DETAILS</span>
-        }, {
-          icon: <AccountCircleIcon className='labelColor' />,
-          label: <span className='labelColor'>EDIT VOYAGE DETAILS</span>
-        },
-        ],
+        }],
         tabPanelChild:
           [{
-            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} />
+            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} history={this.props.history} />
           },
           {
             child: <FillVoyageDetails handleBlocking={this.handleBlocking} />
@@ -200,15 +171,13 @@ class Voyage extends Component {
     } else if (this.props && this.props.detail && this.props.detail.role === 'Client') {
       const tabs = {
         tabsLabel: [{
-          icon: <AccountCircleIcon className='labelColor' />,
           label: <span className='labelColor'>VIEW VOYAGE DETAILS</span>
         }, {
-          icon: <BackspaceIcon className='labelColor' />,
           label: <span className='labelColor'>BACK</span>
         }],
         tabPanelChild:
           [{
-            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} clientData={clientData} />
+            child: <ViewVoyageDetails handleRowClicked={this.handleRowClicked} clientData={clientData} history={this.props.history} />
           }, {}]
       }
 

@@ -2,21 +2,13 @@ import axios from 'axios';
 
 class API {
     constructor() {
-        this.apiUrl = '';
+        this.apiUrl = 'http://localhost:3003';
     }
 
-    /*
-    * loginUser: method to validate user
-    * argument: data : login information { userId, password, rememberMe }
-    */
     loginUser(data) {
         return axios.post(this.apiUrl + '/userDetails/login', data);
     }
 
-    /*
-    * fetchMarks: method to fetch student's marks
-    * argument: data : { userId, schoolId, studentId }
-    */
     checkUsername = data => {
         return axios.post(this.apiUrl + '/userDetails/checkUsername', {
             headers: { 'Content-Type': 'application/json' },
@@ -26,13 +18,6 @@ class API {
 
     updatePassword = data => {
         return axios.post(this.apiUrl + '/userDetails/updatePassword', {
-            headers: { 'Content-Type': 'application/json' },
-            data,
-        });
-    }
-
-    login = data => {
-        return axios.post(this.apiUrl + '/userDetails/login', {
             headers: { 'Content-Type': 'application/json' },
             data,
         });
@@ -146,6 +131,10 @@ class API {
 
     getCompletePerformanceDetailsForView = data => {
         return axios.get(this.apiUrl + '/performanceDetails/getCompletePerformanceDetailsForView/' + data.userName + '/' + data.vesselName + '/' + data.cpDate);
+    }
+
+    getVesselsListAll = () => {
+        return axios.get(this.apiUrl + '/vesselDetails/getAllVesselsListAll');
     }
 };
 

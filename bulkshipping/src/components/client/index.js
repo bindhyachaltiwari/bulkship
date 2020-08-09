@@ -15,20 +15,11 @@ class Client extends Component {
     this.leftValue = 0;
     this.state = {
       vesselList: [],
-      vesselDetails: {
-        vesselName: '',
-        vesselSize: '',
-        cpDate: '',
-        loadPort: '',
-        dischargePort: '',
-        cargo: '',
-        cargoIntake: '',
-        ownerName: ''
-      },
+      voyageDetails: [],
       tableData: [],
       performanceDetails: {},
-      showDetails:false,
-      vesselDetails: []
+      showDetails: false,
+      hoveredVessel: []
     }
   }
 
@@ -37,21 +28,21 @@ class Client extends Component {
     let voyage, performance, documents = false;
     await api.getAllVoyage({ 'companyName': detail.companyName }).then(res => {
       if (res.data.status) {
-        this.toSendVesselList = res.data.vesselList;
+        this.toSendVesselList = JSON.parse(JSON.stringify(res.data.vesselList));
         if (detail.clientDisplay.length) {
           detail.clientDisplay.indexOf('View Documents') >= 0 ? documents = true : documents = false;
           detail.clientDisplay.indexOf('View Performance') >= 0 ? performance = true : performance = false;
           detail.clientDisplay.indexOf('View Voyage Details') >= 0 ? voyage = true : voyage = false;
-          for (var i = 0; i < res.data.vesselList.length; i++) {
-            res.data.vesselList[i].vesselNameEdited = <span style={{ color: 'blue', textAlign: 'center' }} onClick = {this.handleClickState} onMouseEnter = {this.handleHoverState} onMouseLeave = {this.handleHoverStateLeave} id={i}>{res.data.vesselList[i].vesselName}</span>
+          for (var i = 0; i < this.toSendVesselList.length; i++) {
+            this.toSendVesselList[i].vesselNameEdited = <span style={{ color: 'blue', textAlign: 'center' }} onClick={this.handleClickState} onMouseEnter={this.handleHoverState} onMouseLeave={this.handleHoverStateLeave} id={i}>{this.toSendVesselList[i].vesselName}</span>
             if (documents) {
-              res.data.vesselList[i].viewDocuments = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={res.data.vesselList[i]._id} onClick={this.handleViewDocuments}>View</button>;
+              this.toSendVesselList[i].viewDocuments = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={this.toSendVesselList[i]._id} onClick={this.handleViewDocuments}>View</button>;
             }
             if (performance) {
-              res.data.vesselList[i].vesselPerformance = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={res.data.vesselList[i]._id} onClick={this.handleVesselPerformance}>View</button>;
+              this.toSendVesselList[i].vesselPerformance = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={this.toSendVesselList[i]._id} onClick={this.handleVesselPerformance}>View</button>;
             }
             if (voyage) {
-              res.data.vesselList[i].voyageDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={res.data.vesselList[i]._id} onClick={this.handleVoyageDetails}>View</button>;;
+              this.toSendVesselList[i].voyageDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={this.toSendVesselList[i]._id} onClick={this.handleVoyageDetails}>View</button>;;
             }
           }
         }
@@ -77,35 +68,10 @@ class Client extends Component {
 
   handleVoyageDetails = e => {
     const { vesselList } = this.state;
-    const c = vesselList.find(m => m['_id'] === e.target.id);
+    const c = vesselList.filter(m => m['_id'] === e.target.id);
     this.props.history.push({
-      pathname: '/voyage',
-      state: {
-        detail: {
-          'shipper': c.shipper,
-          'bunkerSupplier': c.bunkerSupplier,
-          'bunkerTrader': c.bunkerTrader,
-          'cargo': c.cargo,
-          'cargoIntake': c.cargoIntake,
-          'chartererName': c.chartererName,
-          'cpDate': c.cpDate,
-          'dischargePort': c.dischargePort,
-          'loadPort': c.loadPort,
-          'loadPortAgent': c.loadPortAgent,
-          'dischargePortAgent': c.dischargePortAgent,
-          'offHireSurveyor': c.offHireSurveyor,
-          'receiver': c.receiver,
-          'ownerName': c.ownerName,
-          'onHireSurveyor': c.onHireSurveyor,
-          'vesselSize': c.vesselSize,
-          'weatherRoutingCompany': c.weatherRoutingCompany,
-          'tableData': { id: 0 },
-          'vId': c.vId,
-          'vesselName': c.vesselName,
-          'pniInsurance': c.pniInsurance
-        },
-        fieldVisibility: c.fieldVisibility
-      }
+      pathname: '/voyageDetails',
+      state: { result: c }
     });
   }
 
@@ -132,32 +98,33 @@ class Client extends Component {
 
   handleHoverState = async e => {
     const targetValue = e.target.textContent.split('_')[0];
-    const index = parseInt(e.target.id + '0')  + 30;
+    const index = parseInt(e.target.id + '0') + 30;
     this.leftValue = index + '%';
     await api.getAllVesselsDetails().then(res => {
       if (res.data.status) {
         const result = res.data.vesselList.filter(item => item.vesselName === targetValue);
         this.setState({
           showDetails: true,
-          vesselDetails : result
+          hoveredVessel: result
         })
       }
     });
   }
   handleHoverStateLeave = e => {
     this.setState({
-      showDetails: false
+      showDetails: false,
     })
   }
 
   handleClickState = async e => {
-    const targetValue = e.target.textContent.split('_')[0];
-    const { vesselDetails } = this.state;
-    const result = vesselDetails.filter(item => item.vesselName === targetValue);
+    const { hoveredVessel } = this.state;
+    if (!hoveredVessel.length) {
+      return;
+    }
     this.props.history.push({
-      pathname: '/vesselList',
+      pathname: '/vesselDetails',
       state: {
-        result:result
+        result: hoveredVessel
       }
     });
   }
@@ -165,19 +132,12 @@ class Client extends Component {
   render() {
     const columns = [{ field: 'vesselNameEdited', title: 'Vessel Name', editable: 'never' },
     { field: 'cpDate', title: 'CP Date', editable: 'never' },
-    { field: 'voyageDetails', title: 'View Voyage', check: 'View Voyage Details', editable: 'never' },
-    { field: 'vesselPerformance', title: 'View Performance', check: 'View Performance', editable: 'never' },
-    { field: 'viewDocuments', title: 'View Documents', check: 'View Documents', editable: 'never' }
+    { field: 'voyageDetails', title: 'View Voyage', editable: 'never' },
+    { field: 'vesselPerformance', title: 'View Performance', editable: 'never' },
+    { field: 'viewDocuments', title: 'View Documents', editable: 'never' }
     ];
-    const { detail } = this.props;
-    var index = columns.length;
-    while (index--) {
-      if (columns[index].check && !detail.clientDisplay.includes(columns[index].check)) {
-        columns.splice(index, 1);
-      }
-    }
 
-    const { vesselList,showDetails , vesselDetails } = this.state;
+    const { vesselList, showDetails, hoveredVessel } = this.state;
     const ourCount = {};
     let previousYearDate = new Date();
     const pastYear = previousYearDate.getFullYear() - 1;
@@ -195,23 +155,25 @@ class Client extends Component {
     return (
       <div className="float-container">
         <div className="float-child1">
-          <UserTable title={'Fixture List'} data={vesselList} columns={columns} />
-          {showDetails ? 
-          (<div className = 'absolute-position' style={{ top: this.leftValue  }}> 
-            {vesselDetails.map((item,i) => 
-            <ul>
-            <li key={i}>DWT : {item.DWT}</li>
-          <li key={i}>VesselName :{item.vesselName}</li>
-          <li key={i}>Built Year :{item.built}</li>
-          <li key={i}>Draft :{item.draft}</li>
-          <li key={i}>GRT :{item.GRT}</li>
-          <li key={i}>NRT :{item.NRT}</li>
-          <li key={i}>Cranes :{item.cranes}</li>
-          <li key={i}>Grabs :{item.grabs}</li>
-          </ul>
-          )}
-
-                  </div>):''
+          <UserTable title={'DASHBOARD'} data={this.toSendVesselList} columns={columns} history={this.props.history}/>
+          {showDetails ?
+            (<div className='absolute-position' style={{ top: this.leftValue }}>
+              {hoveredVessel.length ?
+                hoveredVessel.map((item, i) =>
+                  <table className='tableListTable' key={i}>
+                    <tbody key='list'>
+                      <tr><td className='tdList'>Vessel Name :</td><td className='tdList'>{item.vesselName}</td></tr>
+                      <tr><td className='tdList'>DWT : </td><td className='tdList'>{item.DWT}</td></tr>
+                      <tr><td className='tdList'>Built Year :</td><td className='tdList'>{item.built}</td></tr>
+                      <tr><td className='tdList'>Draft :</td><td className='tdList'>{item.draft}</td></tr>
+                      <tr><td className='tdList'>GRT :</td><td className='tdList'>{item.GRT}</td></tr>
+                      <tr><td className='tdList'>NRT :</td><td className='tdList'>{item.NRT}</td></tr>
+                      <tr><td className='tdList'>Cranes :</td><td className='tdList'>{item.cranes}</td></tr>
+                      <tr><td className='tdList'>Grabs :</td><td className='tdList'>{item.grabs}</td></tr>
+                    </tbody>
+                  </table>
+                ) : <p key='dwt'>Vessel details have been deleted. Please contact admin for more details...</p>}
+            </div>) : ''
           }
         </div>
         <div className="float-child2">
@@ -219,11 +181,6 @@ class Client extends Component {
         </div>
       </div>
     );
-  }
-
-  capitalize = s => {
-    if (typeof s !== 'string') return ''
-    return s.charAt(0).toUpperCase() + s.slice(1)
   }
 }
 

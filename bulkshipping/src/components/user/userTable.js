@@ -91,6 +91,13 @@ function UserTable(props) {
       data={data}
       icons={tableIcons}
       style={{ zIndex: '0' }}
+      options={{
+        headerStyle: {
+          backgroundColor: '#555555',
+          color: '#FFF',
+        },
+        exportButton: true
+      }}
       editable=
       {showDelete() ?
         {

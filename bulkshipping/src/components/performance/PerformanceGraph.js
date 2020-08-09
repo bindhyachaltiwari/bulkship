@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import ScrollableTabsButtonAuto from '../sub-component/ScrollableTabsButtonAuto';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import BackspaceIcon from '@material-ui/icons/Backspace';
 import { connect } from 'react-redux';
 import './style.scss';
 import ApexChart from './BarGraph'
@@ -36,10 +34,8 @@ class PerformanceGraph extends Component {
         const { actualData, originalData } = this.state
         const tabs = {
             tabsLabel: [{
-                icon: <AccountCircleIcon className='labelColor' />,
-                label: <span className='labelColor'>Performance Graph</span>
+                label: <span className='labelColor'>PERFORMANCE GRAPH</span>
             }, {
-                icon: <BackspaceIcon className='labelColor' />,
                 label: <span className='labelColor'>BACK</span>
             }],
             tabPanelChild: [{

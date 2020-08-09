@@ -189,7 +189,6 @@ html {
 @media (min-width: 960px) {
     .right {
         height: 100%;
-        border-left: 1px solid grey;
     
         &-container {
           height: calc(100% - 65px);

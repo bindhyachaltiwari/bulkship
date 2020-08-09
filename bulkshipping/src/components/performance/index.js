@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import ScrollableTabsButtonAuto from '../sub-component/ScrollableTabsButtonAuto';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import BackspaceIcon from '@material-ui/icons/Backspace';
 import { connect } from 'react-redux';
 import ConfirmationAlert from '../../utils/confirmationAlert';
 import Alert from '../../utils/alert';
@@ -113,7 +111,7 @@ class Performance extends Component {
         const role = assignedRoles[i];
         if (role === 'View All Performance Details') {
           tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
+
             label: <span className='labelColor'>VIEW PERFORMANCE DETAILS</span>
           });
           tabs.tabPanelChild.push({
@@ -121,7 +119,7 @@ class Performance extends Component {
           })
         } else if (role === 'Fill Performance Details') {
           tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
+
             label: <span className='labelColor'>FILL PERFORMANCE DETAILS</span>
           });
           tabs.tabPanelChild.push({
@@ -129,7 +127,7 @@ class Performance extends Component {
           })
         } else if (role === 'Edit Performance Details') {
           tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
+
             label: <span className='labelColor'>EDIT PERFORMANCE DETAILS</span>
           });
           tabs.tabPanelChild.push({
@@ -142,13 +140,10 @@ class Performance extends Component {
     } else if (this.props && this.props.detail && this.props.detail.role === 'Admin') {
       const tabs = {
         tabsLabel: [{
-          icon: <AccountCircleIcon className='labelColor' />,
           label: <span className='labelColor'>VIEW PERFORMANCE DETAILS</span>
         }, {
-          icon: <AccountCircleIcon className='labelColor' />,
           label: <span className='labelColor'>FILL PERFORMANCE DETAILS</span>
         }, {
-          icon: <AccountCircleIcon className='labelColor' />,
           label: <span className='labelColor'>EDIT PERFORMANCE DETAILS</span>
         },
         ],
@@ -167,10 +162,8 @@ class Performance extends Component {
     else if (this.props && this.props.detail && this.props.detail.role === 'Client') {
       const tabs = {
         tabsLabel: [{
-          icon: <AccountCircleIcon className='labelColor' />,
           label: <span className='labelColor'>VIEW PERFORMANCE DETAILS</span>
         }, {
-          icon: <BackspaceIcon className='labelColor' />,
           label: <span className='labelColor'>BACK</span>
         }],
         tabPanelChild:

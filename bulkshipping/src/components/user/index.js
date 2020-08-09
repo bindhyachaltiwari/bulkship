@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ScrollableTabsButtonAuto from '../sub-component/ScrollableTabsButtonAuto';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { connect } from 'react-redux';
 import AddNewUser from './Form_AddNewUser';
 import ConfirmationAlert from '../../utils/confirmationAlert';
@@ -37,22 +36,6 @@ class Users extends Component {
   }
 
   handleIconDetail = (event, value) => {
-    const { detail } = this.props;
-    let localValue = 2;
-    if (detail && detail.role === 'Manager' && detail.managerRoles.some(m => m === 'Edit User Details')) {
-      localValue = 1;
-    }
-
-    if (value === localValue) {
-      this.setState({
-        alertDetails: {
-          openAlert: true,
-          titleMsg: 'Sorry !!',
-          descrMsg: 'You cannot directly click the tab.  Please click the edit icon from the table to edit...'
-        }
-      });
-      return;
-    }
     this.setState({ onRowClickedData: {} });
     if (value !== this.state.activeTabIndex) {
       const { isDirty } = this.state;
@@ -142,25 +125,19 @@ class Users extends Component {
         const role = assignedRoles[i];
         if (role === 'View All Users') {
           tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
             label: <span disabled className='labelColor'>VIEW ALL USERS</span>
           });
           tabs.tabPanelChild.push({
-            child: <ViewAllUsers handleRowClicked={this.handleRowClicked} />
+            child: <ViewAllUsers handleRowClicked={this.handleRowClicked} history={this.props.history} />
           })
         } else if (role === 'Add New User') {
           tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
             label: <span className='labelColor'>ADD NEW USER</span>
           });
           tabs.tabPanelChild.push({
             child: <AddNewUser handleBlocking={this.handleBlocking} />
           })
         } else if (role === 'Edit User Details') {
-          tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
-            label: <span className='labelColor'>EDIT USER DETAILS</span>
-          });
           tabs.tabPanelChild.push({
             child: <AddNewUser handleBlocking={this.handleBlocking} onRowClickedData={this.state.onRowClickedData} />
           })
@@ -171,19 +148,14 @@ class Users extends Component {
     } else {
       const tabs = {
         tabsLabel: [{
-          icon: <AccountCircleIcon className='labelColor' />,
           label: <span disabled className='labelColor'>VIEW ALL USERS</span>
         }, {
-          icon: <AccountCircleIcon className='labelColor' />,
           label: <span className='labelColor'>ADD NEW USER</span>
-        }, {
-          icon: <AccountCircleIcon className='labelColor' />,
-          label: <span className='labelColor'>EDIT USER DETAILS</span>
-        },
+        }
         ],
         tabPanelChild:
           [{
-            child: <ViewAllUsers handleRowClicked={this.handleRowClicked} />
+            child: <ViewAllUsers handleRowClicked={this.handleRowClicked} history={this.props.history} />
           }, {
             child: <AddNewUser handleBlocking={this.handleBlocking} />
           }, {

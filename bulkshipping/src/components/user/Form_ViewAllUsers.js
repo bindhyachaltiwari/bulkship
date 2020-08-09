@@ -32,13 +32,28 @@ class ViewAllUsers extends Component {
         if (singleClientId.role === 'Manager' && singleClientId.managerRoles && singleClientId.managerRoles.length) {
           singleClientId.managerRoles = <select>{singleClientId.managerRoles.map((e) => <option key={e}>{e}</option>)}</select>
         }
-        if (singleClientId.role === 'Client' && singleClientId.clientDisplay && singleClientId.clientDisplay.length) {
-          singleClientId.clientDisplay = <select>{singleClientId.clientDisplay.map((e) => <option key={e}>{e}</option>)}</select>
+        if (singleClientId.role === 'Client') {
+          if (singleClientId.clientDisplay && singleClientId.clientDisplay.length) {
+            singleClientId.clientDisplay = <select>{singleClientId.clientDisplay.map((e) => <option key={e}>{e}</option>)}</select>
+          }
+          singleClientId.viewDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={singleClientId.id} onClick={this.handleClickState}>View</button>;
         }
       }
 
       this.setState({ clientList: res.data.clientList });
     }
+  }
+
+  handleClickState = async e => {
+    const id = e.target.id;
+    const { clientList } = this.state;
+    const result = clientList.filter(item => item.id === id);
+    delete result[0].viewDetails;
+    delete result[0].clientDisplay;
+    // this.props.history.push({
+    //   pathname: '/client',
+    //   state: { result: result }
+    // });
   }
 
 
@@ -60,8 +75,9 @@ class ViewAllUsers extends Component {
     { field: 'companyName', title: 'Company Name', editable: 'never' },
     { field: 'role', title: 'Role', editable: 'never' },
     { field: 'clientType', title: 'User Type', editable: 'never' },
-    { field: 'clientDisplay', title: 'Client Display', editable: 'never' },
-    { field: 'managerRoles', title: 'Roles', editable: 'never' },
+    { field: 'clientDisplay', title: 'Client Display', editable: 'never', export: false },
+    { field: 'managerRoles', title: 'Roles', editable: 'never', export: false },
+    { field: 'viewDetails', title: 'View Details', editable: 'never', export: false },
     ];
 
     const { clientList, alertDetails } = this.state;

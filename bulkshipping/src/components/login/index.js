@@ -229,8 +229,7 @@ class Login extends React.Component {
 
                     </div>
                     <div className='contact-us-section inner-section' id='contactUsSection'>
-                        <ContactUs
-                        />
+                        <ContactUs/>
 
                     </div>
                     <div className='inner-section footer-section'>

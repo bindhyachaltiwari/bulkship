@@ -211,6 +211,33 @@ class FillVoyageDetails extends Component {
     }
   }
 
+  dynamicFieldValueChange = e => {
+    e.preventDefault();
+    const { id, value } = e.target;
+    const { voyageDetails } = this.state;
+    const { otherFields } = voyageDetails;
+    const elem = otherFields.find(f => f[id]);
+    const key = Object.keys(elem)[0];
+    elem[key] = value;
+    Object.assign(voyageDetails, { otherFields })
+    this.setState({ voyageDetails })
+  }
+
+  dynamicFieldLabelChange = e => {
+    e.preventDefault();
+    const { id, value } = e.target;
+    const { voyageDetails } = this.state;
+    const { otherFields } = voyageDetails;
+    const elem = otherFields.find(f => f[id]);
+    const key = Object.keys(elem)[0];
+    const val = elem[key];
+    otherFields.push({ [value]: val });
+    const index = otherFields.indexOf(elem);
+    otherFields.splice(index, 1);
+    Object.assign(voyageDetails, { otherFields })
+    this.setState({ voyageDetails });
+  }
+
   handleChange = e => {
     e.preventDefault();
     const { id, value, name } = e.target;
@@ -263,17 +290,17 @@ class FillVoyageDetails extends Component {
     e.preventDefault();
     console.log(e)
     const inputs = e.target.querySelectorAll('input');
-    if (inputs && inputs.length) {
-      const { voyageDetails } = this.state;
-      let { otherFields } = voyageDetails;
-      if (!otherFields) {
-        otherFields = {};
-      }
-      Object.assign(otherFields, { [inputs[0].value]: inputs[1].value });
-      this.setState({ voyageDetails });
-      document.getElementById('newFieldForm').reset();
-      // this.displayOtherFields();
+    if (!inputs || !inputs.length) return;
+    if (!inputs[0].value || !inputs[1].value) return;
+    const { voyageDetails } = this.state;
+    let { otherFields } = voyageDetails;
+    if (!otherFields) {
+      otherFields = [];
     }
+    otherFields.push({ [inputs[0].value]: inputs[1].value });
+    Object.assign(voyageDetails, { otherFields });
+    this.setState({ voyageDetails });
+    document.getElementById('newFieldForm').reset();
   };
 
   updateForm(voyageDetails, isformValid, isTyped) {
@@ -295,7 +322,7 @@ class FillVoyageDetails extends Component {
 
   render() {
     const { validity, isDirty, isformValid, confAlertDetails, voyageDetails, alertDetails, clientList, vesselList, isEditPage } = this.state;
-    let { chartererName, vesselName, cpDate, dischargePort, loadPort, vesselSize, cargoIntake, cargo, ownerName, shipper, pniInsurance, weatherRoutingCompany, loadPortAgent, dischargePortAgent, receiver, onHireSurveyor, offHireSurveyor, bunkerSupplier, bunkerTrader, fieldVisibility } = voyageDetails;
+    let { chartererName, vesselName, cpDate, dischargePort, loadPort, vesselSize, cargoIntake, cargo, ownerName, shipper, pniInsurance, weatherRoutingCompany, loadPortAgent, dischargePortAgent, receiver, onHireSurveyor, offHireSurveyor, bunkerSupplier, bunkerTrader, fieldVisibility, otherFields } = voyageDetails;
     if (!fieldVisibility) {
       fieldVisibility = [];
     }
@@ -586,6 +613,27 @@ class FillVoyageDetails extends Component {
                 ))}
               </Select>
             </Grid>
+            {otherFields ? otherFields.map((item, i) =>
+              <Grid container>
+                <Grid item xs={12} md={6} lg={4} className='field-grid' key={i}>
+                  <TextField
+                    key={Object.keys(item)}
+                    id={Object.keys(item)[0]}
+                    value={Object.keys(item)[0] || ''}
+                    onChange={this.dynamicFieldLabelChange}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6} lg={4} className='field-grid'>
+                  <TextField
+                    key={Object.keys(item)}
+                    id={Object.keys(item)[0]}
+                    value={item[Object.keys(item)[0]] || ''}
+                    onChange={this.dynamicFieldValueChange}
+                  />
+                </Grid>
+              </Grid>
+            ) : ''
+            }
           </Grid>
 
           <Button

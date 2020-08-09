@@ -6,20 +6,9 @@ import SaveIcon from '@material-ui/icons/Save';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import './style.scss';
-import miscUtils from '../../utils/miscUtils';
-
-const useStyles = makeStyles((theme) => ({
-    typography: {
-        padding: theme.spacing(2),
-    },
-}));
 
 export default function SimplePopover(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [validity, setValidity] = React.useState({});
-    const [isformValid, setIsformValid] = React.useState(false);
-    const [otherFields, setOtherFields] = React.useState({});
-    const [validationtype, setValidationtype] = React.useState(null);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -29,36 +18,8 @@ export default function SimplePopover(props) {
         setAnchorEl(null);
     };
 
-    const handleChange = e => {
-        e.preventDefault();
-        const { id, value, name } = e.target;
-        let validity = validity;
-        let is;
-        // let { isformValid, validity, otherFields } = localState;
-        if (typeof e.target.getAttribute === 'function') {
-            let validationtype = e.target.getAttribute('type');
-            if (validationtype) {
-                const resp = miscUtils.isFieldValid(validationtype, value, validity, id);
-                isformValid = !resp.v;
-                setValidity(resp.validity);
-                setValidationtype(validationtype);
-                setIsformValid(!resp.v);
-            }
-        }
-
-        if (id) {
-            Object.assign(otherFields, { [id]: value });
-        } else {
-            Object.assign(otherFields, { [name]: value });
-        }
-
-        // localState.otherFields = otherFields;
-    };
-
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
-    // const { validity } = localState;
-    let { fieldLabel } = validity;
     return (
         <div>
             <IconButton onClick={handleClick} aria-describedby={id} aria-label='Add' className='btn-edit'><AddIcon /></IconButton>
@@ -81,14 +42,9 @@ export default function SimplePopover(props) {
                             <Grid item xs={12}>
                                 <TextField
                                     inputProps={{ maxLength: 25 }}
-                                    error={validity && validity.fieldLabel && validity.fieldLabel.isInvalid}
                                     id='fieldLabel'
                                     label='Field Label *'
-                                    type='aplhaNumeric*'
-                                    onChange={handleChange}
-                                    value={fieldLabel || ''}
                                     autoComplete='off'
-                                    helperText={validity && validity.fieldLabel && validity.fieldLabel.isInvalid ? miscUtils.getErrorMessage(validity.fieldLabel.validationtype) : ''}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -98,7 +54,6 @@ export default function SimplePopover(props) {
                                     id='fieldValue'
                                     label='Field Value'
                                     autoComplete='off'
-                                    onChange={handleChange}
                                 />
                             </Grid>
                         </Grid>

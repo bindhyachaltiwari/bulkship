@@ -26,20 +26,15 @@ function UserTable(props) {
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
     Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} onClick={() => {
       for (let i = 0; i < data.length; i++) {
-        let singleClientId = data[i]
-        if (singleClientId.fieldVisibility && singleClientId.fieldVisibility.length) {
-          singleClientId.fieldVisibility = <select>{singleClientId.fieldVisibility.map((e) => <option>{e}</option>)}</select>
-        }
+        let singleClientId = data[i];
+        singleClientId.viewDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={singleClientId._id} onClick={propsInside.handleClickState}>View</button>;
       }
     }} />),
     Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
     DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
     Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} onClick={() => {
       for (let i = 0; i < data.length; i++) {
-        let singleClientId = data[i]
-        if (singleClientId.fieldVisibility) {
-          singleClientId.fieldVisibility = propsInside.originalArray[i].fieldVisibility;
-        }
+        data[i].viewDetails = 'View Details';
       }
     }} />),
     Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
@@ -85,6 +80,13 @@ function UserTable(props) {
       data={data}
       icons={tableIcons}
       style={{ zIndex: '0' }}
+      options={{
+        headerStyle: {
+          backgroundColor: '#555555',
+          color: '#FFF',
+        },
+        exportButton: true
+      }}
       editable=
       {showDelete() ?
         {

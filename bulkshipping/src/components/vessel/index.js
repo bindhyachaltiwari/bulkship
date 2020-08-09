@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ScrollableTabsButtonAuto from '../sub-component/ScrollableTabsButtonAuto';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { connect } from 'react-redux';
 import AddNewVessel from './Form_AddNewVessel';
 import ConfirmationAlert from '../../utils/confirmationAlert';
@@ -37,21 +36,6 @@ class Vessel extends Component {
   }
 
   handleIconDetail = (event, value) => {
-    const { detail } = this.props;
-    let localValue = 2;
-    if (detail && detail.role === 'Manager' && detail.managerRoles.some(m => m === 'Edit Vessel Details')) {
-      localValue = 1;
-    }
-    if (value === localValue) {
-      this.setState({
-        alertDetails: {
-          openAlert: true,
-          titleMsg: 'Sorry !!',
-          descrMsg: 'You cannot directly click the tab.  Please click the edit icon from the table to edit...'
-        }
-      });
-      return;
-    }
     this.setState({ onRowClickedData: {} });
     if (value !== this.state.activeTabIndex) {
       const { isDirty } = this.state;
@@ -116,10 +100,8 @@ class Vessel extends Component {
       if (!isPresent) {
         return;
       } else if (isPresent) {
-        localValue = 1
+        localValue = 2
       }
-    } else {
-      localValue = 2
     }
 
     this.setState({ activeTabIndex: localValue, localClickedtTab: localValue, onRowClickedData: e });
@@ -140,25 +122,19 @@ class Vessel extends Component {
         const role = assignedRoles[i];
         if (role === 'View All Vessels') {
           tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
             label: <span className='labelColor'>VIEW ALL VESSELS</span>
           });
           tabs.tabPanelChild.push({
-            child: <ViewAllVessels handleRowClicked={this.handleRowClicked} />
+            child: <ViewAllVessels handleRowClicked={this.handleRowClicked} history={this.props.history} />
           })
         } else if (role === 'Add New Vessel') {
           tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
             label: <span className='labelColor'>ADD NEW VESSEL</span>
           });
           tabs.tabPanelChild.push({
             child: <AddNewVessel handleBlocking={this.handleBlocking} />
           })
         } else if (role === 'Edit Vessel Details') {
-          tabs.tabsLabel.push({
-            icon: <AccountCircleIcon className='labelColor' />,
-            label: <span className='labelColor'>EDIT VESSEL DETAILS</span>
-          });
           tabs.tabPanelChild.push({
             child: <AddNewVessel handleBlocking={this.handleBlocking} onRowClickedData={this.state.onRowClickedData} />
           })
@@ -169,19 +145,13 @@ class Vessel extends Component {
     } else {
       const tabs = {
         tabsLabel: [{
-          icon: <AccountCircleIcon className='labelColor' />,
           label: <span className='labelColor'>VIEW ALL VESSELS</span>
         }, {
-          icon: <AccountCircleIcon className='labelColor' />,
           label: <span className='labelColor'>ADD NEW VESSEL</span>
-        }, {
-          icon: <AccountCircleIcon className='labelColor' />,
-          label: <span className='labelColor'>EDIT VESSEL DETAILS</span>
-        },
-        ],
+        }],
         tabPanelChild:
           [{
-            child: <ViewAllVessels handleRowClicked={this.handleRowClicked} />
+            child: <ViewAllVessels handleRowClicked={this.handleRowClicked} history={this.props.history} />
           },
           {
             child: <AddNewVessel handleBlocking={this.handleBlocking} />

@@ -40,7 +40,6 @@ class LeftMenu extends React.Component {
         const { ui, detail } = this.props;
         let { activeOverlay } = ui;
         const isMenuActive = this.state.activeMenu;
-        const showOverlay = activeOverlay === 'menu-overlay';
         let menuItem = [];
         if (detail.role === 'Admin') {
             menuItem = ['user', 'vessel', 'voyage', 'performance'];

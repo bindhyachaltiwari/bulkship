@@ -8,7 +8,6 @@ import LeftMenu from '../sub-component/left-menu';
 import Users from '../user';
 import PerformanceGraph from '../performance/PerformanceGraph';
 import vessel from '../vessel';
-import vesselList from '../vesselList';
 import voyage from '../voyage';
 import performance from '../performance';
 import Client from '../client';
@@ -16,6 +15,9 @@ import './../../style/reset.css';
 import './../../style/common.scss';
 import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import vesselDetails from '../vessel/vesselDetails';
+import voyageDetails from '../voyage/voyageDetails';
+import clientFixtures from '../clientFixtures';
 
 class App extends React.Component {
   constructor() {
@@ -76,11 +78,13 @@ class App extends React.Component {
                               <Route exact path='/' component={Users} />}
                     <Route exact path='/' component={initialComponent} />
                     <Route exact path='/user' component={Users} />
+                    <Route exact path='/clientFixtures' component={clientFixtures} />
                     <Route exact path='/vessel' component={vessel} />
                     <Route exact path='/voyage' component={voyage} />
                     <Route exact path='/performance' component={performance} />
                     <Route exact path='/performanceGraph' component={PerformanceGraph} />
-                    <Route exact path='/vesselList' component={vesselList} />
+                    <Route exact path='/vesselDetails' component={vesselDetails} />
+                    <Route exact path='/voyageDetails' component={voyageDetails} />
                   </Switch>
                 </section>
               </div>

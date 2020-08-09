@@ -123,6 +123,18 @@ button.MuiButtonBase-root:focus {
     float: right;
 }  
 
+.tableListTable {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .tdList {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 4px;
+  }
+
 
 @media (max-width: 767px) {
     .my-profile {
