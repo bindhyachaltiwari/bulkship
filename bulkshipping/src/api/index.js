@@ -2,7 +2,7 @@ import axios from 'axios';
 
 class API {
     constructor() {
-        this.apiUrl = 'http://localhost:3003';
+        this.apiUrl = '';
     }
 
     loginUser(data) {
