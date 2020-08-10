@@ -33,7 +33,7 @@ class ApexChart extends React.Component {
                     colors: ['transparent']
                 },
                 xaxis: {
-                    categories: ['LOAD PORT DELAY', 'DISCHARGE PORT DELAY', 'INTERMEDIATE PORT DELAY', 'IFO', 'MDO', 'LOAD PORT DA', 'DISCHARGE PORT DA', 'INTERMEDIATE PORT DA'],
+                    categories: ['VOYAGE DAYS', 'LOAD PORT DELAY', 'DISCHARGE PORT DELAY', 'INTERMEDIATE PORT DELAY', 'IFO', 'MDO', 'LOAD PORT DA', 'DISCHARGE PORT DA', 'INTERMEDIATE PORT DA'],
                 },
                 yaxis: {
                     title: {

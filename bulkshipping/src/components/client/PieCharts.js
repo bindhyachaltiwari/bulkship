@@ -3,7 +3,7 @@ import Chart from 'react-apexcharts';
 class PieCharts extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       options: {
         chart: {
@@ -22,7 +22,7 @@ class PieCharts extends Component {
             }
           }
         }]
-},
+      },
       series: Object.values(props.vesselDetails),
     };
   }
@@ -38,7 +38,7 @@ class PieCharts extends Component {
               options={this.state.options}
               series={this.state.series}
               type='pie'
-              width={500}
+              width={this.props.role === 'Client' ? 500 : 350}
             />
           </div>
         </div>

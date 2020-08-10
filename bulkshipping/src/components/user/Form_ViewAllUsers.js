@@ -47,13 +47,13 @@ class ViewAllUsers extends Component {
   handleClickState = async e => {
     const id = e.target.id;
     const { clientList } = this.state;
-    const result = clientList.filter(item => item.id === id);
-    delete result[0].viewDetails;
-    delete result[0].clientDisplay;
-    // this.props.history.push({
-    //   pathname: '/client',
-    //   state: { result: result }
-    // });
+    const result = clientList.find(item => item.id === id);
+    delete result.viewDetails;
+    delete result.clientDisplay;
+    this.props.history.push({
+      pathname: '/clientDetails',
+      state: { companyName: result.companyName }
+    });
   }
 
 

@@ -96,7 +96,9 @@ function UserTable(props) {
           backgroundColor: '#555555',
           color: '#FFF',
         },
-        exportButton: true
+        pageSize: 7,
+        pageSizeOptions: [5, 7, 10, 15, 20],
+        exportButton: true,
       }}
       editable=
       {showDelete() ?

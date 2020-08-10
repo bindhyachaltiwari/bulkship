@@ -130,9 +130,10 @@ class FillPerformanceDetails extends Component {
 
   handlePerformanceGraph = e => {
     const { selectedClient, selectedCpDate, selectedVessel, portDetails, performanceDetails } = this.state;
-    const { loadPortDelay, dischargePortDelay, intermediatePortDelay, bunkerIFOAct, bunkerIFOOrg,
+    const { loadPortDelay, dischargePortDelay, intermediatePortDelay, bunkerIFOAct, bunkerIFOOrg, voyageDays,
       bunkerMDOAct, bunkerMDOOrg, loadPortDAAct$, loadPortDAOrg$, dischargePortDAAct$, dischargePortDAOrg$, intermediatePortDAAct$, intermediatePortDAOrg$ } = performanceDetails
     const actualData = [
+      voyageDays ? parseFloat(voyageDays.actual$) : 0,
       loadPortDelay ? parseFloat(loadPortDelay.actual$) : 0,
       dischargePortDelay ? parseFloat(dischargePortDelay.actual$) : 0,
       intermediatePortDelay ? parseFloat(intermediatePortDelay.actual$) : 0,
@@ -144,6 +145,7 @@ class FillPerformanceDetails extends Component {
     ]
 
     const originalData = [
+      voyageDays ? parseFloat(voyageDays.original$) : 0,
       loadPortDelay ? parseFloat(loadPortDelay.original$) : 0,
       dischargePortDelay ? parseFloat(dischargePortDelay.original$) : 0,
       intermediatePortDelay ? parseFloat(intermediatePortDelay.original$) : 0,
@@ -502,14 +504,14 @@ class FillPerformanceDetails extends Component {
     const totalAct = this.getTotalAct(performanceDetails);
     Object.assign(performanceDetails, { totalAct, totalOrg });
     if (totalOrg >= 0 && parseFloat(performanceDetails.CargoQuantityOrg) > 0) {
-      let freightOrg = parseFloat(totalOrg / parseFloat(performanceDetails.CargoQuantityOrg));
-      freightOrg = freightOrg ? parseFloat(freightOrg.toFixed(2)) : 0;
+      let freightOrg = parseFloat(totalOrg / parseFloat(performanceDetails.CargoQuantityOrg)).toFixed(2);
+      freightOrg = freightOrg ? parseFloat(freightOrg) : 0;
       Object.assign(performanceDetails, { freightOrg });
     }
 
     if (totalAct >= 0 && parseFloat(performanceDetails.CargoQuantityAct) > 0) {
-      let freightAct = parseFloat(totalAct / parseFloat(performanceDetails.CargoQuantityAct));
-      freightAct = freightAct ? parseFloat(freightAct.toFixed(2)) : 0;
+      let freightAct = parseFloat(totalAct / parseFloat(performanceDetails.CargoQuantityAct)).toFixed(2);
+      freightAct = freightAct ? parseFloat(freightAct) : 0;
       Object.assign(performanceDetails, { freightAct });
     }
     this.setState({ performanceDetails });
@@ -544,13 +546,13 @@ class FillPerformanceDetails extends Component {
     Object.assign(performanceDetails, { totalAct, totalOrg });
     if (totalOrg >= 0 && parseFloat(performanceDetails.CargoQuantityOrg) > 0) {
       let freightOrg = parseFloat(totalOrg / parseFloat(performanceDetails.CargoQuantityOrg)).toFixed(2);
-      freightOrg = freightOrg ? parseFloat(freightOrg.toFixed(2)) : 0;
+      freightOrg = freightOrg ? parseFloat(freightOrg) : 0;
       Object.assign(performanceDetails, { freightOrg });
     }
 
     if (totalAct >= 0 && parseFloat(performanceDetails.CargoQuantityAct) > 0) {
       let freightAct = parseFloat(totalAct / parseFloat(performanceDetails.CargoQuantityAct)).toFixed(2);
-      freightAct = freightAct ? parseFloat(freightAct.toFixed(2)) : 0;
+      freightAct = freightAct ? parseFloat(freightAct) : 0;
       Object.assign(performanceDetails, { freightAct });
     }
     this.setState({ performanceDetails });
@@ -681,7 +683,7 @@ class FillPerformanceDetails extends Component {
       <>
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
         <ConfirmationAlert confAlertDetails={confAlertDetails} handleCancelAlert={this.handleCancelAlert} handleSuccessAlert={this.handleSuccessAlert} />
-        <Paper style={{ marginTop: '2%' }}>
+        <Paper>
           {!isClientPage ? <Grid container>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <InputLabel id='demo-simple-select-label' className='inputLabels'>Select Client *</InputLabel>

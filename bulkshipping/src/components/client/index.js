@@ -4,6 +4,7 @@ import './style.scss';
 import UserTable from './userTable';
 import PieCharts from './PieCharts';
 import api from '../../api';
+import ScrollableTabsButtonAuto from '../sub-component/ScrollableTabsButtonAuto';
 
 class Client extends Component {
 
@@ -25,14 +26,23 @@ class Client extends Component {
 
   getAllVoyage = async () => {
     const { detail } = this.props;
-    let voyage, performance, documents = false;
-    await api.getAllVoyage({ 'companyName': detail.companyName }).then(res => {
+    let voyage, performance, documents, comp, isAdminPage;
+    if (this.props.history.location.pathname === '/clientDetails') {
+      voyage = performance = documents = isAdminPage = true;
+      comp = this.props.history.location.state.companyName;
+    } else {
+      voyage = performance = documents = isAdminPage = false;
+      comp = detail.companyName;
+    }
+    await api.getAllVoyage({ 'companyName': comp }).then(res => {
       if (res.data.status) {
         this.toSendVesselList = JSON.parse(JSON.stringify(res.data.vesselList));
-        if (detail.clientDisplay.length) {
-          detail.clientDisplay.indexOf('View Documents') >= 0 ? documents = true : documents = false;
-          detail.clientDisplay.indexOf('View Performance') >= 0 ? performance = true : performance = false;
-          detail.clientDisplay.indexOf('View Voyage Details') >= 0 ? voyage = true : voyage = false;
+        if (detail.clientDisplay.length || isAdminPage) {
+          if (detail.clientDisplay.length) {
+            detail.clientDisplay.indexOf('View Documents') >= 0 ? documents = true : documents = false;
+            detail.clientDisplay.indexOf('View Performance') >= 0 ? performance = true : performance = false;
+            detail.clientDisplay.indexOf('View Voyage Details') >= 0 ? voyage = true : voyage = false;
+          }
           for (var i = 0; i < this.toSendVesselList.length; i++) {
             this.toSendVesselList[i].vesselNameEdited = <span style={{ color: 'blue', textAlign: 'center' }} onClick={this.handleClickState} onMouseEnter={this.handleHoverState} onMouseLeave={this.handleHoverStateLeave} id={i}>{this.toSendVesselList[i].vesselName}</span>
             if (documents) {
@@ -48,10 +58,10 @@ class Client extends Component {
         }
         this.setState({
           vesselList: res.data.vesselList,
-          companyName: detail.companyName,
+          companyName: comp,
         });
       } else {
-        this.setState({ companyName: detail.companyName });
+        this.setState({ companyName: comp });
         return;
       }
     });
@@ -129,14 +139,36 @@ class Client extends Component {
     });
   }
 
-  render() {
+  handleIconDetail = (event, value) => {
+    if (value === 1) {
+      this.props.history.goBack();
+      return;
+    }
+  };
+
+  getTabData = () => {
+    const tabs = {
+      tabsLabel: [{
+        label: <span className='labelColor'>FIXTURE LIST</span>
+      }, {
+        label: <span className='labelColor'>BACK</span>
+      }],
+      tabPanelChild: [{
+        child: this.getTemplate()
+      },
+      {}]
+    }
+
+    return tabs;
+  }
+
+  getTemplate = () => {
     const columns = [{ field: 'vesselNameEdited', title: 'Vessel Name', editable: 'never' },
     { field: 'cpDate', title: 'CP Date', editable: 'never' },
     { field: 'voyageDetails', title: 'View Voyage', editable: 'never' },
     { field: 'vesselPerformance', title: 'View Performance', editable: 'never' },
     { field: 'viewDocuments', title: 'View Documents', editable: 'never' }
     ];
-
     const { vesselList, showDetails, hoveredVessel } = this.state;
     const ourCount = {};
     let previousYearDate = new Date();
@@ -152,34 +184,47 @@ class Client extends Component {
         }
       }
     });
-    return (
-      <div className="float-container">
-        <div className="float-child1">
-          <UserTable title={'DASHBOARD'} data={this.toSendVesselList} columns={columns} history={this.props.history}/>
-          {showDetails ?
-            (<div className='absolute-position' style={{ top: this.leftValue }}>
-              {hoveredVessel.length ?
-                hoveredVessel.map((item, i) =>
-                  <table className='tableListTable' key={i}>
-                    <tbody key='list'>
-                      <tr><td className='tdList'>Vessel Name :</td><td className='tdList'>{item.vesselName}</td></tr>
-                      <tr><td className='tdList'>DWT : </td><td className='tdList'>{item.DWT}</td></tr>
-                      <tr><td className='tdList'>Built Year :</td><td className='tdList'>{item.built}</td></tr>
-                      <tr><td className='tdList'>Draft :</td><td className='tdList'>{item.draft}</td></tr>
-                      <tr><td className='tdList'>GRT :</td><td className='tdList'>{item.GRT}</td></tr>
-                      <tr><td className='tdList'>NRT :</td><td className='tdList'>{item.NRT}</td></tr>
-                      <tr><td className='tdList'>Cranes :</td><td className='tdList'>{item.cranes}</td></tr>
-                      <tr><td className='tdList'>Grabs :</td><td className='tdList'>{item.grabs}</td></tr>
-                    </tbody>
-                  </table>
-                ) : <p key='dwt'>Vessel details have been deleted. Please contact admin for more details...</p>}
-            </div>) : ''
-          }
-        </div>
-        <div className="float-child2">
-          {ourCount && Object.keys(ourCount).length ? <PieCharts vesselDetails={ourCount} /> : ''}
-        </div>
+
+    return <div className="float-container">
+      <div className="float-child1">
+        <UserTable title={'DASHBOARD'} data={this.toSendVesselList} columns={columns} history={this.props.history} />
+        {showDetails ?
+          (<div className='absolute-position' style={{ top: this.leftValue }}>
+            {hoveredVessel.length ?
+              hoveredVessel.map((item, i) =>
+                <table className='tableListTable' key={i}>
+                  <tbody key='list'>
+                    <tr><td className='tdList'>Vessel Name :</td><td className='tdList'>{item.vesselName}</td></tr>
+                    <tr><td className='tdList'>DWT : </td><td className='tdList'>{item.DWT}</td></tr>
+                    <tr><td className='tdList'>Built Year :</td><td className='tdList'>{item.built}</td></tr>
+                    <tr><td className='tdList'>Draft :</td><td className='tdList'>{item.draft}</td></tr>
+                    <tr><td className='tdList'>GRT :</td><td className='tdList'>{item.GRT}</td></tr>
+                    <tr><td className='tdList'>NRT :</td><td className='tdList'>{item.NRT}</td></tr>
+                    <tr><td className='tdList'>Cranes :</td><td className='tdList'>{item.cranes}</td></tr>
+                    <tr><td className='tdList'>Grabs :</td><td className='tdList'>{item.grabs}</td></tr>
+                  </tbody>
+                </table>
+              ) : <p key='dwt'>Vessel details have been deleted. Please contact admin for more details...</p>}
+          </div>) : ''
+        }
       </div>
+      <div className="float-child2">
+        {ourCount && Object.keys(ourCount).length ? <PieCharts vesselDetails={ourCount} role={this.props.detail.role} /> : ''}
+      </div>
+    </div>
+  }
+
+  render() {
+    const role = this.props.detail.role;
+    const { localClickedtTab } = this.state;
+    return (
+      <>
+        {role === 'Client' ? this.getTemplate() :
+          <div className='my-profile'>
+            <ScrollableTabsButtonAuto paper={true} tabs={this.getTabData()} onChange={this.handleIconDetail} TabIndicatorProps={{ style: { background: '#e37933' } }} newTabVal={localClickedtTab} />
+          </div>
+        }
+      </>
     );
   }
 }

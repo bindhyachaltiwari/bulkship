@@ -79,6 +79,7 @@ class App extends React.Component {
                     <Route exact path='/' component={initialComponent} />
                     <Route exact path='/user' component={Users} />
                     <Route exact path='/clientFixtures' component={clientFixtures} />
+                    <Route exact path='/clientDetails' component={Client} />
                     <Route exact path='/vessel' component={vessel} />
                     <Route exact path='/voyage' component={voyage} />
                     <Route exact path='/performance' component={performance} />
