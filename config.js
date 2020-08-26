@@ -1,3 +1,3 @@
 module.exports = {
-    mongoURI: 'mongodb://localhost/bulkShiping',
+    mongoURI: 'process.env.MONGODB_URI',
 };

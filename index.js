@@ -15,6 +15,7 @@ const voyageDetails = require('./routes/voyageDetails');
 const vesselDetails = require('./routes/vesselDetails');
 const userDetails = require('./routes/userDetails');
 const performanceDetails = require('./routes/performanceDetails');
+const voyageDocuments = require('./routes/voyageDocuments');
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 const config = require('./config');
