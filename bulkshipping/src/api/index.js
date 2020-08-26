@@ -2,7 +2,7 @@ import axios from 'axios';
 
 class API {
     constructor() {
-        this.apiUrl = '';
+        this.apiUrl = 'http://localhost:3003';
     }
 
     loginUser(data) {
@@ -135,6 +135,22 @@ class API {
 
     getVesselsListAll = () => {
         return axios.get(this.apiUrl + '/vesselDetails/getAllVesselsListAll');
+    }
+
+    deletePerformanceDetails = data => {
+        return axios.delete(this.apiUrl + '/performanceDetails/deletePerformanceDetails/' + data.chartererName + '/' + data.vesselName + '/' + data.cpDate);
+    }
+
+    getVoyageDocuments = data => {
+        return axios.get(this.apiUrl + '/voyageDocuments/getVoyageDocuments/' + data);
+    }
+
+    uploadDocument = data => {
+        return axios.post(this.apiUrl + '/voyageDocuments/uploadDocument', data);
+    }
+
+    deleteVoyageDocument = data => {
+        return axios.delete(this.apiUrl + '/voyageDocuments/delete/' + data);
     }
 };
 

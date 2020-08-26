@@ -12,4 +12,6 @@ router.post('/fillPerformanceDetails', performanceDetailsController.fillPerforma
 
 router.get('/getPerformanceDetails/:chartererName/:vesselName/:cpDate', performanceDetailsController.getPerformanceDetails);
 
+router.delete('/deletePerformanceDetails/:chartererName/:vesselName/:cpDate', performanceDetailsController.deletePerformanceDetails);
+
 module.exports = router;

@@ -5,6 +5,10 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const multer = require('multer');
+const GridFsStorage = require('multer-gridfs-storage');
+const crypto = require('crypto');
+const path = require('path');												   
 const app = express();
 const Products = require('./routes/products');
 const voyageDetails = require('./routes/voyageDetails');
@@ -13,12 +17,13 @@ const userDetails = require('./routes/userDetails');
 const performanceDetails = require('./routes/performanceDetails');
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
-const path = require("path");
+const config = require('./config');
 app.use(helmet());
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/bulkShiping').then((
-    () => {
-        console.log('mongo bd connected')
-    }
+const url = config.mongoURI;
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }).then((
+  () => {
+    console.log('mongo bd connected')
+  }
 )).catch(e => console.log('error'));
 
 app.use(bodyParser.urlencoded({
@@ -50,6 +55,27 @@ app.use('/userDetails', userDetails);
 app.use('/vesselDetails', vesselDetails);
 app.use('/voyageDetails', voyageDetails);
 app.use('/performanceDetails', performanceDetails);
+const storage = new GridFsStorage({
+  url,
+  file: (req, file) => {
+      return new Promise((resolve, reject) => {
+          crypto.randomBytes(16, (err, buf) => {
+              if (err) {
+                  return reject(err);
+              }
+              const filename = buf.toString('hex') + path.extname(file.originalname);
+              const fileInfo = {
+                  filename: filename,
+                  bucketName: 'voyageDocuments'
+              };
+              resolve(fileInfo);
+          });
+      });
+  }
+});
+
+const upload = multer({ storage });
+app.use('/voyageDocuments', voyageDocuments(upload));
 if(process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, 'build')));
     app.get('*', (req, res) => {

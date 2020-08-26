@@ -76,6 +76,7 @@ function UserTable(props) {
           onClick: (event) => {
             props.history.push({
               pathname: '/clientFixtures',
+              companyName: props.history.location.state && props.history.location.state.companyName
             });
           }
         }

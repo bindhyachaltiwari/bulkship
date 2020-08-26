@@ -100,7 +100,8 @@ exports.fillPerformanceDetails = (req, res) => {
                     demmurrageReceivedAct$: data.demmurrageReceivedAct$ || 0,
                     HraWarRiskOrg$: data.HraWarRiskOrg$,
                     HraWarRiskAct$: data.HraWarRiskAct$,
-                    remarks: data.remarks
+                    remarks: data.remarks,
+                    lessonsLearnt: data.lessonsLearnt
                 }
             }
         ).then(e => {
@@ -158,11 +159,25 @@ exports.getPerformanceDetails = (req, res) => {
                     demmurrageReceivedAct$: performance.demmurrageReceivedAct$,
                     HraWarRiskOrg$: performance.HraWarRiskOrg$,
                     HraWarRiskAct$: performance.HraWarRiskAct$,
-                    remarks: performance.remarks
+                    remarks: performance.remarks,
+                    lessonsLearnt: performance.lessonsLearnt
                 }
             });
         })
         .catch((e) => {
             res.json({ status: false });
         });
+}
+
+exports.deletePerformanceDetails = (req, res) => {
+    const { chartererName, vesselName, cpDate } = req.params;
+    PerformanceDetails.findOneAndDelete({ 'chartererName': chartererName, 'vesselName': vesselName, 'cpDate': cpDate }).then(() => {
+        res.json({
+            status: true
+        })
+    }).catch(e => {
+        res.json({
+            status: false
+        });
+    })
 }

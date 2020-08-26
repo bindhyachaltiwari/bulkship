@@ -91,6 +91,8 @@ var performanceDetails = new Schema({
         type: Number
     }, remarks: {
         type: String
+    }, lessonsLearnt: {
+        type: String
     }, totalAct: {
         type: Number
     }, totalOrg: {

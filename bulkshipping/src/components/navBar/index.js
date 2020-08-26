@@ -39,7 +39,10 @@ class NavBar extends React.Component {
         const { saveUsername } = this.props;
         auth0Client.signOut();
         saveUsername('signout');
-        window.location.href = '/'
+        window.location.href = '/';
+        localStorage.removeItem('detail');
+        localStorage.removeItem('loggedIn');
+        localStorage.removeItem('ui');
     };
 
     render() {

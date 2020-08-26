@@ -28,6 +28,7 @@ function UserTable(props) {
       for (let i = 0; i < data.length; i++) {
         let singleClientId = data[i];
         singleClientId.viewDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={singleClientId._id} onClick={propsInside.handleClickState}>View</button>;
+        singleClientId.viewDocuments = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={singleClientId._id} onClick={propsInside.handleViewDocuments}>View</button>;
       }
     }} />),
     Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
@@ -35,6 +36,7 @@ function UserTable(props) {
     Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} onClick={() => {
       for (let i = 0; i < data.length; i++) {
         data[i].viewDetails = 'View Details';
+        data[i].viewDocuments = 'View Documents';
       }
     }} />),
     Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
@@ -102,6 +104,11 @@ function UserTable(props) {
                 const dataDelete = [...data];
                 let resp = await api.deleteVoyageDetails(oldData['_id']);
                 if (resp.data.status) {
+                  await api.deletePerformanceDetails({
+                    chartererName: oldData['chartererName'],
+                    vesselName: oldData['vesselName'],
+                    cpDate: oldData['cpDate']
+                  });
                   let index = dataDelete.indexOf(oldData);
                   dataDelete.splice(index, 1);
                 }

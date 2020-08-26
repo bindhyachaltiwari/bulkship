@@ -8,6 +8,7 @@ import ConfirmationAlert from '../../utils/confirmationAlert';
 import Alert from '../../utils/alert';
 import api from '../../api';
 import PerformanceModule from './PerformanceModule';
+import { connect } from 'react-redux';
 
 class FillPerformanceDetails extends Component {
 
@@ -380,7 +381,7 @@ class FillPerformanceDetails extends Component {
     let { name, value } = e.target;
     const { performanceDetails } = this.state;
     value = value ? value : 0;
-    if (name === 'remarks') {
+    if (name === 'remarks' || name === 'lessonsLearnt') {
       Object.assign(performanceDetails, { [name]: value });
       this.setState({ performanceDetails });
       return;
@@ -678,7 +679,7 @@ class FillPerformanceDetails extends Component {
     const { tcHire, addressCommission, bunkerMDOAct, bunkerIFOOrg, bunkerIFOAct, bunkerMDOOrg, totalAct, totalOrg, freightOrg, freightAct, voyageDays, loadPortDelay,
       dischargePortDelay, intermediatePortDelay, loadPortDAAct$, loadPortDAOrg$, dischargePortDAOrg$, dischargePortDAAct$, bunkerSurveyCostBendsOrg$, bunkerSurveyCostBendsAct$, ILOHCandCVEAct$,
       ILOHCandCVEOrg$, wXRoutingExpenseOrg$, wXRoutingExpenseAct$, despatchPaidAct$, despatchPaidOrg$, PNIInsuranceAct$, PNIInsuranceOrg$, demmurrageReceivedAct$, demmurrageReceivedOrg$, intermediatePortDAAct$, intermediatePortDAOrg$,
-      otherExpenseAct$, otherExpenseOrg$, HraWarRiskAct$, HraWarRiskOrg$, remarks, CargoQuantityAct, CargoQuantityOrg } = performanceDetails;
+      otherExpenseAct$, otherExpenseOrg$, HraWarRiskAct$, HraWarRiskOrg$, remarks, CargoQuantityAct, CargoQuantityOrg, lessonsLearnt } = performanceDetails;
     return (
       <>
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
@@ -1109,6 +1110,20 @@ class FillPerformanceDetails extends Component {
                         <input className='table-performance-input' type='text' name='freightAct' disabled value={freightAct || 0} />
                       </td>
                     </tr>
+                    {this.props.detail.role !== 'Client' ? <tr>
+                      <td className='table-performance-td-th'>
+                        <label>Lessons Learnt</label>
+                      </td>
+                      <td className='table-performance-td-th'>
+                      </td>
+                      <td className='table-performance-td-th'>
+                      </td>
+                      <td className='table-performance-td-th'>
+                      </td>
+                      <td className='table-performance-td-th'>
+                        <input disabled={readOnly} maxLength='25' className='table-performance-input' type='text' name='lessonsLearnt' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={lessonsLearnt || ''} />
+                      </td>
+                    </tr> : ''}
                     <tr>
                       <td className='table-performance-td-th'>
                         <label>Remarks</label>
@@ -1140,4 +1155,12 @@ class FillPerformanceDetails extends Component {
   }
 }
 
-export default FillPerformanceDetails;
+const mapStateToProps = (state, ownProps) => {
+  const { ui, detail } = state;
+  return {
+    ui,
+    detail
+  };
+}
+
+export default connect(mapStateToProps, null)(FillPerformanceDetails);

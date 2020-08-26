@@ -101,8 +101,10 @@ class Client extends Component {
   }
 
   handleViewDocuments = e => {
+    const id = e.target.id;
     this.props.history.push({
-      pathname: '/viewDocuments'
+      pathname: '/voyageDocuments',
+      state: { voyageId: id }
     });
   }
 

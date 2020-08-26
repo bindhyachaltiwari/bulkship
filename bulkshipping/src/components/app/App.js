@@ -1,8 +1,8 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 import { connect } from 'react-redux';
-import Login from '../login';
+// import Login from '../login';
 import NavBar from '../navBar';
 import LeftMenu from '../sub-component/left-menu';
 import Users from '../user';
@@ -17,11 +17,15 @@ import './App.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import vesselDetails from '../vessel/vesselDetails';
 import voyageDetails from '../voyage/voyageDetails';
+import voyageDocuments from '../voyage/voyageDocuments';
 import clientFixtures from '../clientFixtures';
+import Home from '../home';
+import Login from '../home/Login';
+import actionTypes from "./../../store/actions/constants";
 
 class App extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       loggedIn: false
     }
@@ -29,8 +33,16 @@ class App extends React.Component {
 
   render() {
     let { loggedIn } = this.props;
-    const { ui, detail } = this.props;
-    const { activeOverlay } = ui;
+    let { ui, detail } = this.props;
+    let { activeOverlay } = ui;
+
+    if (!loggedIn && localStorage.getItem('loggedIn') == "true") {
+      detail = JSON.parse(localStorage.getItem('detail'));
+      this.props.setLoginDetails(detail);
+      ui = JSON.parse(localStorage.getItem('ui'));
+      activeOverlay = ui.activeOverlay;
+      loggedIn = true;
+    }
     let initialComponent = 'Users'
     if (detail.role === "Manager") {
       const mr = detail.managerRoles;
@@ -56,6 +68,11 @@ class App extends React.Component {
     }
     if (detail.role === 'Client') {
       initialComponent = 'client';
+    }
+    const token = localStorage.getItem('userData');
+    
+    if (loggedIn && window.location.href.indexOf('Login') > -1) {
+      this.props.history.push('/');
     }
 
     return (
@@ -86,6 +103,7 @@ class App extends React.Component {
                     <Route exact path='/performanceGraph' component={PerformanceGraph} />
                     <Route exact path='/vesselDetails' component={vesselDetails} />
                     <Route exact path='/voyageDetails' component={voyageDetails} />
+                    <Route exact path='/voyageDocuments' component={voyageDocuments} />
                   </Switch>
                 </section>
               </div>
@@ -93,7 +111,10 @@ class App extends React.Component {
           </Grid>
         </Grid>
           :
-          <Route exact path='/' component={Login} />
+          <>
+            <Route exact path='/' component={Home} />
+            <Route exact path='/Login' component={Login} />
+          </>
         }
       </div>
     );
@@ -111,7 +132,13 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    setLoginDetails: (data) => {
+      dispatch({
+        type: actionTypes.LOGIN_ASYNC,
+        data
+      });
+    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(App));

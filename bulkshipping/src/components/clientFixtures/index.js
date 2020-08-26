@@ -18,7 +18,11 @@ class clientFixtures extends Component {
   getAllVoyage = async () => {
     const { detail } = this.props;
     const localList = [];
-    const res = await api.getAllVoyage({ 'companyName': detail.companyName });
+    let companyName = detail.companyName;
+    if (detail.role !== 'Client') {
+      companyName = this.props.history.location.companyName;
+    }
+    const res = await api.getAllVoyage({ companyName });
     if (res.data.status) {
       const vesselList = res.data.vesselList;
       for (let i = 0; i < vesselList.length; i++) {

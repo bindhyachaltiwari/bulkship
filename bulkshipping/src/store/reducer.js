@@ -36,6 +36,11 @@ function reducer(state = exampleInitialState, action) {
       if (action.data) {
         loggedIn = action.data === 'signout' ? null : true;
       }
+      if (action.data !== 'signout') {
+        localStorage.setItem('detail', JSON.stringify({...detailObj}));
+        localStorage.setItem('loggedIn', JSON.stringify(loggedIn));
+        localStorage.setItem('ui', JSON.stringify(state.ui));
+      }
       return Object.assign({}, state, {
         detail: { ...detailObj },
         loggedIn,
