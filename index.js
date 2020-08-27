@@ -21,10 +21,10 @@ const jwksRsa = require('jwks-rsa');
 const config = require('./config');
 app.use(helmet());
 const url = config.mongoURI;
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }).then((
-  () => {
-    console.log('mongo bd connected')
-  }
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/bulkShiping').then((
+    () => {
+        console.log('mongo bd connected')
+    }
 )).catch(e => console.log('error'));
 
 app.use(bodyParser.urlencoded({
