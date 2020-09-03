@@ -20,12 +20,30 @@ class voyageDocuments extends Component {
   getVoyageDocuments = async () => {
     const voyageId = this.props.history.location.state.voyageId;
     const res = await api.getVoyageDocuments(voyageId);
+    let documents = [];
     if (res.data.status) {
-      const documents = res.data.voyageDocuments;
-      this.setState({
-        voyageDocuments: documents,
-      });
+      documents = res.data.voyageDocuments;
+      for (let counter = 0; counter < documents.length; counter++) {
+        const fileId = documents[counter].fileId;
+        var options = { 
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric' 
+        };
+        documents[counter].dateTime = new Date(documents[counter].createdAt).toLocaleDateString([], options);
+        documents[counter].download = <button style={{ color: 'blue', textAlign: 'center' }} type='button' onClick={(event) => this.downloadDoc(event, fileId)}>Download</button>;
+      }
     }
+    this.setState({
+      voyageDocuments: documents,
+    });
+  }
+
+  downloadDoc = (e, fileId) => {
+    window.open(api.apiUrl + '/voyageDocuments/download/' + fileId, '_blank');
   }
 
   handleIconDetail = (event, value) => {
@@ -38,10 +56,10 @@ class voyageDocuments extends Component {
   getTabData = () => {
     const columns = [
       { field: "description", title: "Description" },
-      { field: "createdAt", title: "Uploaded On" },
+      { field: "dateTime", title: "Uploaded On" },
       { field: "download", title: "Download Document" },
     ];
-    const { voyageDocuments, description } = this.state;
+    const { voyageDocuments } = this.state;
     const tabs = {
       tabsLabel: [
         {

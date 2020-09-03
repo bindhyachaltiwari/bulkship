@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 import { connect } from 'react-redux';
-// import Login from '../login';
 import NavBar from '../navBar';
 import LeftMenu from '../sub-component/left-menu';
 import Users from '../user';

@@ -104,12 +104,10 @@ function UserTable(props) {
           onRowDelete: (oldData) =>
             new Promise((resolve) => {
               setTimeout(async () => {
-                let dataDelete = [...data];
-                let resp = await api.deleteVoyageDocument(oldData['_id']);
+                let resp = await api.deleteVoyageDocument(oldData['fileId']);
                 if (resp.data.status) {
                   props.getVoyageDocuments();
                 }
-                // setData([...dataDelete]);
                 resolve();
               }, 600);
             }),

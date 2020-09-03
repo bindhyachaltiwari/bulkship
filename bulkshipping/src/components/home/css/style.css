@@ -770,10 +770,9 @@ section {
 
 #about .about-col h2 {
   color: #000;
-  text-align: center;
+  text-align: left;
   font-weight: 700;
   font-size: 20px;
-  padding: 0;
   margin: 40px 0 12px 0;
 }
 
@@ -1007,7 +1006,7 @@ section {
   background-color: #68a4c4;
 }
 
-#contact .php-email-form button[type="submit"] {
+#contact .php-email-form button {
   background: #68a4c4;
   border: 0;
   padding: 10px 30px;
@@ -1016,7 +1015,7 @@ section {
   cursor: pointer;
 }
 
-#contact .php-email-form button[type="submit"]:hover {
+#contact .php-email-form button:hover {
   background: #468db3;
 }
 
@@ -1251,6 +1250,94 @@ section {
 
 #team a:hover {
   color: #18d26e;
+}
+
+#team .php-email-form {
+  box-shadow: 0 0 30px rgba(214, 215, 216, 0.6);
+  padding: 30px;
+}
+
+#team .php-email-form .validate {
+  display: none;
+  color: red;
+  margin: 0 0 15px 0;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+#team .php-email-form .error-message {
+  display: none;
+  color: #fff;
+  background: #ed3c0d;
+  text-align: left;
+  padding: 15px;
+  font-weight: 600;
+}
+
+#team .php-email-form .error-message br + br {
+  margin-top: 25px;
+}
+
+#team .php-email-form .sent-message {
+  display: none;
+  color: #fff;
+  background: #68a4c4;
+  text-align: center;
+  padding: 15px;
+  font-weight: 600;
+}
+
+#team .php-email-form .loading {
+  display: none;
+  background: #fff;
+  text-align: center;
+  padding: 15px;
+}
+
+#team .php-email-form .loading:before {
+  content: "";
+  display: inline-block;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  margin: 0 10px -6px 0;
+  border: 3px solid #68a4c4;
+  border-top-color: #eee;
+  -webkit-animation: animate-loading 1s linear infinite;
+  animation: animate-loading 1s linear infinite;
+}
+
+#team .php-email-form input,
+#team .php-email-form textarea {
+  padding: 10px 14px;
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 15px;
+}
+
+#team .php-email-form input::focus,
+#team .php-email-form textarea::focus {
+  background-color: #68a4c4;
+}
+
+#team .cta-btn {
+  font-family: "Montserrat", sans-serif;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 1px;
+  display: inline-block;
+  padding: 8px 28px;
+  border-radius: 25px;
+  transition: 0.5s;
+  margin-top: 10px;
+  border: 2px solid #fff;
+  color: #fff;
+}
+
+#team .cta-btn:hover {
+  background: #68a4c4;
+  border: 2px solid #68a4c4;
 }
 
 .login-container {

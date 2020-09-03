@@ -24,8 +24,6 @@ exports.uploadDocument = (req, res) => {
     fileId: req.file.id,
   });
 
-  console.log(JSON.stringify(voyageDocument));
-
   voyageDocument.save().then(() => {
       res.json({
         status: true,
@@ -53,15 +51,36 @@ exports.getVoyageDocuments = (req, res) => {
 };
 
 exports.deleteVoyageDocument = (req, res) => {
-  VoyageDocuments.deleteOne({ _id: req.params.id })
-    .then(() => {
-      res.json({
-        status: true,
+  gfs.delete(new mongoose.Types.ObjectId(req.params.fileId), (err, data) => {
+      if (err) {
+          return res.json({ status: false });
+      }
+
+      VoyageDocuments.deleteOne({ fileId: req.params.fileId }).then(() => {
+        res.json({
+          status: true,
+        });
+      })
+      .catch((e) => {
+        res.json({
+          status: false,
+        });
       });
-    })
-    .catch((e) => {
-      res.json({
+  });
+  
+};
+
+exports.download = (req, res) => {
+  gfs.find(new mongoose.Types.ObjectId(req.params.fileId)).toArray((err, files) => {
+    if (!files[0] || files.length === 0) {
+      return res.json({
         status: false,
+        message: "No files available",
       });
-    });
+    }
+
+    res.setHeader('Content-disposition', 'attachment; filename=' + files[0].filename);
+    res.setHeader('Content-type', files[0].contentType);
+    gfs.openDownloadStreamByName(files[0].filename).pipe(res);
+  });
 };

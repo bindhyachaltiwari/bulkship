@@ -4,6 +4,7 @@ import Popover from "@material-ui/core/Popover";
 import { Paper, Grid, Button, TextField } from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import api from '../../../api';
+import Alert from "../../../utils/alert";
 
 const useStyles = makeStyles((theme) => ({
   typography: {
@@ -21,10 +22,32 @@ export default function UploadDocumentsPopup(props) {
   const [description, setDescription] = React.useState("");
   const [uploadedImageUrl, setUploadedImageUrl] = React.useState("");
   const [uploadedImage, setUploadedImage] = React.useState({});
+  const [alertDetails, setAlertDetails] = React.useState({});
+  
+  const handleClose = () => {
+    setDescription('');
+    props.handleClose();
+  }
+
+  const handleCancelAlert = () => {
+    const alert = {
+      openAlert: false,
+      titleMsg: '',
+      descrMsg: ''
+    }
+    setAlertDetails(alert);
+  };
+
 
   const uploadDocument = async () => {
     if (!description.trim() || !uploadedImage.name) {
-      return alert("Caption or file is missing");
+      const alert = {
+        openAlert: true,
+        titleMsg: 'Error !!',
+        descrMsg: 'Caption or file is missing'
+      };
+      setAlertDetails(alert)
+      return;
     }
 
     let formData = new FormData();
@@ -34,7 +57,7 @@ export default function UploadDocumentsPopup(props) {
 
     let response = await api.uploadDocument(formData);
     if (response.data.status) {
-      props.handleClose();
+      handleClose();
       props.getVoyageDocuments();
     }
   };
@@ -44,7 +67,7 @@ export default function UploadDocumentsPopup(props) {
       id={id}
       open={open}
       anchorEl={props.anchorEl}
-      onClose={props.handleClose}
+      onClose={handleClose}
       anchorOrigin={{
         vertical: "bottom",
         horizontal: "center",
@@ -55,6 +78,7 @@ export default function UploadDocumentsPopup(props) {
       }}
     >
       <Paper style={{ margin: "1%" }}>
+        <Alert alertDetails={alertDetails} handleCancelAlert={handleCancelAlert} />
         <Grid style={{ marginLeft: "25%" }} container>
           <Grid item xs={12}>
             <TextField

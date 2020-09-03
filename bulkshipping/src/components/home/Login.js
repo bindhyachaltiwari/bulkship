@@ -12,6 +12,7 @@ import "owl.carousel";
 import "../../../node_modules/animate.css";
 import "./css/style.css";
 import AOS from "aos";
+import api from "../../api";
 
 class Login extends React.Component {
   constructor(props) {
@@ -20,18 +21,31 @@ class Login extends React.Component {
       required: "*Field is required",
       pattern: "*Please enter valid value",
       wrongCredentials: "Invalid credentials. Please try again...",
+      confirmPassword: 'Password doesnot match.',
+      passwordLength: 'Password must be of 8 digits.',
+      passwordStrength: 'Must have at least one uppercase, one lowercase, one number and one special character',
+      userNotFound: 'Username not found.',
+      passwordUpdated: 'Password updated successfully',
+      passwordUpdatedFailed: 'Update password failed. Please try again...'
     };
     this.state = {
-      forgotPassword: false,
+      forgotPassword_1: false,
+      forgotPassword_2: false,
       formData: {
         email: "",
         password: "",
         rememberMeChecked: false,
+        updatePassword: '',
+        confirmPassword: '',
+        checkUsername: '',
       },
       error: {
         emailError: "",
         passwordError: "",
+        updatePasswordError: '',
+        confirmPasswordError: '',
         formError: "",
+        checkUsernameError: ''
       },
     };
   }
@@ -51,10 +65,18 @@ class Login extends React.Component {
     const { formData, error } = this.state;
     if (e.target.name === "email") {
       formData.email = value;
+      formData.checkUsername = value;
       if (validEmail) {
         error.emailError = "";
       } else {
         error.emailError = this.defaultError.pattern;
+      }
+    } else if (e.target.name === "checkUsername") {
+      formData.checkUsername = value;
+      if (validEmail) {
+        error.checkUsernameError = "";
+      } else {
+        error.checkUsernameError = this.defaultError.pattern;
       }
     } else if (e.target.name === "password") {
       formData.password = value;
@@ -63,10 +85,82 @@ class Login extends React.Component {
       }
     } else if (e.target.name === "rememberMe") {
       formData.rememberMeChecked = !formData.rememberMeChecked;
+    } else if (e.target.name === 'updatePassword') {
+      formData.updatePassword = value;
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+      if (value.length < 8) {
+        error.updatePasswordError = this.defaultError.passwordLength;
+      } else if (!regex.test(value)) {
+        error.updatePasswordError = this.defaultError.passwordStrength;
+      } else {
+        error.updatePasswordError = '';
+      }
+    } else if (e.target.name === 'confirmPassword') {
+      formData.confirmPassword = value;
+      if (formData.updatePassword !== value) {
+        error.confirmPasswordError = this.defaultError.confirmPassword;
+      } else {
+        error.confirmPasswordError = '';
+      }
     }
 
     this.setState({ formData, error });
   };
+
+  forgotPasswordHandler = () => {
+    this.setState({ forgotPassword_1: true, forgotPassword_2: false });
+  }
+
+  loginPage = () => {
+    this.setState({ forgotPassword_1: false, forgotPassword_2: false });
+  }
+
+  forgotPasswordBack_1 = () => {
+    const { error } = this.state;
+    error.checkUsernameError = '';
+    this.setState({ forgotPassword_1: false, forgotPassword_2: false, error });
+  }
+
+  forgotPasswordBack_2 = () => {
+    const { error } = this.state;
+    error.confirmPasswordError = '';
+    error.updatePasswordError = '';
+    this.setState({ forgotPassword_2: false, forgotPassword_1: true });
+  }
+
+  checkMailHandler = async () => {
+    const { formData, error } = this.state;
+    const resp = await api.checkUsername(formData.checkUsername);
+    if (resp && resp.data && resp.data.status) {
+      error.checkUsernameError = ''
+      formData.updatePassword = '';
+      formData.confirmPassword = '';
+      error.updatePasswordError = '';
+      error.confirmPasswordError = '';
+      this.setState({ forgotPassword_2: true, forgotPassword_1: true, error });
+    } else {
+      error.checkUsernameError = this.defaultError.userNotFound;
+      this.setState({ error });
+    }
+  }
+
+  updatePassword = async () => {
+    const { formData, error } = this.state;
+    const data = {
+      user: formData.email,
+      confirmPass: formData.confirmPassword
+    }
+    const resp = await api.updatePassword(data);
+    if (resp && resp.data && resp.data.status) {
+      formData.confirmPassword = '';
+      formData.updatePassword = '';
+      error.confirmPasswordError = this.defaultError.passwordUpdated;
+      this.setState({ formData, error });
+    } else {
+      error.emailError = this.defaultError.passwordUpdatedFailed
+      this.setState({ error });
+    }
+  }
 
   checkValidityLoginForm = () => {
     const { formData, error } = this.state;
@@ -78,11 +172,8 @@ class Login extends React.Component {
       error.passwordError = this.defaultError.required;
     }
 
-    const valid =
-      !formData.email || !formData.password || error.emailError ? false : true;
-
+    const valid = !formData.email || !formData.password || error.emailError ? false : true;
     this.setState({ error });
-
     return valid;
   };
 
@@ -125,75 +216,73 @@ class Login extends React.Component {
   };
 
   render() {
-    const { formData, error, forgotPassword } = this.state;
-    const { email, password, rememberMeChecked } = formData;
-    const { emailError, passwordError } = error;
+    const { formData, error, forgotPassword_1, forgotPassword_2 } = this.state;
+    const { email, password, rememberMeChecked, updatePassword, confirmPassword, checkUsername } = formData;
+    const { emailError, passwordError, updatePasswordError, confirmPasswordError, checkUsernameError } = error;
     const { loggedIn } = this.props;
 
     return (
       <>
         <Header />
         <br />
+
         <main id="main" className="login-container">
-          <form
-            name="loginForm"
-            role="form"
-            onSubmit={this.onSubmitHandler}
-            method="post"
-            encType="multipart/form-data"
-          >
-            <h3>Sign In</h3>
-
-            <div className="form-group">
-              <label>Email address</label>
-              <input
-                type="email"
-                className="form-control"
-                placeholder="Enter email"
-                name="email"
-                value={email}
-                tabIndex="1"
-                onChange={this.onInputHandler}
-              />
-              {emailError && <p className="error">{emailError}</p>}
-            </div>
-
-            <div className="form-group">
-              <label>Password</label>
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Enter password"
-                name="password"
-                value={password}
-                tabIndex="2"
-                onChange={this.onInputHandler}
-              />
-              {passwordError && <p className="error">{passwordError}</p>}
-            </div>
-
-            <div className="form-group">
-              <div className="custom-control custom-checkbox">
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-				  id="customCheck1"
-				  name='rememberMe' tabIndex='3' checked={rememberMeChecked} onChange={this.onInputHandler}
-                />
-                <label className="custom-control-label" htmlFor="customCheck1">
-                  Remember me
-                </label>
+          {!forgotPassword_1 && !forgotPassword_2 ?
+            <form name="loginForm" role="form" onSubmit={this.onSubmitHandler} method="post" encType="multipart/form-data"            >
+              <h3>Sign In</h3>
+              <div className="form-group">
+                <label>Email address</label>
+                <input type="email" className="form-control" placeholder="Enter email" name="email" value={email} tabIndex="1" onChange={this.onInputHandler} />
+                {emailError && <p className="error">{emailError}</p>}
               </div>
-            </div>
+              <div className="form-group">
+                <label>Password</label>
+                <input type="password" className="form-control" placeholder="Enter password" name="password" value={password} tabIndex="2" onChange={this.onInputHandler} />
+                {passwordError && <p className="error">{passwordError}</p>}
+              </div>
+              <div className="form-group">
+                <div className="custom-control custom-checkbox">
+                  <input type="checkbox" className="custom-control-input" id="customCheck1" name='rememberMe' tabIndex='3' checked={rememberMeChecked} onChange={this.onInputHandler} />
+                  <label className="custom-control-label" htmlFor="customCheck1"> Remember me </label>
+                </div>
+              </div>
 
-            <button type="submit" className="btn btn-primary btn-block">
-              Submit
-            </button>
-            <p className="forgot-password text-right">
-              <a href="#">Forgot password?</a>
-            </p>
-			{loggedIn === false && <p className='error'>{this.defaultError.wrongCredentials}</p>}
-          </form>
+              <button type="submit" disabled={emailError || passwordError || !password.length || !email.length} className="btn btn-primary btn-block"> Submit </button>
+              <p className="forgot-password text-right" onClick={this.forgotPasswordHandler}>
+                <a href="#">Forgot password?</a>
+              </p>
+              {loggedIn === false && <p className='error'>{this.defaultError.wrongCredentials}</p>}
+            </form> : <></>}
+
+          {forgotPassword_1 && !forgotPassword_2 ?
+            <form name="checkMailForm" role="form" method="post" encType="multipart/form-data"            >
+              <h3>Forgot Password ?</h3>
+              <div className="form-group">
+                <label>Email address</label>
+                <input type="email" className="form-control" placeholder="Enter email" name="checkUsername" value={checkUsername} tabIndex="1" onChange={this.onInputHandler} />
+                {checkUsernameError && <p className="error">{checkUsernameError}</p>}
+              </div>
+              <button type="button" disabled={checkUsernameError || !checkUsername.length} style={{ width: '49.5%' }} className="btn btn-primary" onClick={this.checkMailHandler}> Check Username </button>
+              <button type="button" className="btn btn-primary" style={{ width: '49.5%', marginLeft: '2px' }} onClick={this.forgotPasswordBack_1}> Back </button>
+            </form> : <></>}
+          {forgotPassword_1 && forgotPassword_2 ?
+            <form name="updatePasswordForm" role="form" method="post" encType="multipart/form-data"            >
+              <h3>Change Password</h3>
+              <div className="form-group">
+                <label>New password</label>
+                <input type="password" className="form-control" placeholder="Enter passsword" name="updatePassword" value={updatePassword} tabIndex="1" onChange={this.onInputHandler} />
+                {updatePasswordError && <p className="error">{updatePasswordError}</p>}
+              </div>
+              <div className="form-group">
+                <label>Confirm password</label>
+                <input type="password" className="form-control" placeholder="Enter confirm password" name="confirmPassword" value={confirmPassword} tabIndex="1" onChange={this.onInputHandler} />
+                {confirmPasswordError && <p className="error">{confirmPasswordError}</p>}
+              </div>
+              <button type="button" className="btn btn-primary" style={{ width: '49.5%', marginBottom: '3px' }} onClick={this.forgotPasswordBack_2}> Back </button>
+              <button type="button" className="btn btn-primary" style={{ width: '49.5%', marginLeft: '2px', marginBottom: '3px' }} onClick={this.loginPage}> Back to Login </button>
+              <button type="button" disabled={updatePasswordError || confirmPasswordError || !updatePassword.length || !confirmPassword.length} className="btn btn-primary btn-block" onClick={this.updatePassword}> Submit </button>
+
+            </form> : <></>}
         </main>
         <br />
         <Footer />

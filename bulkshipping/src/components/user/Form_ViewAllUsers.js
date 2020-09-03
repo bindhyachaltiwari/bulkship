@@ -84,7 +84,7 @@ class ViewAllUsers extends Component {
     return (
       <form>
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
-        <UserTable title={'View All Users'} data={clientList} columns={columns} onRowClick={this.onRowClick} originalColumns={this.state.originalColumns} originalArray={this.originalObjectArray} />
+        <UserTable title={'View All Users'} data={clientList} columns={columns} onRowClick={this.onRowClick} originalColumns={this.state.originalColumns} originalArray={this.originalObjectArray} handleClickState={this.handleClickState}/>
       </form>
     );
   }

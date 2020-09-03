@@ -152,6 +152,21 @@ class API {
     deleteVoyageDocument = data => {
         return axios.delete(this.apiUrl + '/voyageDocuments/delete/' + data);
     }
+
+    downloadDocument = data => {
+        return axios.get(this.apiUrl + '/voyageDocuments/download/' + data);
+    }
+
+    contactUs = data => {
+        return axios.post(this.apiUrl + '/contactUs/', {
+            headers: { 'Content-Type': 'application/json' },
+            data,
+        });
+    }
+
+    mailResume = data => {
+        return axios.post(this.apiUrl + '/career/', data);
+    }
 };
 
 const api = new API();

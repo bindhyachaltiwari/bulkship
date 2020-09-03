@@ -24,7 +24,7 @@ class Home extends React.Component {
     AOS.init({
       duration: 100,
     });
-	initAnimation();
+    initAnimation();
   }
 
   render() {
@@ -35,7 +35,7 @@ class Home extends React.Component {
         <main id="main">
           <AboutUs />
           <Services />
-		  <Career />
+          <Career />
           <ContactUs />
         </main>
         <Footer />

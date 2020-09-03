@@ -32,6 +32,7 @@ function UserTable(props) {
         }
         if (singleClientId.role === 'Client' && singleClientId.clientDisplay && singleClientId.clientDisplay.length) {
           singleClientId.clientDisplay = <select>{singleClientId.clientDisplay.map((e) => <option>{e}</option>)}</select>
+          singleClientId.viewDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={singleClientId.id} onClick={propsInside.handleClickState}>View</button>;
         }
       }
     }} />),
@@ -45,6 +46,7 @@ function UserTable(props) {
         }
         if (singleClientId.role === 'Client' && singleClientId.clientDisplay) {
           singleClientId.clientDisplay = propsInside.originalArray[i].clientDisplay;
+          singleClientId.viewDetails = 'View Details';
         }
       }
     }} />),

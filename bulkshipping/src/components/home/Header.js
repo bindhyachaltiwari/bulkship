@@ -6,12 +6,12 @@ const Header = () => {
     <header id="header" className={`fixed-top ${window.location.href.indexOf('Login') === -1 ? 'header-transparent' : ''}`}>
       <div className="container">
         <div className="logo float-left">
-          {/* <h1 className="text-light">
+          <h1 className="text-light">
             <a href="/">
               <span>Bulkcom Shipping</span>
             </a>
-          </h1> */}
-          <a href="/"><img src={Logo} alt="" className="img-fluid" /></a>
+          </h1>
+          {/* <a href="/"><img src={Logo} alt="" className="img-fluid" /></a> */}
         </div>
 
         <nav className="nav-menu float-right d-none d-lg-block">
@@ -44,7 +44,7 @@ const Header = () => {
                   </g>
                 </g>
               </svg>
-              <a href='/Login' target="_blank">Login</a>
+              <a href='/Login' target="_blank">E-Ops Login</a>
             </li>
           </ul>
         </nav>

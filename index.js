@@ -16,6 +16,8 @@ const vesselDetails = require('./routes/vesselDetails');
 const userDetails = require('./routes/userDetails');
 const performanceDetails = require('./routes/performanceDetails');
 const voyageDocuments = require('./routes/voyageDocuments');
+const contactUs = require('./routes/contactUs');
+const career = require('./routes/career');										
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 const config = require('./config');
@@ -56,6 +58,8 @@ app.use('/userDetails', userDetails);
 app.use('/vesselDetails', vesselDetails);
 app.use('/voyageDetails', voyageDetails);
 app.use('/performanceDetails', performanceDetails);
+app.use('/contactUs', contactUs);
+app.use('/career', career);							 
 const storage = new GridFsStorage({
   url,
   file: (req, file) => {

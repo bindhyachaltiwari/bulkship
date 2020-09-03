@@ -15,7 +15,7 @@ exports.insertUserDetails = (req, res) => {
 }
 
 exports.checkUsername = (req, res) => {
-    userDetails.findOne({ userName: req.body.data.username }, (err, user) => {
+    userDetails.findOne({ userName: req.body.data }, (err, user) => {
         if (!user) {
             res.json({ status: false, err: 'Username not present' });
             return;
@@ -29,15 +29,17 @@ exports.checkUsername = (req, res) => {
 }
 
 exports.updatePassword = (req, res) => {
-    userDetails.findOne({ userName: req.body.data.user }, (err, user) => {
+    userDetails.findOne({ userName: req.body.data.user }, async (err, user) => {
         if (!user) {
             res.json({ status: false, err: 'Username not found' });
             return;
         }
 
+        const p = await bcrypt.hash(req.body.data.confirmPass, 12)
+
         userDetails.update(
             { userName: req.body.data.user },
-            { $set: { 'password': req.body.data.confirmPass } }
+            { $set: { 'password': p } }
         ).then(e => {
             res.json({ status: true });
             return;
