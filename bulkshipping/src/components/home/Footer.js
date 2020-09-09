@@ -14,14 +14,15 @@ const Footer = () => {
               <h4>Useful Links</h4>
               <ul>
                 <li>
-                  <i className="ion-ios-arrow-right"></i> <a href="/#intro">Home</a>
+                  <i className="ion-ios-arrow-right"></i>
+                  <a href="/#intro">Home</a>
                 </li>
                 <li>
-                  <i className="ion-ios-arrow-right"></i>{" "}
-                  <a href="/#about">About us</a>
+                  <i className="ion-ios-arrow-right"></i>
+                  <a href="/#about">About Us</a>
                 </li>
                 <li>
-                  <i className="ion-ios-arrow-right"></i>{" "}
+                  <i className="ion-ios-arrow-right"></i>
                   <a href="/#services">Services</a>
                 </li>
                 <li>
@@ -50,7 +51,7 @@ const Footer = () => {
                     <br />
               </p>
 
-              <div className="social-links">
+              {/* <div className="social-links">
                 <a href="#" className="twitter">
                   <i className="fa fa-twitter"></i>
                 </a>
@@ -60,7 +61,7 @@ const Footer = () => {
                 <a href="#" className="linkedin">
                   <i className="fa fa-linkedin"></i>
                 </a>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

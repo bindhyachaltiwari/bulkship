@@ -11,7 +11,7 @@ export default function Alert(props) {
   return (
     <div>
       <Dialog
-        open={props.alertDetails.openAlert}
+        open={props.alertDetails.openAlert || false}
         onClose={props.handleCancelAlert}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"

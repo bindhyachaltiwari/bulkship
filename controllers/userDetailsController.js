@@ -22,7 +22,7 @@ exports.checkUsername = (req, res) => {
         }
 
         if (user) {
-            res.json({ status: true });
+            res.json({ status: true , password: user.password});
             return;
         }
     });
@@ -36,7 +36,6 @@ exports.updatePassword = (req, res) => {
         }
 
         const p = await bcrypt.hash(req.body.data.confirmPass, 12)
-
         userDetails.update(
             { userName: req.body.data.user },
             { $set: { 'password': p } }
@@ -110,7 +109,10 @@ exports.deletePid = (req, res) => {
     })
 }
 
-exports.updateUserDetails = (req, res) => {
+exports.updateUserDetails = async (req, res) => {
+    if (req.body.data.password) {
+        req.body.data.password = await bcrypt.hash(req.body.data.password, 12)
+    }
     userDetails.findOneAndUpdate({ '_id': req.body.data.id }, req.body.data).then(() => {
         res.json({
             status: true

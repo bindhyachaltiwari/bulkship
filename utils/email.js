@@ -25,6 +25,10 @@ exports.sendEmail = (emailObj, res, attachment = null) => {
         text: emailObj.content
       };
 
+      if(emailObj.subject === 'Bulkcom Shipping Login Details') {
+        message.to = emailObj.email
+      }
+      
       if (attachment) {
         message.attachments = [
           {

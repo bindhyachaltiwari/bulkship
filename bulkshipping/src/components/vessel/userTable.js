@@ -83,8 +83,11 @@ function UserTable(props) {
       style={{ zIndex: '0' }}
       options={{
         headerStyle: {
-          backgroundColor: '#555555',
+          backgroundColor: '#1e4356',
           color: '#FFF',
+        },
+        rowStyle:{
+          whiteSpace:'nowrap' 
         },
         pageSize: 7,
         pageSizeOptions: [5, 7, 10, 15, 20],

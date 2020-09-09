@@ -27,11 +27,15 @@ function UserTable(props) {
     Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} onClick={() => {
       for (let i = 0; i < data.length; i++) {
         let singleClientId = data[i]
-        if (singleClientId.role === 'Manager' && singleClientId.managerRoles && singleClientId.managerRoles.length) {
-          singleClientId.managerRoles = <select>{singleClientId.managerRoles.map((e) => <option>{e}</option>)}</select>
+        if ((singleClientId.role === 'Manager' && singleClientId.managerRoles && singleClientId.managerRoles.length) ||
+          (singleClientId.role === 'Client' && singleClientId.clientDisplay && singleClientId.clientDisplay.length)) {
+          if (singleClientId.role === 'Manager') {
+            singleClientId.displayRoles = <select>{singleClientId.managerRoles.map((e) => <option>{e}</option>)}</select>
+          } else if (singleClientId.role === 'Client') {
+            singleClientId.displayRoles = <select>{singleClientId.clientDisplay.map((e) => <option>{e}</option>)}</select>
+          }
         }
-        if (singleClientId.role === 'Client' && singleClientId.clientDisplay && singleClientId.clientDisplay.length) {
-          singleClientId.clientDisplay = <select>{singleClientId.clientDisplay.map((e) => <option>{e}</option>)}</select>
+        if (singleClientId.role === 'Client') {
           singleClientId.viewDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={singleClientId.id} onClick={propsInside.handleClickState}>View</button>;
         }
       }
@@ -41,11 +45,11 @@ function UserTable(props) {
     Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} onClick={() => {
       for (let i = 0; i < data.length; i++) {
         let singleClientId = data[i]
-        if (singleClientId.role === 'Manager' && singleClientId.managerRoles) {
-          singleClientId.managerRoles = propsInside.originalArray[i].managerRoles;
-        }
-        if (singleClientId.role === 'Client' && singleClientId.clientDisplay) {
-          singleClientId.clientDisplay = propsInside.originalArray[i].clientDisplay;
+        if ((singleClientId.role === 'Manager' && singleClientId.managerRoles) ||
+        (singleClientId.role === 'Client' && singleClientId.clientDisplay)) {
+            singleClientId.displayRoles = 'Roles';
+          }
+        if (singleClientId.role === 'Client') {
           singleClientId.viewDetails = 'View Details';
         }
       }
@@ -95,12 +99,15 @@ function UserTable(props) {
       style={{ zIndex: '0' }}
       options={{
         headerStyle: {
-          backgroundColor: '#555555',
+          backgroundColor: '#1e4356',
           color: '#FFF',
         },
         pageSize: 7,
         pageSizeOptions: [5, 7, 10, 15, 20],
         exportButton: true,
+        rowStyle: {
+          whiteSpace: 'nowrap'
+        }
       }}
       editable=
       {showDelete() ?

@@ -319,7 +319,6 @@ class AddNewUser extends Component {
                 id='password'
                 label='Password *'
                 type='password'
-                disabled={isEditPage}
                 onChange={this.handleChange}
                 value={password || ''}
                 autoComplete='off'

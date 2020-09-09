@@ -13,6 +13,7 @@ class Client extends Component {
     this.getAllVoyage();
     this.clientDisplay = props.detail.clientDisplay;
     this.toSendVesselList = [];
+    this.columns = [];
     this.leftValue = 0;
     this.state = {
       vesselList: [],
@@ -34,6 +35,9 @@ class Client extends Component {
       voyage = performance = documents = isAdminPage = false;
       comp = detail.companyName;
     }
+    this.columns = [{ field: 'vesselNameEdited', title: 'Vessel Name', editable: 'never' },
+    { field: 'cpDate', title: 'CP Date', editable: 'never' },
+    ];
     await api.getAllVoyage({ 'companyName': comp }).then(res => {
       if (res.data.status) {
         this.toSendVesselList = JSON.parse(JSON.stringify(res.data.vesselList));
@@ -46,12 +50,21 @@ class Client extends Component {
           for (var i = 0; i < this.toSendVesselList.length; i++) {
             this.toSendVesselList[i].vesselNameEdited = <span style={{ color: 'blue', textAlign: 'center' }} onClick={this.handleClickState} onMouseEnter={this.handleHoverState} onMouseLeave={this.handleHoverStateLeave} id={i}>{this.toSendVesselList[i].vesselName}</span>
             if (documents) {
+              if (!this.columns.some(s => s.field === 'viewDocuments')) {
+                this.columns.push({ field: 'viewDocuments', title: 'View Documents', editable: 'never' });
+              }
               this.toSendVesselList[i].viewDocuments = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={this.toSendVesselList[i]._id} onClick={this.handleViewDocuments}>View</button>;
             }
             if (performance) {
+              if (!this.columns.some(s => s.field === 'vesselPerformance')) {
+                this.columns.push({ field: 'vesselPerformance', title: 'View Performance', editable: 'never' });
+              }
               this.toSendVesselList[i].vesselPerformance = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={this.toSendVesselList[i]._id} onClick={this.handleVesselPerformance}>View</button>;
             }
             if (voyage) {
+              if (!this.columns.some(s => s.field === 'voyageDetails')) {
+                this.columns.push({ field: 'voyageDetails', title: 'View Voyage', editable: 'never' });
+              }
               this.toSendVesselList[i].voyageDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={this.toSendVesselList[i]._id} onClick={this.handleVoyageDetails}>View</button>;;
             }
           }
@@ -165,12 +178,6 @@ class Client extends Component {
   }
 
   getTemplate = () => {
-    const columns = [{ field: 'vesselNameEdited', title: 'Vessel Name', editable: 'never' },
-    { field: 'cpDate', title: 'CP Date', editable: 'never' },
-    { field: 'voyageDetails', title: 'View Voyage', editable: 'never' },
-    { field: 'vesselPerformance', title: 'View Performance', editable: 'never' },
-    { field: 'viewDocuments', title: 'View Documents', editable: 'never' }
-    ];
     const { vesselList, showDetails, hoveredVessel } = this.state;
     const ourCount = {};
     let previousYearDate = new Date();
@@ -189,21 +196,21 @@ class Client extends Component {
 
     return <div className="float-container">
       <div className="float-child1">
-        <UserTable title={'DASHBOARD'} data={this.toSendVesselList} columns={columns} history={this.props.history} />
+        <UserTable title={'DASHBOARD'} data={this.toSendVesselList} columns={this.columns} history={this.props.history} />
         {showDetails ?
           (<div className='absolute-position' style={{ top: this.leftValue }}>
             {hoveredVessel.length ?
               hoveredVessel.map((item, i) =>
                 <table className='tableListTable' key={i}>
                   <tbody key='list'>
-                    <tr><td className='tdList'>Vessel Name :</td><td className='tdList'>{item.vesselName}</td></tr>
-                    <tr><td className='tdList'>DWT : </td><td className='tdList'>{item.DWT}</td></tr>
-                    <tr><td className='tdList'>Built Year :</td><td className='tdList'>{item.built}</td></tr>
-                    <tr><td className='tdList'>Draft :</td><td className='tdList'>{item.draft}</td></tr>
-                    <tr><td className='tdList'>GRT :</td><td className='tdList'>{item.GRT}</td></tr>
-                    <tr><td className='tdList'>NRT :</td><td className='tdList'>{item.NRT}</td></tr>
-                    <tr><td className='tdList'>Cranes :</td><td className='tdList'>{item.cranes}</td></tr>
-                    <tr><td className='tdList'>Grabs :</td><td className='tdList'>{item.grabs}</td></tr>
+                    <tr><td className='tdList'>Vessel Name</td><td className='tdList'>{item.vesselName}</td></tr>
+                    <tr><td className='tdList'>DWT </td><td className='tdList'>{item.DWT}</td></tr>
+                    <tr><td className='tdList'>Built Year</td><td className='tdList'>{item.built}</td></tr>
+                    <tr><td className='tdList'>Draft</td><td className='tdList'>{item.draft}</td></tr>
+                    <tr><td className='tdList'>GRT</td><td className='tdList'>{item.GRT}</td></tr>
+                    <tr><td className='tdList'>NRT</td><td className='tdList'>{item.NRT}</td></tr>
+                    <tr><td className='tdList'>Cranes</td><td className='tdList'>{item.cranes}</td></tr>
+                    <tr><td className='tdList'>Grabs</td><td className='tdList'>{item.grabs}</td></tr>
                   </tbody>
                 </table>
               ) : <p key='dwt'>Vessel details have been deleted. Please contact admin for more details...</p>}

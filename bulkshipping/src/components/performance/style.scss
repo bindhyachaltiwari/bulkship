@@ -19,18 +19,18 @@ button.MuiButtonBase-root:focus {
 
 .btn-submit.MuiButton-contained{
     margin-top: 3%;
-    background-color:#555555 ;
+    background-color:#1e4356 ;
     &.white-color{
         color:white;
         &:hover{
-            background-color:#555555 ;
+            background-color:#1e4356 ;
             color:white;
             }
         }
         &.grey-color{
         color:#000000;
         &:hover{
-            background-color:#555555 ;
+            background-color:#1e4356 ;
             color:#9f9f9f;
         }
     }
@@ -39,18 +39,18 @@ button.MuiButtonBase-root:focus {
 .btn-save.MuiButton-contained{
     margin-top: 3%;
     margin-bottom: 2%;
-    background-color:#555555 ;
+    background-color:#1e4356 ;
     &.white-color{
         color:white;
         &:hover{
-            background-color:#555555 ;
+            background-color:#1e4356 ;
             color:white;
             }
         }
         &.grey-color{
         color:#9f9f9f;
         &:hover{
-            background-color:#555555 ;
+            background-color:#1e4356 ;
             color:#9f9f9f;
         }
     }
@@ -58,7 +58,7 @@ button.MuiButtonBase-root:focus {
 
 .btn-edit.MuiIconButton-root{
     float: right;
-    color:#555555;
+    color:#1e4356;
     flex: 0 0 auto;
     padding: 12px;
     overflow: visible;
@@ -74,7 +74,7 @@ button.MuiButtonBase-root:focus {
 }
 
 .labelColor{
-    color: #555555;
+    color: #1e4356;
 }
 
 .field-grid.MuiGrid-item{
@@ -84,7 +84,7 @@ button.MuiButtonBase-root:focus {
 
 .my-profile {
     .MuiTabs-indicator {
-        background-color: #555555;
+        background-color: #1e4356;
     }
 }
 

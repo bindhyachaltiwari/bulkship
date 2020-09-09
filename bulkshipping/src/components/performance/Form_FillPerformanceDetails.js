@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Paper, Grid, Button, InputLabel, Select } from '@material-ui/core';
+import { Paper, Grid, Button, InputLabel, Select, TextareaAutosize } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import IconButton from '@material-ui/core/IconButton';
 import InsertChartTwoToneIcon from '@material-ui/icons/InsertChartTwoTone';
@@ -1114,28 +1114,16 @@ class FillPerformanceDetails extends Component {
                       <td className='table-performance-td-th'>
                         <label>Lessons Learnt</label>
                       </td>
-                      <td className='table-performance-td-th'>
-                      </td>
-                      <td className='table-performance-td-th'>
-                      </td>
-                      <td className='table-performance-td-th'>
-                      </td>
-                      <td className='table-performance-td-th'>
-                        <input disabled={readOnly} maxLength='25' className='table-performance-input' type='text' name='lessonsLearnt' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={lessonsLearnt || ''} />
+                      <td className='table-performance-td-th' colspan="4">
+                        <TextareaAutosize aria-label="minimum height" rowsMin={3} disabled={readOnly} className='table-performance-input' type='text' name='lessonsLearnt' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={lessonsLearnt || ''} />
                       </td>
                     </tr> : ''}
                     <tr>
                       <td className='table-performance-td-th'>
                         <label>Remarks</label>
                       </td>
-                      <td className='table-performance-td-th'>
-                      </td>
-                      <td className='table-performance-td-th'>
-                      </td>
-                      <td className='table-performance-td-th'>
-                      </td>
-                      <td className='table-performance-td-th'>
-                        <input disabled={readOnly} maxLength='25' className='table-performance-input' type='text' name='remarks' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={remarks || ''} />
+                      <td className='table-performance-td-th' colspan="4">
+                        <TextareaAutosize aria-label="minimum height" rowsMin={3} disabled={readOnly} className='table-performance-input' type='text' name='remarks' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={remarks || ''} />
                       </td>
                     </tr>
                   </tbody>

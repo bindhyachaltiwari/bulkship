@@ -770,10 +770,11 @@ section {
 
 #about .about-col h2 {
   color: #000;
-  text-align: left;
+  text-align: center;
   font-weight: 700;
   font-size: 20px;
   margin: 40px 0 12px 0;
+  padding: 0;
 }
 
 #about .about-col h2 a {
@@ -790,6 +791,7 @@ section {
   color: #333;
   margin-bottom: 0;
   padding: 0 20px 20px 20px;
+  text-align: left;
 }
 
 /* Services Section
@@ -1253,8 +1255,8 @@ section {
 }
 
 #team .php-email-form {
-  box-shadow: 0 0 30px rgba(214, 215, 216, 0.6);
   padding: 30px;
+  
 }
 
 #team .php-email-form .validate {

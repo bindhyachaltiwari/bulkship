@@ -80,7 +80,7 @@ const Career = () => {
 
   return (
     <section id="team">
-      <div class="container text-center" data-aos="zoom-in">
+      <div className="container text-center" data-aos="zoom-in">
         <Alert alertDetails={alertDetails} handleCancelAlert={handleCancelAlert} />
         <h3>JOIN US</h3>
         <p>Bulkcom Shipping is always looking for candidates who are passionate about ship brokering.</p>
@@ -97,8 +97,8 @@ const Career = () => {
             className="php-email-form"
             encType='multipart/form-data'
           >
-            <div className="form-row">
-              <div className="form-group col-md-6">
+            <div className="form-row" style={{justifyContent: 'center'}}>
+              <div className="form-group col-md-4">
                 <input
                   type="text"
                   name="name"
@@ -111,7 +111,7 @@ const Career = () => {
                   onChange={(event) => setName(event.target.value)}
                 />
               </div>
-              <div className="form-group col-md-6">
+              <div className="form-group col-md-4">
                 <input
                   type="email"
                   className="form-control"
@@ -125,7 +125,7 @@ const Career = () => {
                 />
               </div>
             </div>
-            <div className="form-group">
+            <div className="form-group" style={{justifyContent: 'center'}}>
             <input
               type="file"
               className="Upload__Input"

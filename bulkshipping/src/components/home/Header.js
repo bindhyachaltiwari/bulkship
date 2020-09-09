@@ -44,7 +44,7 @@ const Header = () => {
                   </g>
                 </g>
               </svg>
-              <a href='/Login' target="_blank">E-Ops Login</a>
+              <a href='/Login' target="_blank">Login</a>
             </li>
           </ul>
         </nav>

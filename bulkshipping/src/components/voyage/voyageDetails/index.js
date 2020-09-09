@@ -41,32 +41,32 @@ class voyageDetails extends Component {
                             <tbody key='list'>
                                 {this.props.detail.role === 'Client' ?
                                     <>
-                                        <tr><th className='tdList'>Field</th><th className='tdList'>Value</th></tr>
+                                        <tr><th className='tdList' style={{backgroundColor:'#1e4356', color:'white'}}>Field</th><th className='tdList'>Value</th></tr>
                                         {item.fieldVisibility.map((field, i) =>
-                                            <tr><td className='tdList'>{field} :</td><td className='tdList'>{item[this.toCamelCase(field)]}</td></tr>
+                                            <tr><td className='tdList'>{field}</td><td className='tdList'>{item[this.toCamelCase(field)]}</td></tr>
                                         )}
                                     </> :
                                     <>
-                                        <tr><th className='tdList'>Field</th><th className='tdList'>Value</th></tr>
-                                        <tr><td className='tdList'>Vessel Name :</td><td className='tdList'>{item.vesselName}</td></tr>
-                                        <tr><td className='tdList'>CP Date :</td><td className='tdList'>{item.cpDate}</td></tr>
-                                        <tr><td className='tdList'>Vessel Size :</td><td className='tdList'>{item.vesselSize}</td></tr>
-                                        <tr><td className='tdList'>Load Port :</td><td className='tdList'>{item.loadPort}</td></tr>
-                                        <tr><td className='tdList'>Discharge Port : </td><td className='tdList'>{item.dischargePort}</td></tr>
-                                        <tr><td className='tdList'>Cargo :</td><td className='tdList'>{item.cargo}</td></tr>
-                                        <tr><td className='tdList'>Cargo Intake :</td><td className='tdList'>{item.cargoIntake}</td></tr>
-                                        <tr><td className='tdList'>Owner Name :</td><td className='tdList'>{item.ownerName}</td></tr>
-                                        <tr><td className='tdList'>Shipper :</td><td className='tdList'>{item.shipper}</td></tr>
-                                        <tr><td className='tdList'>Load Port Agent :</td><td className='tdList'>{item.loadPortAgent}</td></tr>
-                                        <tr><td className='tdList'>Discharge Port Agent :</td><td className='tdList'>{item.dischargePortAgent}</td></tr>
-                                        <tr><td className='tdList'>Receiver :</td><td className='tdList'>{item.receiver}</td></tr>
-                                        <tr><td className='tdList'>On Hire Surveyor :</td><td className='tdList'>{item.onHireSurveyor}</td></tr>
-                                        <tr><td className='tdList'>Off Hire Surveyor :</td><td className='tdList'>{item.offHireSurveyor}</td></tr>
-                                        <tr><td className='tdList'>Bunker Supplier :</td><td className='tdList'>{item.bunkerSupplier}</td></tr>
-                                        <tr><td className='tdList'>Bunker Trader :</td><td className='tdList'>{item.bunkerTrader}</td></tr>
-                                        <tr><td className='tdList'>PNI Insurance :</td><td className='tdList'>{item.pniInsurance}</td></tr>
-                                        <tr><td className='tdList'>Weather Routing Company :</td><td className='tdList'>{item.weatherRoutingCompany}</td></tr>
-                                        <tr><td className='tdList'>Field Visibility :</td><td className='tdList'><select>{item.fieldVisibility.map((e) => <option key={e}>{e}</option>)}</select></td></tr>
+                                        <tr style={{backgroundColor:'#1e4356', color:'white'}}><th className='tdList'>Field</th><th className='tdList'>Value</th></tr>
+                                        <tr><td className='tdList'>Vessel Name</td><td className='tdList'>{item.vesselName}</td></tr>
+                                        <tr><td className='tdList'>CP Date</td><td className='tdList'>{item.cpDate}</td></tr>
+                                        <tr><td className='tdList'>Vessel Size</td><td className='tdList'>{item.vesselSize}</td></tr>
+                                        <tr><td className='tdList'>Load Port</td><td className='tdList'>{item.loadPort}</td></tr>
+                                        <tr><td className='tdList'>Discharge Port </td><td className='tdList'>{item.dischargePort}</td></tr>
+                                        <tr><td className='tdList'>Cargo</td><td className='tdList'>{item.cargo}</td></tr>
+                                        <tr><td className='tdList'>Cargo Intake</td><td className='tdList'>{item.cargoIntake}</td></tr>
+                                        <tr><td className='tdList'>Owner Name</td><td className='tdList'>{item.ownerName}</td></tr>
+                                        <tr><td className='tdList'>Shipper</td><td className='tdList'>{item.shipper}</td></tr>
+                                        <tr><td className='tdList'>Load Port Agent</td><td className='tdList'>{item.loadPortAgent}</td></tr>
+                                        <tr><td className='tdList'>Discharge Port Agent</td><td className='tdList'>{item.dischargePortAgent}</td></tr>
+                                        <tr><td className='tdList'>Receiver</td><td className='tdList'>{item.receiver}</td></tr>
+                                        <tr><td className='tdList'>On Hire Surveyor</td><td className='tdList'>{item.onHireSurveyor}</td></tr>
+                                        <tr><td className='tdList'>Off Hire Surveyor</td><td className='tdList'>{item.offHireSurveyor}</td></tr>
+                                        <tr><td className='tdList'>Bunker Supplier</td><td className='tdList'>{item.bunkerSupplier}</td></tr>
+                                        <tr><td className='tdList'>Bunker Trader</td><td className='tdList'>{item.bunkerTrader}</td></tr>
+                                        <tr><td className='tdList'>PNI Insurance</td><td className='tdList'>{item.pniInsurance}</td></tr>
+                                        <tr><td className='tdList'>Weather Routing Company</td><td className='tdList'>{item.weatherRoutingCompany}</td></tr>
+                                        <tr><td className='tdList'>Field Visibility</td><td className='tdList'><select>{item.fieldVisibility.map((e) => <option key={e}>{e}</option>)}</select></td></tr>
                                     </>}
                             </tbody>
                         </table>
