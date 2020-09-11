@@ -31,14 +31,13 @@ class PieCharts extends Component {
     return (
       <div className='app'>
         <div className='row' />
-
         <div className='row'>
           <div className='col percentage-chart'>
             <Chart
               options={this.state.options}
               series={this.state.series}
               type='pie'
-              width={this.props.role === 'Client' ? 500 : 350}
+              width={this.props.role === 'Client' ? 500 : 420}
             />
           </div>
         </div>

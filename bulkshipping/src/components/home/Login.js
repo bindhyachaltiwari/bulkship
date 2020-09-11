@@ -94,17 +94,11 @@ class Login extends React.Component {
     const { formData, error } = this.state;
     const resp = await api.checkUsername(formData.checkUsername);
     if (resp && resp.data && resp.data.status) {
-      let response = await api.contactUs({ name: 'Bulkcom-Shipping', email: formData.checkUsername, subject: 'Bulkcom Shipping Login Details', message: 'Your password is : ' + resp.data.password });
-      if (response && response.data) {
-        formData.checkUsername = '';
-        error.checkUsernameError = 'Please check your inbox for password details.'
-        this.setState({ error });
-      } else {
-        error.checkUsernameError = ' Error !! Please contact admin for the password.'
-        this.setState({ error });
-      }
+      formData.checkUsername = '';
+      error.checkUsernameError = 'Please check your inbox for password details.'
+      this.setState({ error });
     } else {
-      error.checkUsernameError = this.defaultError.userNotFound;
+      error.checkUsernameError = ' Error !! Please contact admin for the password.'
       this.setState({ error });
     }
   }

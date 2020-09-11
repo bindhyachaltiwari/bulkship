@@ -1,5 +1,4 @@
 import React from 'react';
-// import {Link, withRouter} from 'react-router-dom';
 import auth0Client from './../../Auth';
 import { connect } from 'react-redux';
 import { setLoginDetails } from './../../store/actions';
@@ -35,7 +34,6 @@ class NavBar extends React.Component {
     }
 
     signOut = () => {
-        console.log('signout login');
         const { saveUsername } = this.props;
         auth0Client.signOut();
         saveUsername('signout');
@@ -44,6 +42,15 @@ class NavBar extends React.Component {
         localStorage.removeItem('loggedIn');
         localStorage.removeItem('ui');
     };
+
+    changePassword =()=>{
+        this.props.history.push({
+            pathname: '/changePassword',
+            state: {
+              result: this.props.detail.userName
+            }
+          });
+    }
 
     render() {
         const { detail, ui } = this.props;
@@ -67,7 +74,8 @@ class NavBar extends React.Component {
                                 <IconButton aria-label='Add' className='btn-edit'><ExitToAppIcon /></IconButton>
                                 <ul className={`profile-dropdown ${dropdownActive ? 'show' : 'hide'}`}>
                                     <li><label className="mr-2 text-black">{`${displayName ? capitalize(displayName) : 'name'}`}</label></li>
-                                    <li><button className="btn btn-primary" onClick={this.signOut}>Sign Out</button></li>
+                                    <li><button className="btn btn-primary" style={{width:'80%'}} onClick={this.changePassword}>Change Password</button></li>
+                                    <li><button className="btn btn-primary" style={{width:'80%'}} onClick={this.signOut}>Sign Out</button></li>
                                 </ul>
                             </span>
 

@@ -65,8 +65,8 @@ function UserTable(props) {
           backgroundColor: '#1e4356',
           color: '#FFF',
         },
-        pageSize: 7,
-        pageSizeOptions: [5, 7, 10, 15, 20],
+        pageSize: 9,
+        pageSizeOptions: [6, 9, 12, 15, 20],
       }}
       actions={[
         {

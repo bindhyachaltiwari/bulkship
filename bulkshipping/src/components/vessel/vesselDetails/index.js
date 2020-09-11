@@ -18,7 +18,7 @@ class vesselDetails extends Component {
     };
 
     getTabData = () => {
-        const vesselDetails = this.props.history.location.state.result;
+        const vesselDetails = this.props.location.state.result;
         const tabs = {
             tabsLabel: [{
                 label: <span className='labelColor'>VESSEL DETAILS</span>

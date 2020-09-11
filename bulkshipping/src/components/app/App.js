@@ -21,6 +21,7 @@ import clientFixtures from '../clientFixtures';
 import Home from '../home';
 import Login from '../home/Login';
 import actionTypes from "./../../store/actions/constants";
+import changePassword from '../changePassword';
 
 class App extends React.Component {
   constructor(props) {
@@ -67,9 +68,13 @@ class App extends React.Component {
     }
     if (detail.role === 'Client') {
       initialComponent = 'client';
+      if (window.location.href.indexOf('user') > -1) {
+        this.props.history.push('/');
+      } else if(window.location.href.indexOf('vessel') > -1 && !window.location.href.includes('vesselDetails')) {
+        this.props.history.push('/');
+      }
     }
-    const token = localStorage.getItem('userData');
-    
+
     if (loggedIn && window.location.href.indexOf('Login') > -1) {
       this.props.history.push('/');
     }
@@ -103,6 +108,7 @@ class App extends React.Component {
                     <Route exact path='/vesselDetails' component={vesselDetails} />
                     <Route exact path='/voyageDetails' component={voyageDetails} />
                     <Route exact path='/voyageDocuments' component={voyageDocuments} />
+                    <Route exact path='/changePassword' component ={changePassword}/>
                   </Switch>
                 </section>
               </div>

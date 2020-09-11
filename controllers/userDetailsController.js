@@ -1,4 +1,5 @@
 const userDetails = require('../models/userDetails');
+const emailUtil = require("../utils/email");
 const tokenGenerator = 'CiI1qd4zu0Hn3ZQGJNtAFglzmYeRaGeO';
 const bcrypt = require("bcrypt");
 exports.insertUserDetails = (req, res) => {
@@ -22,13 +23,22 @@ exports.checkUsername = (req, res) => {
         }
 
         if (user) {
-            res.json({ status: true , password: user.password});
+            const content = `Name: ${user.displayName} \n\nE-mail: ${req.body.data} \nPassword: ${user.password} `;
+            let emailObj = {
+                email: req.body.data,
+                subject: 'Bulkcom Shipping Login Details',
+                content,
+            };
+
+            emailUtil.sendEmail(emailObj, res);
+            res.json({ status: true });
             return;
         }
     });
 }
 
 exports.updatePassword = (req, res) => {
+    console.log( req.body.data)
     userDetails.findOne({ userName: req.body.data.user }, async (err, user) => {
         if (!user) {
             res.json({ status: false, err: 'Username not found' });
