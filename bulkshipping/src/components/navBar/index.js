@@ -23,8 +23,6 @@ class NavBar extends React.Component {
         e.stopPropagation();
         const { dropdownActive } = this.state;
         const { setOverlay } = this.props;
-
-        console.log('toggleDropdown: ');
         if (!dropdownActive) {
             setOverlay('menu-nav-dropdown');
         } else {
@@ -43,13 +41,13 @@ class NavBar extends React.Component {
         localStorage.removeItem('ui');
     };
 
-    changePassword =()=>{
+    changePassword = () => {
         this.props.history.push({
             pathname: '/changePassword',
             state: {
-              result: this.props.detail.userName
+                result: this.props.detail.userName
             }
-          });
+        });
     }
 
     render() {
@@ -63,7 +61,7 @@ class NavBar extends React.Component {
         const { dropdownActive } = this.state;
         const showOverlay = activeOverlay === 'menu-nav-dropdown';
         return (
-            <header>
+            <header style={{ backgroundColor: '#1e4356' }}>
                 <nav className={`nav-wrapper ${dropdownActive && 'active-dropdown'}`}>
                     {
                         auth0Client.isAuthenticated() &&
@@ -71,11 +69,11 @@ class NavBar extends React.Component {
                             {/* <span className='logo-wrapper'>logo</span> */}
                             <span className='title'>Bulkcom Shipping</span>
                             <span className='profile-wrapper' onClick={this.toggleDropdown}>
-                                <IconButton aria-label='Add' className='btn-edit'><ExitToAppIcon /></IconButton>
+                                <IconButton aria-label='Add' className='btn-logout' ><ExitToAppIcon /></IconButton>
                                 <ul className={`profile-dropdown ${dropdownActive ? 'show' : 'hide'}`}>
                                     <li><label className="mr-2 text-black">{`${displayName ? capitalize(displayName) : 'name'}`}</label></li>
-                                    <li><button className="btn btn-primary" style={{width:'80%'}} onClick={this.changePassword}>Change Password</button></li>
-                                    <li><button className="btn btn-primary" style={{width:'80%'}} onClick={this.signOut}>Sign Out</button></li>
+                                    <li><button className="btn btn-primary btn-blue" style={{ width: '80%', backgroundColor: '#1e4356' }} onClick={this.changePassword}>Change Password</button></li>
+                                    <li><button className="btn btn-primary btn-blue" style={{ width: '80%', backgroundColor: '#1e4356' }} onClick={this.signOut}>Sign Out</button></li>
                                 </ul>
                             </span>
 

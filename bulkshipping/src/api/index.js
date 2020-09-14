@@ -167,6 +167,21 @@ class API {
     mailResume = data => {
         return axios.post(this.apiUrl + '/career/', data);
     }
+
+    activateUser = data => {
+        return axios.post(this.apiUrl + '/userDetails/activateUser', {
+            headers: { 'Content-Type': 'application/json' },
+            data,
+        });
+    }
+
+    activateVoyage = data => {
+        return axios.post(this.apiUrl + '/voyageDetails/activateVoyage', {
+            headers: { 'Content-Type': 'application/json' },
+            data,
+        });
+    }
+
 };
 
 const api = new API();

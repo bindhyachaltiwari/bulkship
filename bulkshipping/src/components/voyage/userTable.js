@@ -16,6 +16,8 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
 import api from '../../api';
 import { connect } from 'react-redux';
 
@@ -27,8 +29,8 @@ function UserTable(props) {
     Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} onClick={() => {
       for (let i = 0; i < data.length; i++) {
         let singleClientId = data[i];
-        singleClientId.viewDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={singleClientId._id} onClick={propsInside.handleClickState}>View</button>;
-        singleClientId.viewDocuments = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={singleClientId._id} onClick={propsInside.handleViewDocuments}>View</button>;
+        singleClientId.viewDetails = <button style={{ backgroundColor: '#1e4356', color: 'white', textAlign: 'center' }} type='button' id={singleClientId._id} onClick={propsInside.handleClickState}>View</button>;
+        singleClientId.viewDocuments = <button style={{ backgroundColor: '#1e4356', color: 'white', textAlign: 'center' }} type='button' id={singleClientId._id} onClick={propsInside.handleViewDocuments}>View</button>;
       }
     }} />),
     Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
@@ -39,6 +41,8 @@ function UserTable(props) {
         data[i].viewDocuments = 'View Documents';
       }
     }} />),
+    activateUser: forwardRef((props, ref) => <CheckCircleIcon style={{ color: 'green' }}{...props} ref={ref} />),
+    deactivateUser: forwardRef((props, ref) => <CancelIcon style={{ color: 'red' }} {...props} ref={ref} />),
     Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
     Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
     FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -94,6 +98,25 @@ function UserTable(props) {
         pageSizeOptions: [5, 7, 10, 15, 20],
         exportButton: true
       }}
+      actions={[
+        rowData => showDelete() ? ({
+          icon: rowData.isActive ? tableIcons.activateUser : tableIcons.deactivateUser,
+          tooltip: rowData.isActive ? 'Active Voyage.' : 'Deactivated Voyage.',
+          onClick: async (event, rowData) => {
+            const data = {
+              id: rowData['_id'],
+              isActive: !rowData.isActive
+            }
+            let resp = await api.activateVoyage(data);
+            if (resp.data.status) {
+              rowData.isActive = !rowData.isActive
+              props.showAlert(rowData);
+            } else {
+              props.showAlert('Voyage Activation/Deactivation Failed');
+            }
+          }
+        }) : ''
+      ]}
       editable=
       {showDelete() ?
         {

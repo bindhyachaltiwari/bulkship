@@ -34,7 +34,7 @@ class voyageDocuments extends Component {
           second: 'numeric' 
         };
         documents[counter].dateTime = new Date(documents[counter].createdAt).toLocaleDateString([], options);
-        documents[counter].download = <button style={{ color: 'blue', textAlign: 'center' }} type='button' onClick={(event) => this.downloadDoc(event, fileId)}>Download</button>;
+        documents[counter].download = <button style={{ backgroundColor: '#1e4356', color: 'white', textAlign: 'center' }} type='button' onClick={(event) => this.downloadDoc(event, fileId)}>Download</button>;
       }
     }
     this.setState({

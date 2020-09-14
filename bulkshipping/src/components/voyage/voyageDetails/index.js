@@ -41,7 +41,7 @@ class voyageDetails extends Component {
                             <tbody key='list'>
                                 {this.props.detail.role === 'Client' ?
                                     <>
-                                        <tr><th className='tdList' style={{ backgroundColor: '#1e4356', color: 'white' }}>Field</th><th className='tdList'>Value</th></tr>
+                                        <tr style={{ backgroundColor: '#1e4356', color: 'white' }}><th className='tdList'>Field</th><th className='tdList'>Value</th></tr>
                                         {item.fieldVisibility.map((field, i) =>
                                             <tr><td className='tdList' key={field}>{field}</td><td className='tdList'>{item[this.toCamelCase(field)]}</td></tr>
                                         )}

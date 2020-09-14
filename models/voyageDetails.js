@@ -92,6 +92,10 @@ var voyageDetails = new Schema({
     otherFields: {
         type: JSON,
     },
+    isActive:{
+        type: Boolean,
+        required: false
+    }
 }, {
     collection: 'voyageDetails'
 });

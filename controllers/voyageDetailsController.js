@@ -4,6 +4,7 @@ const voyageDetails = require('../models/voyageDetails');
 exports.insertVoyageData = (req, res) => {
     const vesselDetailData = new voyageDetails(req.body.data.voyageDetails);
     vesselDetailData.vId = new Date().getTime();
+    vesselDetailData.isActive = true;
     vesselDetailData.cpDate = vesselDetailData.cpDate.split('T')[0];
     vesselDetailData.save().then(() => {
         res.json({
@@ -17,7 +18,7 @@ exports.insertVoyageData = (req, res) => {
 }
 
 exports.getAllVoyage = (req, res) => {
-    voyageDetails.find({ chartererName: req.params.chartererName }, (err, vl) => {
+    voyageDetails.find({ $and: [{ chartererName: req.params.chartererName }, { isActive: true }] }, (err, vl) => {
         if (!vl) {
             res.json({ status: false, error: err });
             return;
@@ -69,6 +70,22 @@ exports.getAllVoyageDetails = (req, res) => {
         } else {
             res.json({ status: false });
         }
+    });
+}
+
+exports.activateVoyage = async (req, res) => {
+    voyageDetails.findOne({ '_id': req.body.data.id }, async (err, user) => {
+        if (!user) {
+            res.json({ status: false, err: 'Voyage not found' });
+            return;
+        }
+        voyageDetails.update(
+            { '_id': req.body.data.id },
+            { $set: { 'isActive': req.body.data.isActive } }
+        ).then(e => {
+            res.json({ status: true });
+            return;
+        });
     });
 }
 

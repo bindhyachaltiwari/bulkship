@@ -23,8 +23,8 @@ class ViewVoyageDetails extends Component {
     if (res.data.status) {
       for (var i = 0; i < res.data.voyageList.length; i++) {
         const id = res.data.voyageList[i]._id;
-        res.data.voyageList[i].viewDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={id} onClick={this.handleClickState}>View</button>;
-        res.data.voyageList[i].viewDocuments = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={id} onClick={this.handleViewDocuments}>View</button>;
+        res.data.voyageList[i].viewDetails = <button style={{ backgroundColor: '#1e4356', color: 'white', textAlign: 'center' }} type='button' id={id} onClick={this.handleClickState}>View</button>;
+        res.data.voyageList[i].viewDocuments = <button style={{ backgroundColor: '#1e4356', color: 'white', textAlign: 'center' }} type='button' id={id} onClick={this.handleViewDocuments}>View</button>;
       }
     }
     this.setState({ voyageList: res.data.voyageList })
@@ -37,6 +37,28 @@ class ViewVoyageDetails extends Component {
       descrMsg: ''
     },
   });
+
+  showAlert = (event) => {
+    let str;
+    let title = 'Success'
+    if (typeof event !== 'string') {
+      str = 'Voyage Details Activated Successfully.'
+      if (!event.isActive) {
+        str = 'Voyage Details Deactivated Successfully.'
+      }
+    } else {
+      title = 'Error'
+      str = event
+    }
+
+    this.setState({
+      alertDetails: {
+        openAlert: true,
+        titleMsg: title,
+        descrMsg: str
+      },
+    });
+  }
 
   handleClickState = async e => {
     const id = e.target.id;
@@ -76,7 +98,7 @@ class ViewVoyageDetails extends Component {
     return (
       <form>
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
-        <UserTable title={'View Voyage Details'} data={voyageList} columns={columns} onRowClick={this.onRowClick} originalArray={this.originalObjectArray} handleClickState={this.handleClickState} handleViewDocuments={this.handleViewDocuments} />
+        <UserTable title={'View Voyage Details'} data={voyageList} columns={columns} showAlert={this.showAlert} onRowClick={this.onRowClick} originalArray={this.originalObjectArray} handleClickState={this.handleClickState} handleViewDocuments={this.handleViewDocuments} />
       </form>
     );
   }

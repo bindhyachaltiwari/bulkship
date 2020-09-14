@@ -38,7 +38,7 @@ class ViewAllUsers extends Component {
           }
         }
         if (singleClientId.role === 'Client') {
-          singleClientId.viewDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={singleClientId.id} onClick={this.handleClickState}>View</button>;
+          singleClientId.viewDetails = <button style={{ backgroundColor: '#1e4356', color: 'white', textAlign: 'center' }} type='button' id={singleClientId.id} onClick={this.handleClickState}>View</button>;
         }
       }
 
@@ -60,6 +60,28 @@ class ViewAllUsers extends Component {
 
   onRowClick = (event, rowData) => {
     this.props.handleRowClicked(rowData);
+  }
+
+  showAlert = (event) => {
+    let str;
+    let title = 'Success'
+    if (typeof event !== 'string') {
+      str = 'User Activated Successfully.'
+      if (!event.isActive) {
+        str = 'User Deactivated Successfully.'
+      }
+    } else {
+      title = 'Error'
+      str = event
+    }
+
+    this.setState({
+      alertDetails: {
+        openAlert: true,
+        titleMsg: title,
+        descrMsg: str
+      },
+    });
   }
 
   handleCancelAlert = () => this.setState({
@@ -84,7 +106,7 @@ class ViewAllUsers extends Component {
     return (
       <form>
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
-        <UserTable title={'View All Users'} data={clientList} columns={columns} onRowClick={this.onRowClick} originalColumns={this.state.originalColumns} originalArray={this.originalObjectArray} handleClickState={this.handleClickState} />
+        <UserTable title={'View All Users'} data={clientList} columns={columns} showAlert={this.showAlert} onRowClick={this.onRowClick} originalColumns={this.state.originalColumns} originalArray={this.originalObjectArray} handleClickState={this.handleClickState} />
       </form>
     );
   }

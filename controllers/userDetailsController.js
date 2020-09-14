@@ -1,9 +1,10 @@
 const userDetails = require('../models/userDetails');
 const emailUtil = require("../utils/email");
-const tokenGenerator = 'CiI1qd4zu0Hn3ZQGJNtAFglzmYeRaGeO';
-const bcrypt = require("bcrypt");
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr('CiI1qd4zu0Hn3ZQGJNtAFglzmYeRaGeO');
 exports.insertUserDetails = (req, res) => {
     const userDetailsData = new userDetails(req.body.data);
+    userDetailsData.isActive = true;
     userDetailsData.save().then(() => {
         res.json({
             status: true
@@ -16,14 +17,15 @@ exports.insertUserDetails = (req, res) => {
 }
 
 exports.checkUsername = (req, res) => {
-    userDetails.findOne({ userName: req.body.data }, (err, user) => {
+    userDetails.findOne({ userName: req.body.data }, async (err, user) => {
         if (!user) {
             res.json({ status: false, err: 'Username not present' });
             return;
         }
 
         if (user) {
-            const content = `Name: ${user.displayName} \n\nE-mail: ${req.body.data} \nPassword: ${user.password} `;
+            const pass = await cryptr.decrypt(user.password)
+            const content = `Name: ${user.displayName} \n\nE-mail: ${req.body.data} \nPassword: ${pass} `;
             let emailObj = {
                 email: req.body.data,
                 subject: 'Bulkcom Shipping Login Details',
@@ -37,18 +39,32 @@ exports.checkUsername = (req, res) => {
     });
 }
 
-exports.updatePassword = (req, res) => {
-    console.log( req.body.data)
+exports.updatePassword = async (req, res) => {
     userDetails.findOne({ userName: req.body.data.user }, async (err, user) => {
         if (!user) {
             res.json({ status: false, err: 'Username not found' });
             return;
         }
-
-        const p = await bcrypt.hash(req.body.data.confirmPass, 12)
+        const p = await cryptr.encrypt(req.body.data.confirmPass)
         userDetails.update(
             { userName: req.body.data.user },
             { $set: { 'password': p } }
+        ).then(e => {
+            res.json({ status: true });
+            return;
+        });
+    });
+}
+
+exports.activateUser = async (req, res) => {
+    userDetails.findOne({ userName: req.body.data.userName }, async (err, user) => {
+        if (!user) {
+            res.json({ status: false, err: 'Username not found' });
+            return;
+        }
+        userDetails.update(
+            { userName: req.body.data.userName },
+            { $set: { 'isActive': req.body.data.isActive } }
         ).then(e => {
             res.json({ status: true });
             return;
@@ -97,6 +113,7 @@ exports.getAllUserDetails = (req, res) => {
                         clientType: m.clientType,
                         managerRoles: m.managerRoles,
                         clientDisplay: m.clientDisplay,
+                        isActive: m.isActive,
                         id: m['_id']
                     };
                 })
@@ -121,7 +138,7 @@ exports.deletePid = (req, res) => {
 
 exports.updateUserDetails = async (req, res) => {
     if (req.body.data.password) {
-        req.body.data.password = await bcrypt.hash(req.body.data.password, 12)
+        req.body.data.password = await cryptr.encrypt(req.body.data.password);
     }
     userDetails.findOneAndUpdate({ '_id': req.body.data.id }, req.body.data).then(() => {
         res.json({

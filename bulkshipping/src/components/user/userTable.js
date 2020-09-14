@@ -16,6 +16,8 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
 import api from '../../api';
 import { connect } from 'react-redux';
 
@@ -36,7 +38,7 @@ function UserTable(props) {
           }
         }
         if (singleClientId.role === 'Client') {
-          singleClientId.viewDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={singleClientId.id} onClick={propsInside.handleClickState}>View</button>;
+          singleClientId.viewDetails = <button style={{ backgroundColor: '#1e4356', color: 'white', textAlign: 'center' }} type='button' id={singleClientId.id} onClick={propsInside.handleClickState}>View</button>;
         }
       }
     }} />),
@@ -46,14 +48,17 @@ function UserTable(props) {
       for (let i = 0; i < data.length; i++) {
         let singleClientId = data[i]
         if ((singleClientId.role === 'Manager' && singleClientId.managerRoles) ||
-        (singleClientId.role === 'Client' && singleClientId.clientDisplay)) {
-            singleClientId.displayRoles = 'Roles';
-          }
+          (singleClientId.role === 'Client' && singleClientId.clientDisplay)) {
+          singleClientId.displayRoles = 'Roles';
+        }
         if (singleClientId.role === 'Client') {
           singleClientId.viewDetails = 'View Details';
         }
       }
     }} />),
+
+    activateUser: forwardRef((props, ref) => <CheckCircleIcon style={{ color: 'green' }}{...props} ref={ref} />),
+    deactivateUser: forwardRef((props, ref) => <CancelIcon style={{ color: 'red' }} {...props} ref={ref} />),
     Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
     Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
     FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -105,10 +110,30 @@ function UserTable(props) {
         pageSize: 7,
         pageSizeOptions: [5, 7, 10, 15, 20],
         exportButton: true,
-        rowStyle: {
+        rowStyle: rowData => ({
           whiteSpace: 'nowrap'
-        }
+        })
       }}
+
+      actions={[
+        rowData => showDelete() && rowData.role !== 'Admin' ? ({
+          icon: rowData.isActive ? tableIcons.activateUser : tableIcons.deactivateUser,
+          tooltip: rowData.isActive ? 'Active User.' : 'Deactivated User.',
+          onClick: async (event, rowData) => {
+            const data = {
+              userName: rowData.userName,
+              isActive: !rowData.isActive
+            }
+            let resp = await api.activateUser(data);
+            if (resp.data.status) {
+              rowData.isActive = !rowData.isActive
+              props.showAlert(rowData);
+            } else {
+              props.showAlert('User Activation/Deactivation Failed');
+            }
+          }
+        }) : ''
+      ]}
       editable=
       {showDelete() ?
         {
@@ -119,15 +144,22 @@ function UserTable(props) {
           onRowDelete: (oldData) =>
             new Promise(resolve => {
               setTimeout(async () => {
-                const dataDelete = [...data];
-                let resp = await api.deleteUserDetails(oldData['id']);
-                if (resp.data.status) {
-                  let index = dataDelete.indexOf(oldData);
-                  dataDelete.splice(index, 1);
+                if (oldData.role === 'Admin') {
+                  props.showAlert('Admin cannot be deleted');
+                  resolve();
+                  return;
+                } else {
+                  const dataDelete = [...data];
+                  let resp = await api.deleteUserDetails(oldData['id']);
+                  if (resp.data.status) {
+                    let index = dataDelete.indexOf(oldData);
+                    dataDelete.splice(index, 1);
+                  }
+                  setData([...dataDelete]);
+                  resolve();
                 }
-                setData([...dataDelete]);
-                resolve();
               }, 600);
+
             }),
         } : null}
     />

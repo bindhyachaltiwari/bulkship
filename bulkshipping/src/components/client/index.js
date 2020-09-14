@@ -48,24 +48,24 @@ class Client extends Component {
           detail.clientDisplay.indexOf('View Voyage Details') >= 0 ? voyage = true : voyage = false;
         }
         for (var i = 0; i < this.toSendVesselList.length; i++) {
-          this.toSendVesselList[i].vesselNameEdited = <span style={{ color: 'blue', textAlign: 'center' }} onClick={this.handleClickState} onMouseEnter={this.handleHoverState} onMouseLeave={this.handleHoverStateLeave} id={i}>{this.toSendVesselList[i].vesselName}</span>
+          this.toSendVesselList[i].vesselNameEdited = <span style={{ color: '#1e4356', textAlign: 'center' }} onClick={this.handleClickState} onMouseEnter={this.handleHoverState} onMouseLeave={this.handleHoverStateLeave} id={i}>{this.toSendVesselList[i].vesselName}</span>
           if (documents) {
             if (!this.columns.some(s => s.field === 'viewDocuments')) {
               this.columns.push({ field: 'viewDocuments', title: 'View Documents', editable: 'never' });
             }
-            this.toSendVesselList[i].viewDocuments = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={this.toSendVesselList[i]._id} onClick={this.handleViewDocuments}>View</button>;
+            this.toSendVesselList[i].viewDocuments = <button style={{ backgroundColor: '#1e4356', color: 'white', textAlign: 'center' }} type='button' id={this.toSendVesselList[i]._id} onClick={this.handleViewDocuments}>View</button>;
           }
           if (performance) {
             if (!this.columns.some(s => s.field === 'vesselPerformance')) {
               this.columns.push({ field: 'vesselPerformance', title: 'View Performance', editable: 'never' });
             }
-            this.toSendVesselList[i].vesselPerformance = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={this.toSendVesselList[i]._id} onClick={this.handleVesselPerformance}>View</button>;
+            this.toSendVesselList[i].vesselPerformance = <button style={{ backgroundColor: '#1e4356', color: 'white', textAlign: 'center' }} type='button' id={this.toSendVesselList[i]._id} onClick={this.handleVesselPerformance}>View</button>;
           }
           if (voyage) {
             if (!this.columns.some(s => s.field === 'voyageDetails')) {
               this.columns.push({ field: 'voyageDetails', title: 'View Voyage', editable: 'never' });
             }
-            this.toSendVesselList[i].voyageDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={this.toSendVesselList[i]._id} onClick={this.handleVoyageDetails}>View</button>;;
+            this.toSendVesselList[i].voyageDetails = <button style={{ backgroundColor: '#1e4356', color: 'white', textAlign: 'center' }} type='button' id={this.toSendVesselList[i]._id} onClick={this.handleVoyageDetails}>View</button>;;
           }
         }
       }

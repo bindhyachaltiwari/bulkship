@@ -27,7 +27,7 @@ function UserTable(props) {
     Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} onClick={() => {
       for (let i = 0; i < data.length; i++) {
         let singleClientId = data[i];
-        singleClientId.viewDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={singleClientId._id} onClick={propsInside.handleClickState}>View</button>;
+        singleClientId.viewDetails = <button style={{ backgroundColor: '#1e4356', color: 'white', textAlign: 'center' }} type='button' id={singleClientId._id} onClick={propsInside.handleClickState}>View</button>;
       }
     }} />),
     Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),

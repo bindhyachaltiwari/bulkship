@@ -110,17 +110,15 @@ class FillPerformanceDetails extends Component {
         readOnly,
         isEditPage
       });
-    } else {
+    } else if (isGraphPage && !res.data.status) {
       this.setState({
-        alertDetails: {
-          openAlert: true,
-          titleMsg: 'Error !!',
-          descrMsg: 'Failed to fetch data or no voyage to fill details...'
-        }
+        readOnly: true,
+        isEditPage: false,
+        isClientPage: true
       });
     }
 
-    if (isGraphPage) {
+    if (isGraphPage && res.data.status) {
       this.handleClientListChange();
       this.handleVesselListChange();
       this.handleCpDateChange();
@@ -770,11 +768,10 @@ class FillPerformanceDetails extends Component {
                 </table>
               </form>
               {isViewPage ? <IconButton onClick={this.handlePerformanceGraph} aria-label='View Graph' className='btn-edit'><InsertChartTwoToneIcon /></IconButton> : <></>}
-              <br />
               <form id='performanceDetailsForm' onSubmit={this.handlePerformanceDetailSubmit} style={{ margin: '1%' }}>
                 <table className='table-performance'>
                   <thead>
-                    <tr>
+                    <tr style={{ backgroundColor: '#1e4356', color: 'white' }}>
                       <th className='table-performance-td-th'>Field</th>
                       <th className='table-performance-td-th'>Original</th>
                       <th className='table-performance-td-th'>Actual</th>
@@ -1114,7 +1111,7 @@ class FillPerformanceDetails extends Component {
                       <td className='table-performance-td-th'>
                         <label>Lessons Learnt</label>
                       </td>
-                      <td className='table-performance-td-th' colspan="4">
+                      <td className='table-performance-td-th' colSpan="4">
                         <TextareaAutosize aria-label="minimum height" rowsMin={3} disabled={readOnly} className='table-performance-input' type='text' name='lessonsLearnt' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={lessonsLearnt || ''} />
                       </td>
                     </tr> : ''}
@@ -1122,13 +1119,13 @@ class FillPerformanceDetails extends Component {
                       <td className='table-performance-td-th'>
                         <label>Remarks</label>
                       </td>
-                      <td className='table-performance-td-th' colspan="4">
+                      <td className='table-performance-td-th' colSpan="4">
                         <TextareaAutosize aria-label="minimum height" rowsMin={3} disabled={readOnly} className='table-performance-input' type='text' name='remarks' onChange={this.handlePerformanceDetailsChange} autoComplete='off' value={remarks || ''} />
                       </td>
                     </tr>
                   </tbody>
                 </table>
-                {isViewPage ? <></> : <Button
+                {isViewPage ? '' : <Button
                   className={`${(isDirty) ? 'white-color' : 'grey-color'} btn-save`}
                   variant='contained'
                   size='large'
@@ -1136,7 +1133,7 @@ class FillPerformanceDetails extends Component {
                   disabled={!(isDirty)}
                   onClick={this.handleSubmit}> Submit  </Button>}
               </form>
-            </> : <></>}
+            </> : ''}
         </Paper>
       </>
     );

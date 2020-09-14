@@ -21,4 +21,6 @@ router.delete('/:pid', userDetailsController.deletePid);
 
 router.post('/updateUserDetails', userDetailsController.updateUserDetails);
 
+router.post('/activateUser', userDetailsController.activateUser);
+
 module.exports = router;

@@ -65,7 +65,7 @@ function UserTable(props) {
         },
         pageSize: 7,
         pageSizeOptions: [5, 7, 10, 15, 20],
-        exportButton: true
+        exportButton: true,
       }}
     />
   );

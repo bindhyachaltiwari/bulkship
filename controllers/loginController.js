@@ -1,6 +1,7 @@
 const formidable = require('formidable');
 const userDetails = require('../models/userDetails');
-const bcrypt = require('bcrypt');
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr('CiI1qd4zu0Hn3ZQGJNtAFglzmYeRaGeO');
 
 exports.login = (req, res, next) => {
   const promiseAllHandler = (p) => {
@@ -15,8 +16,10 @@ exports.login = (req, res, next) => {
       if (!user) {
         throw new Error('UserName or password is incorrect');
       }
-      if (fields.password.length > 55 && fields.password === user.password) {
-        const { role, _id, userName, companyName, displayName, clientType, managerRoles, clientDisplay } = user;
+
+      const realPassword = cryptr.decrypt(user.password);
+      if (realPassword === fields.password && (user.isActive || user.role === 'Admin')) {
+        const { role, _id, userName, companyName, displayName, clientType, managerRoles, clientDisplay, isActive } = user;
         let respObj = {
           status: 'success',
           _id,
@@ -25,6 +28,7 @@ exports.login = (req, res, next) => {
           displayName,
           role,
           clientType,
+          isActive
         };
 
         if (role === 'Manager') {
@@ -33,35 +37,12 @@ exports.login = (req, res, next) => {
           respObj.clientDisplay = clientDisplay
         }
         res.status(200).json(respObj);
+      } else if (realPassword === fields.password && !user.isActive) {
+        res.json({ status: false, err: 'User is not active' });
       } else {
-        bcrypt.compare(fields.password, user.password, (error, verified) => {
-          if (error) {
-            res.json({ status: false, err: 'Wrong Credentials' });
-          }
-          if (verified) {
-            const { role, _id, userName, companyName, displayName, clientType, managerRoles, clientDisplay } = user;
-            let respObj = {
-              status: 'success',
-              _id,
-              userName,
-              companyName,
-              displayName,
-              role,
-              clientType,
-            };
-
-            if (role === 'Manager') {
-              respObj.managerRoles = managerRoles
-            } else if (role === 'Client') {
-              respObj.clientDisplay = clientDisplay
-            }
-            res.status(200).json(respObj);
-          } else {
-            let error = new Error('userName or password is incorrect');
-            (error.status = 'Failed'), (error.statusCode = 404);
-            next(error);
-          }
-        });
+        let error = new Error('UserName or password is incorrect');
+        (error.status = 'Failed'), (error.statusCode = 404);
+        next(error);
       }
     })
       .catch(err => {
@@ -71,9 +52,7 @@ exports.login = (req, res, next) => {
 };
 
 exports.validateUser = (req, res, next) => {
-  console.log('users' + req.params.userName);
   const pid = req.params.userName;
-  console.log(pid);
   const query = userDetails
     .find({
       userName: pid

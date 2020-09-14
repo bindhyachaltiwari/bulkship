@@ -23,7 +23,6 @@ class LeftMenu extends React.Component {
     toggleMenu = (e) => {
         e = e || window.event;
         e.stopPropagation();
-        console.log('toggleMenu: ');
         const { activeMenu } = this.state;
         const { setOverlay } = this.props;
         if (!activeMenu) {

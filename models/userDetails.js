@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr('CiI1qd4zu0Hn3ZQGJNtAFglzmYeRaGeO');
+
 var Schema = mongoose.Schema;
 var userDetails = new Schema({
     userName: {
@@ -38,12 +40,16 @@ var userDetails = new Schema({
     clientDisplay: {
         type: Object,
         required: false
+    },
+    isActive: {
+        type: Boolean,
+        required: false
     }
 }, {
     collection: 'userDetails'
 });
 userDetails.pre('save', async function (next) {
-    this.password = await bcrypt.hash(this.password, 12);
+    this.password = await cryptr.encrypt(this.password);
     next();
 });
 module.exports = mongoose.model('userDetails', userDetails);

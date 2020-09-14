@@ -67,16 +67,16 @@ class MiscUtils {
                         validationtype = 'mobileLength';
                     }
                     break;
-                // case 'password':
-                //     regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
-                //     if (!regex.test(value)) {
-                //         vld = false;
-                //         validationtype = 'password';
-                //     } else if (value.length < 8) {
-                //         vld = false;
-                //         validationtype = 'passwordLength';
-                //     }
-                //     break;
+                case 'password':
+                    regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+                    if (!regex.test(value)) {
+                        vld = false;
+                        validationtype = 'password';
+                    } else if (value.length < 8) {
+                        vld = false;
+                        validationtype = 'passwordLength';
+                    }
+                    break;
                 case 'email':
                     regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
                     vld = regex.test(value);

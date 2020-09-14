@@ -30,7 +30,7 @@ class vesselDetails extends Component {
                     {vesselDetails.map((item, i) =>
                         <table className='tableList' key={i}>
                             <tbody key='list'>
-                                <tr style={{backgroundColor:'#1e4356', color:'white'}}><th className='tdList'>Field</th><th className='tdList'>Value</th></tr>
+                                <tr style={{ backgroundColor: '#1e4356', color: 'white' }}><th className='tdList'>Field</th><th className='tdList'>Value</th></tr>
                                 <tr><td className='tdList'>Vessel Name </td><td className='tdList'>{item.vesselName}</td></tr>
                                 <tr><td className='tdList'>IMO </td><td className='tdList'>{item.IMO}</td></tr>
                                 <tr><td className='tdList'>DWT  </td><td className='tdList'>{item.DWT}</td></tr>

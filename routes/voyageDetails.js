@@ -16,4 +16,6 @@ router.post('/updateVoyageDetails', voyageDetailsController.updateVoyageDetails)
 
 router.get('/getPortDetails/:userName/:vesselName/:cpDate', voyageDetailsController.getPortDetails);
 
+router.post('/activateVoyage', voyageDetailsController.activateVoyage);
+
 module.exports = router;

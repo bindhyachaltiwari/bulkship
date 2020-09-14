@@ -314,15 +314,15 @@ class AddNewUser extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 8 }}
+                inputProps={{ maxLength: 12 }}
                 error={validity && validity.password && validity.password.isInvalid}
                 id='password'
                 label='Password *'
                 type='password'
-                disabled={isEditPage}
                 onChange={this.handleChange}
                 value={password || ''}
                 autoComplete='off'
+                style={{ width: '200px' }}
                 helperText={validity && validity.password && validity.password.isInvalid ? miscUtils.getErrorMessage(validity.password.validationtype) : ''}
               />
             </Grid>

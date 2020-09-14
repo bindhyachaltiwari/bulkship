@@ -21,7 +21,7 @@ class ViewAllVessels extends Component {
     const res = await api.getAllVesselsDetails();
     if (res.data.status) {
       for (var i = 0; i < res.data.vesselList.length; i++) {
-        res.data.vesselList[i].viewDetails = <button style={{ color: 'blue', textAlign: 'center' }} type='button' id={res.data.vesselList[i]._id} onClick={this.handleClickState}>View</button>;
+        res.data.vesselList[i].viewDetails = <button style={{ backgroundColor: '#1e4356', color: 'white', textAlign: 'center' }} type='button' id={res.data.vesselList[i]._id} onClick={this.handleClickState}>View</button>;
       }
     }
     this.setState({ vesselList: res.data.vesselList })

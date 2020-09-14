@@ -288,7 +288,6 @@ class FillVoyageDetails extends Component {
 
   submitNewFieldDetails = e => {
     e.preventDefault();
-    console.log(e)
     const inputs = e.target.querySelectorAll('input');
     if (!inputs || !inputs.length) return;
     if (!inputs[0].value || !inputs[1].value) return;
