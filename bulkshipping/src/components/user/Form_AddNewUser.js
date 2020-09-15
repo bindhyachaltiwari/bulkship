@@ -111,8 +111,9 @@ class AddNewUser extends Component {
       }
     } else {
       resp = await api.insertUserDetails({ ...userDetails });
-      if (resp.data.status.errors || resp.data.status.errorMsg || resp.data.status.errmsg || !resp.data.status) {
-        if (resp && resp.data && resp.data.status && resp.data.status.errmsg && resp.data.status.errmsg.indexOf('duplicate key error') >= 0) {
+      if (resp.data.status.errors || resp.data.status.errorMsg || resp.data.status.name === 'MongoError' || resp.data.status.errmsg || !resp.data.status) {
+        if ((resp && resp.data && resp.data.status && resp.data.status.errmsg && resp.data.status.errmsg.indexOf('duplicate key error') >= 0)
+          || (resp.data.status.keyPattern && resp.data.status.keyPattern.userName)) {
           this.setState({
             alertDetails: {
               openAlert: true,
@@ -243,6 +244,9 @@ class AddNewUser extends Component {
           this.setState({ isDirty: true, userDetails });
         } else if (role === 'Manager' && managerRoles && managerRoles.length) {
           Object.assign(userDetails, { clientType: role, clientDisplay: [] });
+          this.setState({ isDirty: true, userDetails, isTyped });
+        } else if (role === 'Admin') {
+          Object.assign(userDetails, { clientType: '', clientDisplay: [] });
           this.setState({ isDirty: true, userDetails, isTyped });
         } else {
           this.setState({ isDirty: false, userDetails, isTyped });
