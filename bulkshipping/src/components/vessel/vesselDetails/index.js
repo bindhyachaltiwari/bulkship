@@ -17,8 +17,15 @@ class vesselDetails extends Component {
         }
     };
 
+    getDynamicFields = obj => {
+        let key = Object.keys(obj)[0];
+        let value = obj[key];
+        return <tr><td className='tdList' key={key}>{key}</td><td className='tdList' key={value}>{value}</td></tr>
+    }
+
     getTabData = () => {
         const vesselDetails = this.props.location.state.result;
+        const {otherFields}  = vesselDetails[0];
         const tabs = {
             tabsLabel: [{
                 label: <span className='labelColor'>VESSEL DETAILS</span>
@@ -48,6 +55,10 @@ class vesselDetails extends Component {
                                 <tr><td className='tdList'>Bale Capacity </td><td className='tdList'>{item.baleCapacity}</td></tr>
                                 <tr><td className='tdList'>Cranes </td><td className='tdList'>{item.cranes}</td></tr>
                                 <tr><td className='tdList'>Grabs </td><td className='tdList'>{item.grabs}</td></tr>
+                                {otherFields && otherFields.length ? otherFields.map((field, i) => this.getDynamicFields(field)) : ''}
+                                <tr><td className='tdList'></td><td className='tdList'></td></tr>
+                                <tr><td className='tdList'></td><td className='tdList'></td></tr>
+                                <tr><td className='tdList'></td><td className='tdList'></td></tr>
                             </tbody>
                         </table>
                     )}

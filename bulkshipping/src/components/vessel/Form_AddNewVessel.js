@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { Paper, Grid, Button, TextField } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
+import IconButton from '@material-ui/core/IconButton';
+import CancelIcon from '@material-ui/icons/Cancel';
 import miscUtils from '../../utils/miscUtils';
 import ConfirmationAlert from '../../utils/confirmationAlert';
 import Alert from '../../utils/alert';
 import api from '../../api';
+import AddDynamicField from '../common/AddDynamicField';
 
 class AddNewVessel extends Component {
 
@@ -134,6 +137,91 @@ class AddNewVessel extends Component {
     }
   }
 
+  dynamicFieldValueChange = e => {
+    e.preventDefault();
+    const { id, value } = e.target;
+    if (!value) {
+      this.setState({
+        alertDetails: {
+          openAlert: true,
+          titleMsg: 'Error !!',
+          descrMsg: 'You cannot empty the value.'
+        }
+      });
+      return
+    }
+    const { vesselDetails } = this.state;
+    const { otherFields } = vesselDetails;
+    const elem = otherFields.find(f => f[id]);
+    const key = Object.keys(elem)[0];
+    elem[key] = value;
+    Object.assign(vesselDetails, { otherFields })
+    this.setState({ vesselDetails })
+  }
+
+  dynamicFieldLabelChange = e => {
+    e.preventDefault();
+    Array.prototype.insert = function (index, item) {
+      this.splice(index, 0, item);
+    };
+    const { id, value } = e.target;
+    if (!value) {
+      this.setState({
+        alertDetails: {
+          openAlert: true,
+          titleMsg: 'Error !!',
+          descrMsg: 'You cannot empty the Label.'
+        }
+      });
+      return
+    }
+
+    const { vesselDetails } = this.state;
+    const { otherFields } = vesselDetails;
+    const elem = otherFields.find(f => f[id]);
+    const key = Object.keys(elem)[0];
+    const val = elem[key];
+    const index = otherFields.indexOf(elem);
+    otherFields.splice(index, 1);
+    otherFields.insert(index, { [value]: val });
+    Object.assign(vesselDetails, { otherFields });
+    this.setState({ vesselDetails });
+    setTimeout(() => {
+      if (document.getElementById(value)) {
+        document.getElementById(value).focus();
+      }
+    }, 100);
+  }
+
+  deleteDynamicField = e => {
+    const { id } = e.currentTarget;
+    const { vesselDetails } = this.state;
+    const { otherFields } = vesselDetails;
+    const elem = otherFields.find(f => f[id]);
+    const index = otherFields.indexOf(elem);
+    if (index > -1) {
+      otherFields.splice(index, 1);
+    }
+    Object.assign(vesselDetails, { otherFields })
+    this.setState({ vesselDetails })
+  }
+
+  submitNewFieldDetails = e => {
+    e.preventDefault();
+    const inputs = e.target.querySelectorAll('input');
+    if (!inputs || !inputs.length) return;
+    if (!inputs[0].value || !inputs[1].value) return;
+    const { vesselDetails } = this.state;
+    let { otherFields } = vesselDetails;
+    if (!otherFields) {
+      otherFields = [];
+    }
+    otherFields.push({ [inputs[0].value]: inputs[1].value });
+    Object.assign(vesselDetails, { otherFields });
+    this.setState({ vesselDetails });
+    document.getElementById('newFieldForm').reset();
+  };
+
   handleSubmit = e => {
     e.preventDefault();
     if (this.state.isEditPage) {
@@ -198,16 +286,16 @@ class AddNewVessel extends Component {
 
   render() {
     const { validity, isDirty, isformValid, confAlertDetails, vesselDetails, alertDetails, isEditPage } = this.state;
-    let { vesselName, IMO, DWT, flag, vesselType, built, draft, LOA, beam, GRT, NRT, TPC, holdsHatches, grainCapacity, baleCapacity, cranes, grabs } = vesselDetails;
+    let { vesselName, IMO, DWT, flag, vesselType, built, draft, LOA, beam, GRT, NRT, TPC, holdsHatches, grainCapacity, baleCapacity, cranes, grabs, otherFields } = vesselDetails;
     return (
       <form autoComplete="off" noValidate >
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
         <ConfirmationAlert confAlertDetails={confAlertDetails} handleCancelAlert={this.handleCancelAlert} handleSuccessAlert={this.handleSuccessAlert} />
+        <AddDynamicField submitNewFieldDetails={this.submitNewFieldDetails} />
         <Paper style={{ marginTop: '2%' }}>
           <Grid container>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 20 }}
                 disabled={isEditPage}
                 error={validity && validity.vesselName && validity.vesselName.isInvalid}
                 id='vesselName'
@@ -221,7 +309,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
                 disabled={isEditPage}
                 error={validity && validity.IMO && validity.IMO.isInvalid}
                 id='IMO'
@@ -235,7 +322,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 10 }}
                 disabled={isEditPage}
                 error={validity && validity.DWT && validity.DWT.isInvalid}
                 id='DWT'
@@ -249,7 +335,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 20 }}
                 error={validity && validity.flag && validity.flag.isInvalid}
                 id='flag'
                 label='Flag'
@@ -263,7 +348,6 @@ class AddNewVessel extends Component {
 
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
                 error={validity && validity.vesselType && validity.vesselType.isInvalid}
                 id='vesselType'
                 label='Vessel Type'
@@ -276,7 +360,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 4 }}
                 error={validity && validity.built && validity.built.isInvalid}
                 id='built'
                 label='Built Year'
@@ -289,7 +372,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 8 }}
                 error={validity && validity.draft && validity.draft.isInvalid}
                 id='draft'
                 label='Draft (M)'
@@ -302,7 +384,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 10 }}
                 error={validity && validity.LOA && validity.LOA.isInvalid}
                 id='LOA'
                 label='LOA (M)'
@@ -315,7 +396,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 10 }}
                 error={validity && validity.beam && validity.beam.isInvalid}
                 id='beam'
                 label='Beam (M)'
@@ -328,7 +408,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 10 }}
                 error={validity && validity.GRT && validity.GRT.isInvalid}
                 id='GRT'
                 label='GRT (MT)'
@@ -341,7 +420,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 10 }}
                 error={validity && validity.NRT && validity.NRT.isInvalid}
                 id='NRT'
                 label='NRT (MT)'
@@ -354,7 +432,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 10 }}
                 error={validity && validity.TPC && validity.TPC.isInvalid}
                 id='TPC'
                 label='TPC (MT/CBM)'
@@ -367,7 +444,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 10 }}
                 error={validity && validity.holdsHatches && validity.holdsHatches.isInvalid}
                 id='holdsHatches'
                 label='Holds/Hatches'
@@ -380,7 +456,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 10 }}
                 error={validity && validity.grainCapacity && validity.grainCapacity.isInvalid}
                 id='grainCapacity'
                 label='Grain Capacity (CBM)'
@@ -393,7 +468,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 10 }}
                 error={validity && validity.baleCapacity && validity.baleCapacity.isInvalid}
                 id='baleCapacity'
                 label='Bale Capacity (CBM)'
@@ -406,7 +480,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 10 }}
                 error={validity && validity.cranes && validity.cranes.isInvalid}
                 id='cranes'
                 label='Cranes (MT)'
@@ -419,7 +492,6 @@ class AddNewVessel extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 10 }}
                 error={validity && validity.grabs && validity.grabs.isInvalid}
                 id='grabs'
                 label='Grabs (CBM)'
@@ -430,6 +502,30 @@ class AddNewVessel extends Component {
                 helperText={validity && validity.grabs && validity.grabs.isInvalid ? miscUtils.getErrorMessage(validity.grabs.validationtype) : ''}
               />
             </Grid>
+            {otherFields ? otherFields.map((item, i) =>
+              <Grid container key={i}>
+                <Grid item xs={12} md={6} lg={4} className='field-grid' key={i}>
+                  <TextField
+                    key={Object.keys(item)}
+                    id={Object.keys(item)[0]}
+                    value={Object.keys(item)[0] || ''}
+                    onChange={this.dynamicFieldLabelChange}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6} lg={4} className='field-grid'>
+                  <TextField
+                    key={Object.keys(item)}
+                    id={Object.keys(item)[0]}
+                    value={item[Object.keys(item)[0]] || ''}
+                    onChange={this.dynamicFieldValueChange}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6} lg={4} className='field-grid'>
+                  <IconButton onClick={this.deleteDynamicField} aria-label={Object.keys(item)[0]} className='btn-dlt' id={Object.keys(item)[0]}><CancelIcon /></IconButton>
+                </Grid>
+              </Grid>
+            ) : ''
+            }
           </Grid>
           <Button
             className={`${(isDirty && isformValid) ? 'white-color' : 'grey-color'} btn-save`}

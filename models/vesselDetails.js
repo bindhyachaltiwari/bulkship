@@ -75,6 +75,9 @@ var vesselDetails = new Schema({
     vesselType: {
         type: String,
         trim: true
+    },
+    otherFields :{
+        type: JSON,   
     }
 }, {
     collection: 'vesselDetails'

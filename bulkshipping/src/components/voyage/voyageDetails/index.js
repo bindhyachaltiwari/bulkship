@@ -26,8 +26,24 @@ class voyageDetails extends Component {
         }).join('');
     }
 
+
+    getDynamicFields = obj => {
+        let key = Object.keys(obj)[0];
+        let value = obj[key];
+        return <tr><td className='tdList' key={key}>{key}</td><td className='tdList' key={value}>{value}</td></tr>
+    }
+
     getTabData = () => {
         const voyageDetails = this.props.history.location.state.result;
+        const { otherFields } = voyageDetails[0];
+        if (this.props.detail.role === 'Client' && otherFields && otherFields.length) {
+            for (let i = 0; i < otherFields.length; i++) {
+                let field = otherFields[i];
+                let key = Object.keys(field)[0];
+                voyageDetails[0][key.toLowerCase()] = field[key];
+            }
+        }
+
         const tabs = {
             tabsLabel: [{
                 label: <span className='labelColor'>VESSEL DETAILS</span>
@@ -43,7 +59,7 @@ class voyageDetails extends Component {
                                     <>
                                         <tr style={{ backgroundColor: '#1e4356', color: 'white' }}><th className='tdList'>Field</th><th className='tdList'>Value</th></tr>
                                         {item.fieldVisibility.map((field, i) =>
-                                            <tr><td className='tdList' key={field}>{field}</td><td className='tdList'>{item[this.toCamelCase(field)]}</td></tr>
+                                            <tr key={i}><td className='tdList' key={field}>{field}</td><td className='tdList'>{item[this.toCamelCase(field)]}</td></tr>
                                         )}
                                     </> :
                                     <>
@@ -67,6 +83,10 @@ class voyageDetails extends Component {
                                         <tr><td className='tdList'>PNI Insurance</td><td className='tdList'>{item.pniInsurance}</td></tr>
                                         <tr><td className='tdList'>Weather Routing Company</td><td className='tdList'>{item.weatherRoutingCompany}</td></tr>
                                         <tr><td className='tdList'>Field Visibility</td><td className='tdList'><select>{item.fieldVisibility.map((e) => <option key={e}>{e}</option>)}</select></td></tr>
+                                        {otherFields && otherFields.length ? otherFields.map((field, i) => this.getDynamicFields(field)) : ''}
+                                        <tr><td className='tdList'></td><td className='tdList'></td></tr>
+                                        <tr><td className='tdList'></td><td className='tdList'></td></tr>
+                                        <tr><td className='tdList'></td><td className='tdList'></td></tr>
                                     </>}
                             </tbody>
                         </table>

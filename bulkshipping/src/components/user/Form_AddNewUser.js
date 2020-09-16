@@ -318,7 +318,7 @@ class AddNewUser extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 12 }}
+                inputProps={{ maxLength: 20 }}
                 error={validity && validity.password && validity.password.isInvalid}
                 id='password'
                 label='Password *'

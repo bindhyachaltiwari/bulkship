@@ -5,6 +5,8 @@ import constants from '../../utils/constants';
 import DateFnsUtils from '@date-io/date-fns';
 import SaveIcon from '@material-ui/icons/Save';
 import miscUtils from '../../utils/miscUtils';
+import IconButton from '@material-ui/core/IconButton';
+import CancelIcon from '@material-ui/icons/Cancel';
 import ConfirmationAlert from '../../utils/confirmationAlert';
 import Alert from '../../utils/alert';
 import api from '../../api';
@@ -60,7 +62,7 @@ class FillVoyageDetails extends Component {
       this.updateForm(this.props.onRowClickedData, true);
     }
     const { isEditPage, checkedAll, voyageDetails } = this.state;
-    if (isEditPage && !checkedAll && voyageDetails.fieldVisibility && voyageDetails.fieldVisibility.length === 16) {
+    if (isEditPage && !checkedAll && voyageDetails.fieldVisibility && voyageDetails.fieldVisibility.length === (this.getVisibiltyArray().length + 1)) {
       this.setState({ checkedAll: true })
     }
   }
@@ -214,6 +216,16 @@ class FillVoyageDetails extends Component {
   dynamicFieldValueChange = e => {
     e.preventDefault();
     const { id, value } = e.target;
+    if (!value) {
+      this.setState({
+        alertDetails: {
+          openAlert: true,
+          titleMsg: 'Error !!',
+          descrMsg: 'You cannot empty the value.'
+        }
+      });
+      return
+    }
     const { voyageDetails } = this.state;
     const { otherFields } = voyageDetails;
     const elem = otherFields.find(f => f[id]);
@@ -225,18 +237,76 @@ class FillVoyageDetails extends Component {
 
   dynamicFieldLabelChange = e => {
     e.preventDefault();
+    Array.prototype.insert = function (index, item) {
+      this.splice(index, 0, item);
+    };
     const { id, value } = e.target;
+    if (!value) {
+      this.setState({
+        alertDetails: {
+          openAlert: true,
+          titleMsg: 'Error !!',
+          descrMsg: 'You cannot empty the Label.'
+        }
+      });
+      return
+    }
+
     const { voyageDetails } = this.state;
     const { otherFields } = voyageDetails;
     const elem = otherFields.find(f => f[id]);
     const key = Object.keys(elem)[0];
     const val = elem[key];
-    otherFields.push({ [value]: val });
     const index = otherFields.indexOf(elem);
     otherFields.splice(index, 1);
-    Object.assign(voyageDetails, { otherFields })
+    otherFields.insert(index, { [value]: val });
+    Object.assign(voyageDetails, { otherFields });
     this.setState({ voyageDetails });
+    setTimeout(() => {
+      if (document.getElementById(value)) {
+        document.getElementById(value).focus();
+      }
+    }, 100);
   }
+
+  deleteDynamicField = e => {
+    const { id } = e.currentTarget;
+    const { voyageDetails } = this.state;
+    const { otherFields, fieldVisibility } = voyageDetails;
+    const elem = otherFields.find(f => f[id]);
+    let index = otherFields.indexOf(elem);
+    if (index > -1) {
+      otherFields.splice(index, 1);
+    }
+
+    index = fieldVisibility.indexOf(id);
+    if (index > -1) {
+      fieldVisibility.splice(index, 1);
+    }
+
+    Object.assign(voyageDetails, { otherFields, fieldVisibility });
+    if (!fieldVisibility || !fieldVisibility.length) {
+      this.setState({ isDirty: false, voyageDetails, isTyped: true });
+      return;
+    }
+    this.setState({ voyageDetails })
+  }
+
+  submitNewFieldDetails = e => {
+    e.preventDefault();
+    const inputs = e.target.querySelectorAll('input');
+    if (!inputs || !inputs.length) return;
+    if (!inputs[0].value || !inputs[1].value) return;
+    const { voyageDetails } = this.state;
+    let { otherFields } = voyageDetails;
+    if (!otherFields) {
+      otherFields = [];
+    }
+    otherFields.push({ [inputs[0].value]: inputs[1].value });
+    Object.assign(voyageDetails, { otherFields });
+    this.setState({ voyageDetails });
+    document.getElementById('newFieldForm').reset();
+  };
 
   handleChange = e => {
     e.preventDefault();
@@ -268,16 +338,16 @@ class FillVoyageDetails extends Component {
     const { value } = e.target;
     let v = value[value.length - 1];
     let { voyageDetails, checkedAll } = this.state;
-
+    const list = this.getVisibiltyArray();
     if (!checkedAll && v === 'Select All') {
-      Object.assign(voyageDetails, { fieldVisibility: constants.voyageFieldList })
+      Object.assign(voyageDetails, { fieldVisibility: list })
     } else if (checkedAll && v === 'Select All') {
       Object.assign(voyageDetails, { fieldVisibility: [] })
     } else {
       Object.assign(voyageDetails, { fieldVisibility: value })
     }
 
-    if ((v === 'Select All' && !checkedAll) || value.length === 16) {
+    if ((v === 'Select All' && !checkedAll) || value.length === list.length) {
       checkedAll = true;
     } else {
       checkedAll = false;
@@ -285,22 +355,6 @@ class FillVoyageDetails extends Component {
     this.setState({ voyageDetails, checkedAll });
     this.updateForm(voyageDetails, true, true);
   }
-
-  submitNewFieldDetails = e => {
-    e.preventDefault();
-    const inputs = e.target.querySelectorAll('input');
-    if (!inputs || !inputs.length) return;
-    if (!inputs[0].value || !inputs[1].value) return;
-    const { voyageDetails } = this.state;
-    let { otherFields } = voyageDetails;
-    if (!otherFields) {
-      otherFields = [];
-    }
-    otherFields.push({ [inputs[0].value]: inputs[1].value });
-    Object.assign(voyageDetails, { otherFields });
-    this.setState({ voyageDetails });
-    document.getElementById('newFieldForm').reset();
-  };
 
   updateForm(voyageDetails, isformValid, isTyped) {
     let { chartererName, vesselName, cpDate, dischargePort, loadPort, fieldVisibility } = voyageDetails;
@@ -319,12 +373,29 @@ class FillVoyageDetails extends Component {
     }
   }
 
+  getVisibiltyArray() {
+    const { voyageDetails } = this.state;
+    const { otherFields } = voyageDetails;
+
+    let visibiltyList = new Array();
+    visibiltyList.push(...constants.voyageFieldList);
+    if (otherFields && otherFields.length) {
+      for (let i = 0; i < otherFields.length; i++) {
+        let field = otherFields[i];
+        let key = Object.keys(field)
+        visibiltyList.push(key[0])
+      }
+    }
+    return visibiltyList;
+  }
+
   render() {
     const { validity, isDirty, isformValid, confAlertDetails, voyageDetails, alertDetails, clientList, vesselList, isEditPage } = this.state;
     let { chartererName, vesselName, cpDate, dischargePort, loadPort, vesselSize, cargoIntake, cargo, ownerName, shipper, pniInsurance, weatherRoutingCompany, loadPortAgent, dischargePortAgent, receiver, onHireSurveyor, offHireSurveyor, bunkerSupplier, bunkerTrader, fieldVisibility, otherFields } = voyageDetails;
     if (!fieldVisibility) {
       fieldVisibility = [];
     }
+
     return (
       <form autoComplete="off" noValidate >
         <Alert alertDetails={alertDetails} handleCancelAlert={this.handleCancelAlert} />
@@ -382,7 +453,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 10 }}
                 error={validity && validity.vesselSize && validity.vesselSize.isInvalid}
                 id='vesselSize'
                 label='Vessel Size'
@@ -395,7 +465,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
                 error={validity && validity.loadPort && validity.loadPort.isInvalid}
                 id='loadPort'
                 label='Load Port *'
@@ -408,7 +477,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 25 }}
                 error={validity && validity.dischargePort && validity.dischargePort.isInvalid}
                 id='dischargePort'
                 label='Discharge Port *'
@@ -421,7 +489,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 15 }}
                 error={validity && validity.cargo && validity.cargo.isInvalid}
                 id='cargo'
                 label='Cargo'
@@ -434,7 +501,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 10 }}
                 error={validity && validity.cargoIntake && validity.cargoIntake.isInvalid}
                 id='cargoIntake'
                 label='Cargo Intake'
@@ -447,7 +513,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 30 }}
                 error={validity && validity.ownerName && validity.ownerName.isInvalid}
                 id='ownerName'
                 label='Owner Name'
@@ -460,7 +525,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 30 }}
                 error={validity && validity.shipper && validity.shipper.isInvalid}
                 id='shipper'
                 label='Shipper'
@@ -473,7 +537,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 30 }}
                 error={validity && validity.loadPortAgent && validity.loadPortAgent.isInvalid}
                 id='loadPortAgent'
                 label='Load Port Agent'
@@ -486,7 +549,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 30 }}
                 error={validity && validity.dischargePortAgent && validity.dischargePortAgent.isInvalid}
                 id='dischargePortAgent'
                 label='Discharge Port Agent'
@@ -499,7 +561,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 30 }}
                 error={validity && validity.receiver && validity.receiver.isInvalid}
                 id='receiver'
                 label='Receiver'
@@ -512,7 +573,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 30 }}
                 error={validity && validity.onHireSurveyor && validity.onHireSurveyor.isInvalid}
                 id='onHireSurveyor'
                 label='On Hire Surveyor'
@@ -525,7 +585,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 30 }}
                 error={validity && validity.offHireSurveyor && validity.offHireSurveyor.isInvalid}
                 id='offHireSurveyor'
                 label='Off Hire Surveyor'
@@ -538,7 +597,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 30 }}
                 error={validity && validity.bunkerSupplier && validity.bunkerSupplier.isInvalid}
                 id='bunkerSupplier'
                 label='Bunker Supplier'
@@ -551,7 +609,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 30 }}
                 error={validity && validity.bunkerTrader && validity.bunkerTrader.isInvalid}
                 id='bunkerTrader'
                 label='Bunker Trader'
@@ -564,7 +621,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 30 }}
                 error={validity && validity.pniInsurance && validity.pniInsurance.isInvalid}
                 id='pniInsurance'
                 label='PNI Insurance'
@@ -577,7 +633,6 @@ class FillVoyageDetails extends Component {
             </Grid>
             <Grid item xs={12} md={6} lg={4} className='field-grid'>
               <TextField
-                inputProps={{ maxLength: 30 }}
                 error={validity && validity.weatherRoutingCompany && validity.weatherRoutingCompany.isInvalid}
                 id='weatherRoutingCompany'
                 label='Weather Routing Co.'
@@ -604,7 +659,7 @@ class FillVoyageDetails extends Component {
                   <Checkbox checked={Boolean(this.state.checkedAll)} />
                   <ListItemText primary={this.state.checkedAll ? "Select None" : "Select All"} />
                 </MenuItem>
-                {constants.voyageFieldList.map((name) => (
+                {this.getVisibiltyArray().map((name) => (
                   <MenuItem key={name} value={name}>
                     <Checkbox checked={fieldVisibility.indexOf(name) > -1} />
                     <ListItemText primary={name} />
@@ -613,7 +668,7 @@ class FillVoyageDetails extends Component {
               </Select>
             </Grid>
             {otherFields ? otherFields.map((item, i) =>
-              <Grid container>
+              <Grid container key={i}>
                 <Grid item xs={12} md={6} lg={4} className='field-grid' key={i}>
                   <TextField
                     key={Object.keys(item)}
@@ -629,6 +684,9 @@ class FillVoyageDetails extends Component {
                     value={item[Object.keys(item)[0]] || ''}
                     onChange={this.dynamicFieldValueChange}
                   />
+                </Grid>
+                <Grid item xs={12} md={6} lg={4} className='field-grid'>
+                  <IconButton onClick={this.deleteDynamicField} aria-label={Object.keys(item)[0]} className='btn-dlt' id={Object.keys(item)[0]}><CancelIcon /></IconButton>
                 </Grid>
               </Grid>
             ) : ''

@@ -119,6 +119,7 @@ button.MuiButtonBase-root:focus {
 }  
 
 .float-child2 {
+    margin-top: 100px;
     width: 33%;
     float: right;
 }  
@@ -175,6 +176,16 @@ button.MuiButtonBase-root:focus {
         }
     }
 
+    .float-child2 {
+        overflow: auto;
+    }
+}
+
+
+@media (max-width: 1350px) {
+    .float-child2 {
+        overflow: auto;
+    }
 }
 
 .absolute-position {
