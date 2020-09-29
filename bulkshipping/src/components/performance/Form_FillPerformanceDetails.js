@@ -98,7 +98,8 @@ class FillPerformanceDetails extends Component {
         isEditPage = true
       } else if (isClientPage) {
         readOnly = true;
-        const performanceDetails = res.data.vesselList.find(m => m.chartererName === this.state.selectedClient);
+        const { selectedCpDate, selectedClient, selectedVessel } = this.state;
+        const performanceDetails = res.data.vesselList.find(m => m.chartererName === selectedClient && m.vesselName === selectedVessel && m.cpDate === selectedCpDate);
         this.setState({ performanceDetails, readOnly, isEditPage });
         return
       }
