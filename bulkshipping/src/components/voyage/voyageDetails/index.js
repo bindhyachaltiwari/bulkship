@@ -46,7 +46,7 @@ class voyageDetails extends Component {
 
         const tabs = {
             tabsLabel: [{
-                label: <span className='labelColor'>VESSEL DETAILS</span>
+                label: <span className='labelColor'>VOYAGE DETAILS</span>
             }, {
                 label: <span className='labelColor'>BACK</span>
             }],
@@ -84,9 +84,6 @@ class voyageDetails extends Component {
                                         <tr><td className='tdList'>Weather Routing Company</td><td className='tdList'>{item.weatherRoutingCompany}</td></tr>
                                         <tr><td className='tdList'>Field Visibility</td><td className='tdList'><select>{item.fieldVisibility.map((e) => <option key={e}>{e}</option>)}</select></td></tr>
                                         {otherFields && otherFields.length ? otherFields.map((field, i) => this.getDynamicFields(field)) : ''}
-                                        <tr><td className='tdList'></td><td className='tdList'></td></tr>
-                                        <tr><td className='tdList'></td><td className='tdList'></td></tr>
-                                        <tr><td className='tdList'></td><td className='tdList'></td></tr>
                                     </>}
                             </tbody>
                         </table>

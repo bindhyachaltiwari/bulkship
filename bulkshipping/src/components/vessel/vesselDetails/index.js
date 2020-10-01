@@ -56,9 +56,6 @@ class vesselDetails extends Component {
                                 <tr><td className='tdList'>Cranes </td><td className='tdList'>{item.cranes}</td></tr>
                                 <tr><td className='tdList'>Grabs </td><td className='tdList'>{item.grabs}</td></tr>
                                 {otherFields && otherFields.length ? otherFields.map((field, i) => this.getDynamicFields(field)) : ''}
-                                <tr><td className='tdList'></td><td className='tdList'></td></tr>
-                                <tr><td className='tdList'></td><td className='tdList'></td></tr>
-                                <tr><td className='tdList'></td><td className='tdList'></td></tr>
                             </tbody>
                         </table>
                     )}

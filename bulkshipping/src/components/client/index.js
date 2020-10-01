@@ -182,6 +182,7 @@ class Client extends Component {
     let previousYearDate = new Date();
     const pastYear = previousYearDate.getFullYear() - 1;
     previousYearDate.setFullYear(pastYear);
+    let sum = 0;
     vesselList.forEach(v => {
       if (v.cargo) {
         if (!ourCount[v.cargo]) {
@@ -189,6 +190,7 @@ class Client extends Component {
         }
         if (new Date(v.cpDate).getTime() <= new Date().getTime() && new Date(v.cpDate).getTime() > previousYearDate.getTime()) {
           ourCount[v.cargo] += parseFloat(v.cargoIntake);
+          sum += parseFloat(v.cargoIntake);
         }
       }
     });
@@ -218,6 +220,7 @@ class Client extends Component {
       </div>
       <div className="float-child2">
         {ourCount && Object.keys(ourCount).length ? <PieCharts vesselDetails={ourCount} role={this.props.detail.role} /> : ''}
+        <p style={{ paddingLeft: '110px', textAlign: 'left', marginTop: '5%' }}>Total Volume = {sum} MT</p>
       </div>
     </div>
   }

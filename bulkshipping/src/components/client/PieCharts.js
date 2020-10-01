@@ -10,6 +10,20 @@ class PieCharts extends Component {
           width: 380,
           type: 'pie',
         },
+        title: {
+          text: 'CARGO',
+          align: 'left',
+          margin: 50,
+          offsetX:  this.props.role === 'Client' ? 170 : 125,
+          offsetY: 0,
+          floating: true,
+          style: {
+            fontSize: '14px',
+            fontWeight: 'bold',
+            fontFamily: undefined,
+            color: '#263238'
+          },
+        },
         labels: Object.keys(props.vesselDetails),
         responsive: [{
           breakpoint: 480,
